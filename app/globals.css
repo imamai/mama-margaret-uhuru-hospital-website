@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-dark-grey: var(--brand-dark-grey);
+  --color-brand-light-grey: var(--brand-light-grey);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Brand tokens -- overridden at runtime from margaret_settings.brand_colors
+     by the inline <style> tag rendered in app/layout.tsx, so admins can
+     change the palette without a code deploy. These are the shipped defaults. */
+  --brand-primary: #1496e8;
+  --brand-deep: #0d5ea6;
+  --brand-accent: #19b5fe;
+  --brand-dark-grey: #3e4348;
+  --brand-light-grey: #f6f7f9;
+
+  --background: #ffffff;
+  --foreground: var(--brand-dark-grey);
+  --card: #ffffff;
+  --card-foreground: var(--brand-dark-grey);
+  --popover: #ffffff;
+  --popover-foreground: var(--brand-dark-grey);
+  /* Primary maps to the deep blue, not the brighter brand-primary hue, so
+     button/link text clears WCAG AA (4.5:1) on white. The brighter hue is
+     reserved for large surfaces/headings via --color-brand-primary. */
+  --primary: var(--brand-deep);
+  --primary-foreground: #ffffff;
+  --secondary: var(--brand-light-grey);
+  --secondary-foreground: var(--brand-dark-grey);
+  --muted: var(--brand-light-grey);
+  --muted-foreground: #6b7280;
+  --accent: var(--brand-light-grey);
+  --accent-foreground: var(--brand-deep);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: var(--brand-primary);
+  --chart-1: var(--brand-primary);
+  --chart-2: var(--brand-deep);
+  --chart-3: var(--brand-accent);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --sidebar: var(--brand-light-grey);
+  --sidebar-foreground: var(--brand-dark-grey);
+  --sidebar-primary: var(--brand-deep);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffffff;
+  --sidebar-accent-foreground: var(--brand-deep);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: var(--brand-primary);
+}
+
+.dark {
+  --background: #14181b;
+  --foreground: #f2f4f6;
+  --card: #1b2126;
+  --card-foreground: #f2f4f6;
+  --popover: #1b2126;
+  --popover-foreground: #f2f4f6;
+  /* On dark backgrounds the brighter hue clears AA against near-black text,
+     so it becomes the primary token here instead of the deep blue. */
+  --primary: var(--brand-primary);
+  --primary-foreground: #0a1116;
+  --secondary: #232b31;
+  --secondary-foreground: #f2f4f6;
+  --muted: #232b31;
+  --muted-foreground: #9aa5ad;
+  --accent: #232b31;
+  --accent-foreground: var(--brand-accent);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: var(--brand-accent);
+  --chart-1: var(--brand-primary);
+  --chart-2: var(--brand-accent);
+  --chart-3: var(--brand-deep);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: #1b2126;
+  --sidebar-foreground: #f2f4f6;
+  --sidebar-primary: var(--brand-primary);
+  --sidebar-primary-foreground: #0a1116;
+  --sidebar-accent: #232b31;
+  --sidebar-accent-foreground: var(--brand-accent);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: var(--brand-accent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+}
+
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

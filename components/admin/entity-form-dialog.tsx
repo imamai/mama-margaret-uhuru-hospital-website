@@ -1,0 +1,135 @@
+"use client"
+
+import { useActionState, useEffect, useState, type ReactNode } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+
+import type { ActionResult } from "@/lib/actions/forms"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+
+export type EntityFieldConfig = {
+  name: string
+  label: string
+  type?: "text" | "textarea" | "number" | "date" | "select" | "checkbox"
+  required?: boolean
+  options?: { value: string; label: string }[]
+  defaultValue?: string
+}
+
+/**
+ * Config-driven create/edit dialog reused by every admin module: pass the
+ * field list and a server action, get a fully working form. This is the
+ * pattern the remaining CMS modules (news, events, tenders, ...) should
+ * follow rather than hand-rolling a new dialog per table.
+ */
+export function EntityFormDialog({
+  trigger,
+  title,
+  description,
+  fields,
+  action,
+  hiddenFields,
+}: {
+  trigger: ReactNode
+  title: string
+  description?: string
+  fields: EntityFieldConfig[]
+  action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>
+  hiddenFields?: Record<string, string>
+}) {
+  const [open, setOpen] = useState(false)
+  const [state, formAction, pending] = useActionState<ActionResult | null, FormData>(action, null)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!state) return
+    if (state.success) {
+      toast.success(`${title} saved.`)
+      // Closes the dialog after a successful save; the action result only
+      // arrives via this effect, so there is no event handler to do it from.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOpen(false)
+      router.refresh()
+    } else {
+      toast.error(state.error)
+    }
+  }, [state, title, router])
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          {description ? <DialogDescription>{description}</DialogDescription> : null}
+        </DialogHeader>
+
+        <form action={formAction} className="space-y-4">
+          {Object.entries(hiddenFields ?? {}).map(([name, value]) => (
+            <input key={name} type="hidden" name={name} value={value} />
+          ))}
+
+          {fields.map((field) => (
+            <div key={field.name} className="space-y-1.5">
+              <Label htmlFor={field.name}>
+                {field.label}
+                {field.required ? <span className="text-destructive"> *</span> : null}
+              </Label>
+              {field.type === "textarea" ? (
+                <Textarea id={field.name} name={field.name} required={field.required} defaultValue={field.defaultValue} rows={4} />
+              ) : field.type === "select" ? (
+                <select
+                  id={field.name}
+                  name={field.name}
+                  required={field.required}
+                  defaultValue={field.defaultValue}
+                  className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
+                >
+                  {field.options?.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              ) : field.type === "checkbox" ? (
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="checkbox"
+                  defaultChecked={field.defaultValue === "true"}
+                  className="size-4 rounded border-input"
+                />
+              ) : (
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type={field.type ?? "text"}
+                  required={field.required}
+                  defaultValue={field.defaultValue}
+                />
+              )}
+            </div>
+          ))}
+
+          <DialogFooter>
+            <Button type="submit" disabled={pending}>
+              {pending ? "Saving..." : "Save"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
