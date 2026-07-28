@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react"
 
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
-import { HeroSlideRow } from "@/components/admin/hero-slide-row"
+import { FOCAL_POINT_OPTIONS, HeroSlideRow } from "@/components/admin/hero-slide-row"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { createHeroSlide } from "@/lib/actions/admin/hero-slides"
@@ -24,6 +24,14 @@ const NEW_SLIDE_FIELDS: EntityFieldConfig[] = [
     required: true,
     hint: "Recommended: at least 1600×900px, under 10MB.",
   },
+  {
+    name: "focalPoint",
+    label: "Image position",
+    type: "select",
+    options: FOCAL_POINT_OPTIONS,
+    defaultValue: "center",
+    hint: "Which part of the photo stays visible when it's cropped to fit the banner.",
+  },
   { name: "ctaLabel", label: "Button label" },
   { name: "ctaUrl", label: "Button link", defaultValue: "/appointments" },
   { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: "draft" },
@@ -33,7 +41,7 @@ export default async function AdminHeroSlidesPage() {
   const supabase = await createClient()
   const { data } = await supabase
     .from("margaret_hero_slides")
-    .select("id, title, subtitle, image_url, cta_label, cta_url, status")
+    .select("id, title, subtitle, image_url, cta_label, cta_url, focal_point, status")
     .is("deleted_at", null)
     .order("sort_order", { ascending: true })
 

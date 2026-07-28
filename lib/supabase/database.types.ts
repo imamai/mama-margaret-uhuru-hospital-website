@@ -1825,6 +1825,7 @@ export type Database = {
           cta_url: string | null
           deleted_at: string | null
           ends_at: string | null
+          focal_point: string
           id: string
           image_url: string
           sort_order: number
@@ -1843,6 +1844,7 @@ export type Database = {
           cta_url?: string | null
           deleted_at?: string | null
           ends_at?: string | null
+          focal_point?: string
           id?: string
           image_url: string
           sort_order?: number
@@ -1861,6 +1863,7 @@ export type Database = {
           cta_url?: string | null
           deleted_at?: string | null
           ends_at?: string | null
+          focal_point?: string
           id?: string
           image_url?: string
           sort_order?: number

@@ -1,15 +1,7 @@
 import { Badge } from "@/components/ui/badge"
-import { StatusSelect } from "@/components/admin/status-select"
+import { SupplierStatusSelect } from "@/components/admin/supplier-status-select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { updateSupplierStatus } from "@/lib/actions/admin/suppliers"
 import { createClient } from "@/lib/supabase/server"
-
-const STATUS_OPTIONS = [
-  { value: "pending", label: "Pending" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-  { value: "suspended", label: "Suspended" },
-] as const
 
 export default async function AdminSuppliersPage() {
   const supabase = await createClient()
@@ -58,11 +50,7 @@ export default async function AdminSuppliersPage() {
                     <Badge variant={supplier.status === "approved" ? "default" : "outline"}>{supplier.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <StatusSelect
-                      value={supplier.status as (typeof STATUS_OPTIONS)[number]["value"]}
-                      options={STATUS_OPTIONS as unknown as { value: string; label: string }[]}
-                      onChange={(next) => updateSupplierStatus(supplier.id, next as (typeof STATUS_OPTIONS)[number]["value"])}
-                    />
+                    <SupplierStatusSelect id={supplier.id} status={supplier.status} />
                   </TableCell>
                 </TableRow>
               ))

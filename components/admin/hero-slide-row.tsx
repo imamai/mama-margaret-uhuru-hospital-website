@@ -19,6 +19,18 @@ const STATUS_OPTIONS = [
   { value: "archived", label: "Archived" },
 ]
 
+export const FOCAL_POINT_OPTIONS = [
+  { value: "left top", label: "Top Left" },
+  { value: "top", label: "Top" },
+  { value: "right top", label: "Top Right" },
+  { value: "left", label: "Left" },
+  { value: "center", label: "Center" },
+  { value: "right", label: "Right" },
+  { value: "left bottom", label: "Bottom Left" },
+  { value: "bottom", label: "Bottom" },
+  { value: "right bottom", label: "Bottom Right" },
+]
+
 export type HeroSlideListItem = {
   id: string
   title: string
@@ -26,6 +38,7 @@ export type HeroSlideListItem = {
   image_url: string
   cta_label: string | null
   cta_url: string | null
+  focal_point: string
   status: string
 }
 
@@ -39,6 +52,14 @@ function fieldsFor(slide: HeroSlideListItem): EntityFieldConfig[] {
       type: "file",
       accept: "image/*",
       hint: "Leave blank to keep the current image. Recommended: at least 1600×900px, under 10MB.",
+    },
+    {
+      name: "focalPoint",
+      label: "Image position",
+      type: "select",
+      options: FOCAL_POINT_OPTIONS,
+      defaultValue: slide.focal_point,
+      hint: "Which part of the photo stays visible when it's cropped to fit the banner.",
     },
     { name: "ctaLabel", label: "Button label", defaultValue: slide.cta_label ?? "" },
     { name: "ctaUrl", label: "Button link", defaultValue: slide.cta_url ?? "" },
@@ -62,7 +83,15 @@ export function HeroSlideRow({ slide, isFirst, isLast }: { slide: HeroSlideListI
     <TableRow>
       <TableCell>
         {slide.image_url ? (
-          <Image src={slide.image_url} alt="" width={96} height={54} className="rounded-md border object-cover" unoptimized />
+          <Image
+            src={slide.image_url}
+            alt=""
+            width={96}
+            height={54}
+            className="rounded-md border object-cover"
+            style={{ objectPosition: slide.focal_point }}
+            unoptimized
+          />
         ) : (
           <div className="flex h-[54px] w-24 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">No image</div>
         )}

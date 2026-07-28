@@ -5,10 +5,10 @@ import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { blocksToText } from "@/lib/actions/admin/blocks"
 import { createFooterSection, deleteFooterSection, updateFooterSection } from "@/lib/actions/admin/footer-sections"
 import { createClient } from "@/lib/supabase/server"
 
+type FooterContent = { body?: string; links?: { label: string; url: string }[] }
 type Row = { id: string; title: string; content: unknown; status: string }
 
 const STATUS_OPTIONS = [
@@ -17,9 +17,19 @@ const STATUS_OPTIONS = [
 ]
 
 function fieldsFor(row?: Row): EntityFieldConfig[] {
+  const content = (row?.content ?? {}) as FooterContent
+  const linksText = (content.links ?? []).map((l) => `${l.label} | ${l.url}`).join("\n")
+
   return [
     { name: "title", label: "Title", required: true, defaultValue: row?.title },
-    { name: "body", label: "Content", type: "textarea", defaultValue: row ? blocksToText(row.content) : "" },
+    { name: "body", label: "Body text (optional)", type: "textarea", defaultValue: content.body ?? "" },
+    {
+      name: "links",
+      label: "Links (optional)",
+      type: "textarea",
+      defaultValue: linksText,
+      hint: "One per line, formatted as: Label | /url",
+    },
     { name: "sortOrder", label: "Sort order", type: "number", defaultValue: "0" },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "active" },
   ]

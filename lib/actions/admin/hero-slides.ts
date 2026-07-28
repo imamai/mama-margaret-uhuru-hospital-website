@@ -7,12 +7,19 @@ import { createClient } from "@/lib/supabase/server"
 import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
 import type { ActionResult } from "@/lib/actions/forms"
 
+const FOCAL_POINTS = [
+  "left top", "top", "right top",
+  "left", "center", "right",
+  "left bottom", "bottom", "right bottom",
+] as const
+
 const heroSlideSchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
   title: z.string().trim().min(2, "Title is required.").max(200),
   subtitle: z.string().trim().max(500).optional().or(z.literal("")),
   ctaLabel: z.string().trim().max(60).optional().or(z.literal("")),
   ctaUrl: z.string().trim().max(500).optional().or(z.literal("")),
+  focalPoint: z.enum(FOCAL_POINTS),
   status: z.enum(["draft", "published", "archived"]),
 })
 
@@ -23,6 +30,7 @@ function parse(formData: FormData) {
     subtitle: formData.get("subtitle") ?? "",
     ctaLabel: formData.get("ctaLabel") ?? "",
     ctaUrl: formData.get("ctaUrl") ?? "",
+    focalPoint: formData.get("focalPoint") ?? "center",
     status: formData.get("status") ?? "draft",
   })
 }
@@ -59,6 +67,7 @@ export async function createHeroSlide(_prev: ActionResult | null, formData: Form
     image_url: imageUrl,
     cta_label: parsed.data.ctaLabel || null,
     cta_url: parsed.data.ctaUrl || null,
+    focal_point: parsed.data.focalPoint,
     status: parsed.data.status,
     sort_order: (last?.sort_order ?? 0) + 1,
   })
@@ -81,6 +90,7 @@ export async function updateHeroSlide(_prev: ActionResult | null, formData: Form
     subtitle: parsed.data.subtitle || null,
     cta_label: parsed.data.ctaLabel || null,
     cta_url: parsed.data.ctaUrl || null,
+    focal_point: parsed.data.focalPoint,
     status: parsed.data.status,
   }
 

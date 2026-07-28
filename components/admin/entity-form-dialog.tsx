@@ -115,10 +115,7 @@ export function EntityFormDialog({
                   className="size-4 rounded border-input"
                 />
               ) : field.type === "file" ? (
-                <>
-                  <Input id={field.name} name={field.name} type="file" accept={field.accept} required={field.required} />
-                  {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
-                </>
+                <Input id={field.name} name={field.name} type="file" accept={field.accept} required={field.required} />
               ) : (
                 <Input
                   id={field.name}
@@ -128,6 +125,7 @@ export function EntityFormDialog({
                   defaultValue={field.defaultValue}
                 />
               )}
+              {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
             </div>
           ))}
 

@@ -16,6 +16,7 @@ export type HeroSlide = {
   image_url: string | null
   cta_label: string | null
   cta_url: string | null
+  focal_point: string
 }
 
 export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
@@ -48,7 +49,14 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             className="absolute inset-0"
           >
             {slide.image_url ? (
-              <Image src={slide.image_url} alt="" fill priority className="object-cover" />
+              <Image
+                src={slide.image_url}
+                alt=""
+                fill
+                priority
+                className="object-cover"
+                style={{ objectPosition: slide.focal_point }}
+              />
             ) : (
               <PlaceholderImage kind="building" />
             )}

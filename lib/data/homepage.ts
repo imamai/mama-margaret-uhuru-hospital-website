@@ -24,7 +24,7 @@ export const getHeroSlides = cache(async () => {
   const supabase = await createClient()
   const { data } = await supabase
     .from("margaret_hero_slides")
-    .select("id, title, subtitle, image_url, video_url, cta_label, cta_url")
+    .select("id, title, subtitle, image_url, video_url, cta_label, cta_url, focal_point")
     .eq("status", "published")
     .order("sort_order", { ascending: true })
   return data ?? []
