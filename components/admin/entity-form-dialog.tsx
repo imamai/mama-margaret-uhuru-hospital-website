@@ -22,10 +22,13 @@ import { Textarea } from "@/components/ui/textarea"
 export type EntityFieldConfig = {
   name: string
   label: string
-  type?: "text" | "textarea" | "number" | "date" | "select" | "checkbox"
+  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "select" | "checkbox" | "file"
   required?: boolean
   options?: { value: string; label: string }[]
   defaultValue?: string
+  /** For type "file": accept attribute (e.g. "image/*") and helper text. */
+  accept?: string
+  hint?: string
 }
 
 /**
@@ -111,6 +114,11 @@ export function EntityFormDialog({
                   defaultChecked={field.defaultValue === "true"}
                   className="size-4 rounded border-input"
                 />
+              ) : field.type === "file" ? (
+                <>
+                  <Input id={field.name} name={field.name} type="file" accept={field.accept} required={field.required} />
+                  {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
+                </>
               ) : (
                 <Input
                   id={field.name}

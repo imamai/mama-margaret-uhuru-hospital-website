@@ -1,0 +1,154 @@
+"use server"
+
+import { revalidatePath } from "next/cache"
+import { z } from "zod"
+
+import { createClient } from "@/lib/supabase/server"
+import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
+import type { ActionResult } from "@/lib/actions/forms"
+
+const heroSlideSchema = z.object({
+  id: z.string().uuid().optional().or(z.literal("")),
+  title: z.string().trim().min(2, "Title is required.").max(200),
+  subtitle: z.string().trim().max(500).optional().or(z.literal("")),
+  ctaLabel: z.string().trim().max(60).optional().or(z.literal("")),
+  ctaUrl: z.string().trim().max(500).optional().or(z.literal("")),
+  status: z.enum(["draft", "published", "archived"]),
+})
+
+function parse(formData: FormData) {
+  return heroSlideSchema.safeParse({
+    id: formData.get("id") ?? "",
+    title: formData.get("title"),
+    subtitle: formData.get("subtitle") ?? "",
+    ctaLabel: formData.get("ctaLabel") ?? "",
+    ctaUrl: formData.get("ctaUrl") ?? "",
+    status: formData.get("status") ?? "draft",
+  })
+}
+
+function revalidate() {
+  revalidatePath("/admin/hero-slides")
+  revalidatePath("/")
+}
+
+export async function createHeroSlide(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  const parsed = parse(formData)
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+
+  const file = formData.get("image")
+  if (!(file instanceof File) || file.size === 0) return { success: false, error: "Please choose an image." }
+  if (!file.type.startsWith("image/")) return { success: false, error: "File must be an image." }
+  if (file.size > MAX_UPLOAD_BYTES) return { success: false, error: "Image must be smaller than 10MB." }
+
+  const supabase = await createClient()
+
+  const imageUrl = await uploadPublicFile(supabase, "hero-media", "slides", file)
+  if (!imageUrl) return { success: false, error: "You don't have permission to upload images." }
+
+  const { data: last } = await supabase
+    .from("margaret_hero_slides")
+    .select("sort_order")
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const { error } = await supabase.from("margaret_hero_slides").insert({
+    title: parsed.data.title,
+    subtitle: parsed.data.subtitle || null,
+    image_url: imageUrl,
+    cta_label: parsed.data.ctaLabel || null,
+    cta_url: parsed.data.ctaUrl || null,
+    status: parsed.data.status,
+    sort_order: (last?.sort_order ?? 0) + 1,
+  })
+
+  if (error) return { success: false, error: "You don't have permission to do this." }
+
+  revalidate()
+  return { success: true }
+}
+
+export async function updateHeroSlide(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  const parsed = parse(formData)
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+  if (!parsed.data.id) return { success: false, error: "Missing record id." }
+
+  const supabase = await createClient()
+
+  const update: Record<string, unknown> = {
+    title: parsed.data.title,
+    subtitle: parsed.data.subtitle || null,
+    cta_label: parsed.data.ctaLabel || null,
+    cta_url: parsed.data.ctaUrl || null,
+    status: parsed.data.status,
+  }
+
+  const file = formData.get("image")
+  if (file instanceof File && file.size > 0) {
+    if (!file.type.startsWith("image/")) return { success: false, error: "File must be an image." }
+    if (file.size > MAX_UPLOAD_BYTES) return { success: false, error: "Image must be smaller than 10MB." }
+
+    const imageUrl = await uploadPublicFile(supabase, "hero-media", "slides", file)
+    if (!imageUrl) return { success: false, error: "You don't have permission to upload images." }
+    update.image_url = imageUrl
+  }
+
+  const { error } = await supabase.from("margaret_hero_slides").update(update as never).eq("id", parsed.data.id)
+  if (error) return { success: false, error: "You don't have permission to do this." }
+
+  revalidate()
+  return { success: true }
+}
+
+export async function deleteHeroSlide(id: string): Promise<ActionResult> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("margaret_hero_slides")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id)
+
+  if (error) return { success: false, error: "You don't have permission to do this." }
+
+  revalidate()
+  return { success: true }
+}
+
+async function swapWithNeighbor(id: string, direction: "up" | "down"): Promise<ActionResult> {
+  const supabase = await createClient()
+
+  const { data: slides } = await supabase
+    .from("margaret_hero_slides")
+    .select("id, sort_order")
+    .is("deleted_at", null)
+    .order("sort_order", { ascending: true })
+
+  if (!slides) return { success: false, error: "Could not load slides." }
+
+  const index = slides.findIndex((s) => s.id === id)
+  const neighborIndex = direction === "up" ? index - 1 : index + 1
+  if (index === -1 || neighborIndex < 0 || neighborIndex >= slides.length) {
+    return { success: true } // already at the edge, nothing to do
+  }
+
+  const current = slides[index]
+  const neighbor = slides[neighborIndex]
+
+  const [{ error: err1 }, { error: err2 }] = await Promise.all([
+    supabase.from("margaret_hero_slides").update({ sort_order: neighbor.sort_order }).eq("id", current.id),
+    supabase.from("margaret_hero_slides").update({ sort_order: current.sort_order }).eq("id", neighbor.id),
+  ])
+
+  if (err1 || err2) return { success: false, error: "You don't have permission to do this." }
+
+  revalidate()
+  return { success: true }
+}
+
+export async function moveHeroSlideUp(id: string) {
+  return swapWithNeighbor(id, "up")
+}
+
+export async function moveHeroSlideDown(id: string) {
+  return swapWithNeighbor(id, "down")
+}
