@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Pencil, Plus, Users } from "lucide-react"
 
-import { DataTable, type DataTableColumn } from "@/components/admin/data-table"
+import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Badge } from "@/components/ui/badge"
@@ -70,25 +70,49 @@ export default async function AdminJobsPage() {
 
   const jobs: JobRow[] = (data ?? []).map((job) => ({ ...job, applicantCount: countsByJob.get(job.id) ?? 0 }))
 
-  const columns: DataTableColumn<JobRow>[] = [
+  const columns: DataTableColumn[] = [
     { key: "title", label: "Title" },
     { key: "location", label: "Location" },
     { key: "application_deadline", label: "Deadline" },
-    {
-      key: "status",
-      label: "Status",
-      render: (row) => <Badge variant={row.status === "published" ? "default" : "outline"}>{row.status}</Badge>,
-    },
-    {
-      key: "applicantCount",
-      label: "Applicants",
-      render: (row) => (
-        <Link href={`/admin/jobs/${row.id}/applications`} className="flex items-center gap-1.5 text-brand-deep hover:underline dark:text-brand-accent">
-          <Users className="size-3.5" aria-hidden="true" /> {row.applicantCount}
-        </Link>
-      ),
-    },
+    { key: "status", label: "Status" },
+    { key: "applicantCount", label: "Applicants" },
   ]
+
+  const rows: DataTableRow[] = jobs.map((row) => ({
+    id: row.id,
+    searchText: `${row.title} ${row.location}`.toLowerCase(),
+    cells: [
+      row.title,
+      row.location,
+      row.application_deadline,
+      <Badge key="status" variant={row.status === "published" ? "default" : "outline"}>
+        {row.status}
+      </Badge>,
+      <Link
+        key="applicants"
+        href={`/admin/jobs/${row.id}/applications`}
+        className="flex items-center gap-1.5 text-brand-deep hover:underline dark:text-brand-accent"
+      >
+        <Users className="size-3.5" aria-hidden="true" /> {row.applicantCount}
+      </Link>,
+    ],
+    actions: (
+      <div className="flex justify-end gap-1">
+        <EntityFormDialog
+          trigger={
+            <Button variant="ghost" size="icon-sm" aria-label="Edit">
+              <Pencil className="size-4" aria-hidden="true" />
+            </Button>
+          }
+          title={`Edit ${row.title}`}
+          fields={fieldsFor(row)}
+          action={updateJob}
+          hiddenFields={{ id: row.id }}
+        />
+        <DeleteButton id={row.id} action={deleteJob} confirmMessage={`Delete ${row.title}?`} />
+      </div>
+    ),
+  }))
 
   return (
     <div>
@@ -99,8 +123,8 @@ export default async function AdminJobsPage() {
 
       <DataTable
         columns={columns}
-        rows={jobs}
-        searchKeys={["title", "location"]}
+        rows={rows}
+        searchable
         toolbar={
           <EntityFormDialog
             trigger={
@@ -113,22 +137,6 @@ export default async function AdminJobsPage() {
             action={createJob}
           />
         }
-        renderActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <EntityFormDialog
-              trigger={
-                <Button variant="ghost" size="icon-sm" aria-label="Edit">
-                  <Pencil className="size-4" aria-hidden="true" />
-                </Button>
-              }
-              title={`Edit ${row.title}`}
-              fields={fieldsFor(row)}
-              action={updateJob}
-              hiddenFields={{ id: row.id }}
-            />
-            <DeleteButton id={row.id} action={deleteJob} confirmMessage={`Delete ${row.title}?`} />
-          </div>
-        )}
       />
     </div>
   )

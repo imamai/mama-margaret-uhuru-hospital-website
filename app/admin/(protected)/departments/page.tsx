@@ -1,6 +1,6 @@
 import { Pencil, Plus } from "lucide-react"
 
-import { DataTable, type DataTableColumn } from "@/components/admin/data-table"
+import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Badge } from "@/components/ui/badge"
@@ -43,17 +43,39 @@ export default async function AdminDepartmentsPage() {
 
   const departments = (data ?? []) as DepartmentRow[]
 
-  const columns: DataTableColumn<DepartmentRow>[] = [
+  const columns: DataTableColumn[] = [
     { key: "name", label: "Name" },
     { key: "location", label: "Location" },
-    {
-      key: "status",
-      label: "Status",
-      render: (row) => (
-        <Badge variant={row.status === "published" ? "default" : "outline"}>{row.status}</Badge>
-      ),
-    },
+    { key: "status", label: "Status" },
   ]
+
+  const rows: DataTableRow[] = departments.map((row) => ({
+    id: row.id,
+    searchText: `${row.name} ${row.location ?? ""}`.toLowerCase(),
+    cells: [
+      row.name,
+      row.location,
+      <Badge key="status" variant={row.status === "published" ? "default" : "outline"}>
+        {row.status}
+      </Badge>,
+    ],
+    actions: (
+      <div className="flex justify-end gap-1">
+        <EntityFormDialog
+          trigger={
+            <Button variant="ghost" size="icon-sm" aria-label="Edit">
+              <Pencil className="size-4" aria-hidden="true" />
+            </Button>
+          }
+          title={`Edit ${row.name}`}
+          fields={fieldsFor(row)}
+          action={updateDepartment}
+          hiddenFields={{ id: row.id }}
+        />
+        <DeleteButton id={row.id} action={deleteDepartment} confirmMessage={`Delete ${row.name}?`} />
+      </div>
+    ),
+  }))
 
   return (
     <div>
@@ -66,8 +88,8 @@ export default async function AdminDepartmentsPage() {
 
       <DataTable
         columns={columns}
-        rows={departments}
-        searchKeys={["name", "location"]}
+        rows={rows}
+        searchable
         toolbar={
           <EntityFormDialog
             trigger={
@@ -80,22 +102,6 @@ export default async function AdminDepartmentsPage() {
             action={createDepartment}
           />
         }
-        renderActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <EntityFormDialog
-              trigger={
-                <Button variant="ghost" size="icon-sm" aria-label="Edit">
-                  <Pencil className="size-4" aria-hidden="true" />
-                </Button>
-              }
-              title={`Edit ${row.name}`}
-              fields={fieldsFor(row)}
-              action={updateDepartment}
-              hiddenFields={{ id: row.id }}
-            />
-            <DeleteButton id={row.id} action={deleteDepartment} confirmMessage={`Delete ${row.name}?`} />
-          </div>
-        )}
       />
     </div>
   )

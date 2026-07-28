@@ -2,7 +2,18 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, LogOut } from "lucide-react"
+import {
+  Briefcase,
+  Building2,
+  FileText,
+  LayoutDashboard,
+  LayoutTemplate,
+  LogOut,
+  Menu as MenuIcon,
+  Settings as SettingsIcon,
+  Stethoscope,
+  Truck,
+} from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 import { signOut } from "@/lib/actions/auth"
@@ -12,7 +23,17 @@ export type AdminNavItem = {
   key: string
   label: string
   href: string
-  icon: LucideIcon
+}
+
+const MODULE_ICONS: Record<string, LucideIcon> = {
+  departments: Building2,
+  doctors: Stethoscope,
+  careers: Briefcase,
+  tenders: FileText,
+  suppliers: Truck,
+  homepage: LayoutTemplate,
+  menus: MenuIcon,
+  settings: SettingsIcon,
 }
 
 export function AdminSidebar({ items, hospitalName }: { items: AdminNavItem[]; hospitalName: string }) {
@@ -37,7 +58,7 @@ export function AdminSidebar({ items, hospitalName }: { items: AdminNavItem[]; h
           Dashboard
         </Link>
         {items.map((item) => {
-          const Icon = item.icon
+          const Icon = MODULE_ICONS[item.key] ?? LayoutDashboard
           const active = pathname.startsWith(item.href)
           return (
             <Link

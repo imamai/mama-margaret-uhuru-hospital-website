@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Eye, Pencil, Plus } from "lucide-react"
 
-import { DataTable, type DataTableColumn } from "@/components/admin/data-table"
+import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Badge } from "@/components/ui/badge"
@@ -55,20 +55,46 @@ export default async function AdminTendersPage() {
 
   const tenders = (data ?? []) as (TenderRow & { description: string; eligibility: string; opening_date: string; evaluation_stage: string })[]
 
-  const columns: DataTableColumn<TenderRow>[] = [
+  const columns: DataTableColumn[] = [
     { key: "tender_number", label: "Number" },
     { key: "title", label: "Title" },
-    {
-      key: "closing_date",
-      label: "Closes",
-      render: (row) => new Date(row.closing_date).toLocaleDateString("en-KE", { month: "short", day: "numeric", year: "numeric" }),
-    },
-    {
-      key: "status",
-      label: "Status",
-      render: (row) => <Badge variant={row.status === "published" ? "default" : "outline"}>{row.status}</Badge>,
-    },
+    { key: "closing_date", label: "Closes" },
+    { key: "status", label: "Status" },
   ]
+
+  const rows: DataTableRow[] = tenders.map((row) => ({
+    id: row.id,
+    searchText: `${row.title} ${row.tender_number}`.toLowerCase(),
+    cells: [
+      row.tender_number,
+      row.title,
+      new Date(row.closing_date).toLocaleDateString("en-KE", { month: "short", day: "numeric", year: "numeric" }),
+      <Badge key="status" variant={row.status === "published" ? "default" : "outline"}>
+        {row.status}
+      </Badge>,
+    ],
+    actions: (
+      <div className="flex justify-end gap-1">
+        <Button variant="ghost" size="icon-sm" aria-label="Manage" asChild>
+          <Link href={`/admin/tenders/${row.id}`}>
+            <Eye className="size-4" aria-hidden="true" />
+          </Link>
+        </Button>
+        <EntityFormDialog
+          trigger={
+            <Button variant="ghost" size="icon-sm" aria-label="Edit">
+              <Pencil className="size-4" aria-hidden="true" />
+            </Button>
+          }
+          title={`Edit ${row.title}`}
+          fields={fieldsFor(row)}
+          action={updateTender}
+          hiddenFields={{ id: row.id }}
+        />
+        <DeleteButton id={row.id} action={deleteTender} confirmMessage={`Delete ${row.title}?`} />
+      </div>
+    ),
+  }))
 
   return (
     <div>
@@ -79,8 +105,8 @@ export default async function AdminTendersPage() {
 
       <DataTable
         columns={columns}
-        rows={tenders}
-        searchKeys={["title", "tender_number"]}
+        rows={rows}
+        searchable
         toolbar={
           <EntityFormDialog
             trigger={
@@ -93,30 +119,6 @@ export default async function AdminTendersPage() {
             action={createTender}
           />
         }
-        renderActions={(row) => {
-          const full = tenders.find((t) => t.id === row.id)
-          return (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon-sm" aria-label="Manage" asChild>
-                <Link href={`/admin/tenders/${row.id}`}>
-                  <Eye className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <EntityFormDialog
-                trigger={
-                  <Button variant="ghost" size="icon-sm" aria-label="Edit">
-                    <Pencil className="size-4" aria-hidden="true" />
-                  </Button>
-                }
-                title={`Edit ${row.title}`}
-                fields={fieldsFor(full)}
-                action={updateTender}
-                hiddenFields={{ id: row.id }}
-              />
-              <DeleteButton id={row.id} action={deleteTender} confirmMessage={`Delete ${row.title}?`} />
-            </div>
-          )
-        }}
       />
     </div>
   )
