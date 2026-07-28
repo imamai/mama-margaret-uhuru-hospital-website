@@ -83,9 +83,11 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
                   <Link href={slide.cta_url}>{slide.cta_label}</Link>
                 </Button>
               ) : null}
-              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/5 text-white hover:bg-white/15 hover:text-white">
-                <Link href="/appointments">Book an Appointment</Link>
-              </Button>
+              {slide.cta_url !== "/appointments" ? (
+                <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/5 text-white hover:bg-white/15 hover:text-white">
+                  <Link href="/appointments">Book an Appointment</Link>
+                </Button>
+              ) : null}
             </div>
           </motion.div>
         </AnimatePresence>
