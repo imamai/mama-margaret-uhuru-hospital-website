@@ -38,8 +38,8 @@ export default async function DoctorDetailPage({
     <div className="mx-auto max-w-7xl px-4 py-12">
       <div className="grid gap-10 lg:grid-cols-3">
         <div>
-          <div className="relative aspect-square overflow-hidden rounded-2xl">
-            <SmartImage src={doctor.photo_url} alt={doctor.full_name} kind="doctor" />
+          <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
+            <SmartImage src={doctor.photo_url} alt={doctor.full_name} kind="doctor" className="object-contain" />
           </div>
           <div className="mt-6 space-y-2">
             {doctor.phone ? (
