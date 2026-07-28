@@ -78,14 +78,15 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{slide.title}</h1>
             {slide.subtitle ? <p className="mt-4 text-lg text-white/85 sm:text-xl">{slide.subtitle}</p> : null}
             <div className="mt-8 flex flex-wrap gap-3">
-              {slide.cta_url && slide.cta_label ? (
-                <Button asChild size="lg">
-                  <Link href={slide.cta_url}>{slide.cta_label}</Link>
-                </Button>
-              ) : null}
-              {slide.cta_url !== "/appointments" ? (
+              <Button asChild size="lg">
+                <Link href="/contact">Emergency Contacts</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/5 text-white hover:bg-white/15 hover:text-white">
+                <Link href="/appointments">Book an Appointment</Link>
+              </Button>
+              {slide.cta_url && slide.cta_label && slide.cta_url !== "/contact" && slide.cta_url !== "/appointments" ? (
                 <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/5 text-white hover:bg-white/15 hover:text-white">
-                  <Link href="/appointments">Book an Appointment</Link>
+                  <Link href={slide.cta_url}>{slide.cta_label}</Link>
                 </Button>
               ) : null}
             </div>
