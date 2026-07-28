@@ -1,4 +1,5 @@
-import { Pencil, Plus } from "lucide-react"
+import Link from "next/link"
+import { Eye, Pencil, Plus } from "lucide-react"
 
 import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
@@ -12,6 +13,16 @@ type DoctorRow = {
   id: string
   full_name: string
   specialization: string
+  department_id: string | null
+  title: string | null
+  years_experience: number | null
+  biography: string | null
+  email: string | null
+  phone: string | null
+  qualifications: string[]
+  languages: string[]
+  linkedin_url: string | null
+  twitter_url: string | null
   status: string
 }
 
@@ -21,28 +32,40 @@ const STATUS_OPTIONS = [
   { value: "archived", label: "Archived" },
 ]
 
-function fieldsFor(row?: DoctorRow): EntityFieldConfig[] {
+function fieldsFor(row: DoctorRow | undefined, departmentOptions: { value: string; label: string }[]): EntityFieldConfig[] {
   return [
     { name: "full_name", label: "Full name", required: true, defaultValue: row?.full_name },
     { name: "specialization", label: "Specialization", required: true, defaultValue: row?.specialization },
-    { name: "title", label: "Title (e.g. Senior Consultant)" },
-    { name: "years_experience", label: "Years of experience", type: "number" },
-    { name: "biography", label: "Biography", type: "textarea" },
-    { name: "email", label: "Email" },
-    { name: "phone", label: "Phone" },
+    { name: "departmentId", label: "Department", type: "select", options: [{ value: "", label: "None" }, ...departmentOptions], defaultValue: row?.department_id ?? "" },
+    { name: "title", label: "Title (e.g. Senior Consultant)", defaultValue: row?.title ?? "" },
+    { name: "years_experience", label: "Years of experience", type: "number", defaultValue: row?.years_experience ? String(row.years_experience) : undefined },
+    { name: "biography", label: "Biography", type: "textarea", defaultValue: row?.biography ?? "" },
+    { name: "email", label: "Email", defaultValue: row?.email ?? "" },
+    { name: "phone", label: "Phone", defaultValue: row?.phone ?? "" },
+    { name: "qualifications", label: "Qualifications (one per line)", type: "textarea", defaultValue: row?.qualifications?.join("\n") ?? "" },
+    { name: "languages", label: "Languages (comma separated)", defaultValue: row?.languages?.join(", ") ?? "" },
+    { name: "linkedinUrl", label: "LinkedIn URL", defaultValue: row?.linkedin_url ?? "" },
+    { name: "twitterUrl", label: "Twitter/X URL", defaultValue: row?.twitter_url ?? "" },
+    { name: "photo", label: row ? "Replace photo" : "Photo", type: "file", accept: "image/*", hint: "Leave blank to keep the current photo." },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
   ]
 }
 
 export default async function AdminDoctorsPage() {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from("margaret_doctors")
-    .select("id, full_name, specialization, status")
-    .is("deleted_at", null)
-    .order("sort_order", { ascending: true })
+  const [{ data }, { data: departments }] = await Promise.all([
+    supabase
+      .from("margaret_doctors")
+      .select(
+        "id, full_name, specialization, department_id, title, years_experience, biography, email, phone, qualifications, languages, linkedin_url, twitter_url, status"
+      )
+      .is("deleted_at", null)
+      .order("sort_order", { ascending: true }),
+    supabase.from("margaret_departments").select("id, name").is("deleted_at", null).order("name"),
+  ])
 
   const doctors = (data ?? []) as DoctorRow[]
+  const departmentOptions = (departments ?? []).map((d) => ({ value: d.id, label: d.name }))
 
   const columns: DataTableColumn[] = [
     { key: "full_name", label: "Name" },
@@ -62,6 +85,11 @@ export default async function AdminDoctorsPage() {
     ],
     actions: (
       <div className="flex justify-end gap-1">
+        <Button variant="ghost" size="icon-sm" aria-label="Manage availability & publications" asChild>
+          <Link href={`/admin/doctors/${row.id}`}>
+            <Eye className="size-4" aria-hidden="true" />
+          </Link>
+        </Button>
         <EntityFormDialog
           trigger={
             <Button variant="ghost" size="icon-sm" aria-label="Edit">
@@ -69,7 +97,7 @@ export default async function AdminDoctorsPage() {
             </Button>
           }
           title={`Edit ${row.full_name}`}
-          fields={fieldsFor(row)}
+          fields={fieldsFor(row, departmentOptions)}
           action={updateDoctor}
           hiddenFields={{ id: row.id }}
         />
@@ -97,7 +125,7 @@ export default async function AdminDoctorsPage() {
               </Button>
             }
             title="New Doctor"
-            fields={fieldsFor()}
+            fields={fieldsFor(undefined, departmentOptions)}
             action={createDoctor}
           />
         }
