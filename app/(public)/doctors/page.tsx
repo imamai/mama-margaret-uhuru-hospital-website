@@ -45,8 +45,8 @@ export default async function DoctorsPage({
           {doctors.map((doctor) => (
             <Card key={doctor.id} className="overflow-hidden py-0 text-center">
               <Link href={`/doctors/${doctor.slug}`} className="group">
-                <div className="relative aspect-square bg-muted">
-                  <SmartImage src={doctor.photo_url} alt={doctor.full_name} kind="doctor" className="object-contain" />
+                <div className="relative aspect-square">
+                  <SmartImage src={doctor.photo_url} alt={doctor.full_name} kind="doctor" />
                 </div>
                 <CardContent className="py-4">
                   <h2 className="font-semibold text-foreground group-hover:text-primary">{doctor.full_name}</h2>
