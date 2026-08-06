@@ -5,6 +5,7 @@ import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
 import type { ActionResult } from "@/lib/actions/forms"
+import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
 
 async function upsertSettings(entries: { key: string; value: unknown }[]): Promise<ActionResult> {
   const supabase = await createClient()
@@ -15,7 +16,10 @@ async function upsertSettings(entries: { key: string; value: unknown }[]): Promi
       .update({ setting_value: entry.value as never })
       .eq("setting_key", entry.key)
 
-    if (error) return { success: false, error: "You don't have permission to change settings." }
+    if (error) {
+      console.error(`Failed to update setting "${entry.key}":`, error)
+      return { success: false, error: "You don't have permission to change settings." }
+    }
   }
 
   revalidatePath("/", "layout")
@@ -54,13 +58,54 @@ const brandingSchema = z.object({
   accent: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex color like #19B5FE"),
   dark_grey: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex color"),
   light_grey: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex color"),
-  logo_url: z.string().trim().url().optional().or(z.literal("")),
-  favicon_url: z.string().trim().url().optional().or(z.literal("")),
 })
 
+async function getSettingValue(supabase: Awaited<ReturnType<typeof createClient>>, key: string): Promise<string | null> {
+  const { data, error } = await supabase.from("margaret_settings").select("setting_value").eq("setting_key", key).maybeSingle()
+  if (error || !data?.setting_value) return null
+  return typeof data.setting_value === "string" ? data.setting_value : null
+}
+
+async function resolveAssetUrl(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  formData: FormData,
+  fieldName: string,
+  existingValue: string | null
+): Promise<string> {
+  const rawValue = formData.get(fieldName)
+
+  if (rawValue instanceof File) {
+    const file = rawValue
+    if (!file.size) return existingValue ?? ""
+    if (file.size > MAX_UPLOAD_BYTES) return existingValue ?? ""
+
+    const uploadedUrl = await uploadPublicFile(supabase, "gallery", "branding", file)
+    return uploadedUrl ?? existingValue ?? ""
+  }
+
+  if (typeof rawValue === "string") {
+    const trimmedValue = rawValue.trim()
+    return trimmedValue || existingValue || ""
+  }
+
+  return existingValue ?? ""
+}
+
 export async function updateBrandingSettings(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
-  const parsed = brandingSchema.safeParse(Object.fromEntries(formData.entries()))
+  const supabase = await createClient()
+  const payload = Object.fromEntries(
+    Array.from(formData.entries())
+      .filter(([, value]) => !(value instanceof File))
+      .map(([key, value]) => [key, typeof value === "string" ? value : String(value)])
+  )
+
+  const parsed = brandingSchema.safeParse(payload)
   if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+
+  const existingLogoUrl = await getSettingValue(supabase, "logo_url")
+  const existingFaviconUrl = await getSettingValue(supabase, "favicon_url")
+  const logoUrl = await resolveAssetUrl(supabase, formData, "logo_url", existingLogoUrl)
+  const faviconUrl = await resolveAssetUrl(supabase, formData, "favicon_url", existingFaviconUrl)
 
   return upsertSettings([
     {
@@ -73,8 +118,8 @@ export async function updateBrandingSettings(_prev: ActionResult | null, formDat
         light_grey: parsed.data.light_grey,
       },
     },
-    { key: "logo_url", value: parsed.data.logo_url || null },
-    { key: "favicon_url", value: parsed.data.favicon_url || null },
+    { key: "logo_url", value: logoUrl },
+    { key: "favicon_url", value: faviconUrl },
   ])
 }
 

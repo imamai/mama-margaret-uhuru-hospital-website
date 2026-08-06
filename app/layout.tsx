@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -66,19 +67,6 @@ export default async function RootLayout({
             __html: `:root{--brand-primary:${brand_colors.primary};--brand-deep:${brand_colors.deep};--brand-accent:${brand_colors.accent};--brand-dark-grey:${brand_colors.dark_grey};--brand-light-grey:${brand_colors.light_grey};}`,
           }}
         />
-        {settings.google_analytics_id ? (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${settings.google_analytics_id}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${settings.google_analytics_id}');`,
-              }}
-            />
-          </>
-        ) : null}
       </head>
       <body className="min-h-full flex flex-col">
         <a href="#main-content" className="skip-link">
@@ -90,6 +78,17 @@ export default async function RootLayout({
             <Toaster position="top-center" />
           </TooltipProvider>
         </ThemeProvider>
+        {settings.google_analytics_id ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${settings.google_analytics_id}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${settings.google_analytics_id}');`}
+            </Script>
+          </>
+        ) : null}
       </body>
     </html>
   );

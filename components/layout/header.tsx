@@ -23,9 +23,15 @@ export async function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2.5 font-semibold">
           {settings.logo_url ? (
-            <Image src={settings.logo_url} alt={settings.hospital_name} width={36} height={36} className="rounded" />
+            <Image
+              src={settings.logo_url}
+              alt={settings.hospital_name}
+              width={56}
+              height={56}
+              className="size-14 object-contain"
+            />
           ) : (
-            <span className="flex size-9 items-center justify-center rounded-lg bg-brand-deep text-sm font-bold text-white">
+            <span className="flex size-14 items-center justify-center rounded-lg bg-brand-deep text-sm font-bold text-white">
               {settings.hospital_short_name.slice(0, 3)}
             </span>
           )}

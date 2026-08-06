@@ -35,12 +35,14 @@ export function SettingsForm({
   }, [state])
 
   return (
-    <form action={formAction} className="max-w-xl space-y-4">
+    <form action={formAction} encType="multipart/form-data" className="max-w-xl space-y-4">
       {fields.map((field) => (
         <div key={field.name} className="space-y-1.5">
           <Label htmlFor={field.name}>{field.label}</Label>
           {field.type === "textarea" ? (
             <Textarea id={field.name} name={field.name} defaultValue={field.defaultValue} rows={3} />
+          ) : field.type === "file" ? (
+            <Input id={field.name} name={field.name} type="file" accept={field.accept} required={field.required} />
           ) : (
             <Input id={field.name} name={field.name} type={field.type ?? "text"} defaultValue={field.defaultValue} />
           )}

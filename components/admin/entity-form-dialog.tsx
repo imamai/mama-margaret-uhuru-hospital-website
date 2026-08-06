@@ -79,7 +79,7 @@ export function EntityFormDialog({
           {description ? <DialogDescription>{description}</DialogDescription> : null}
         </DialogHeader>
 
-        <form action={formAction} className="space-y-4">
+        <form action={formAction} encType="multipart/form-data" className="space-y-4">
           {Object.entries(hiddenFields ?? {}).map(([name, value]) => (
             <input key={name} type="hidden" name={name} value={value} />
           ))}

@@ -28,6 +28,15 @@ export type SiteSettings = {
   google_maps_embed_url: string
 }
 
+// next.config.ts only whitelists this host for next/image; anything else (e.g. a
+// stale Google Drive link from before logo_url/favicon_url became file uploads)
+// would crash the app at render time, so drop it here instead.
+const ALLOWED_ASSET_HOST_PREFIX = "https://sedsjjmjnikppfaecaya.supabase.co/storage/v1/object/public/"
+
+function sanitizeAssetUrl(url: string | null | undefined): string | null {
+  return url && url.startsWith(ALLOWED_ASSET_HOST_PREFIX) ? url : null
+}
+
 const DEFAULTS: SiteSettings = {
   hospital_name: "Mama Margaret Uhuru Hospital",
   hospital_short_name: "MMUH",
@@ -68,5 +77,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       settings[key] = row.setting_value
     }
   }
+  settings.logo_url = sanitizeAssetUrl(settings.logo_url)
+  settings.favicon_url = sanitizeAssetUrl(settings.favicon_url)
   return settings
 })

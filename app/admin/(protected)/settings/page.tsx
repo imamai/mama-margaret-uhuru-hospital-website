@@ -55,8 +55,22 @@ export default async function AdminSettingsPage() {
               { name: "accent", label: "Accent color", defaultValue: settings.brand_colors.accent },
               { name: "dark_grey", label: "Dark grey", defaultValue: settings.brand_colors.dark_grey },
               { name: "light_grey", label: "Light grey", defaultValue: settings.brand_colors.light_grey },
-              { name: "logo_url", label: "Logo URL", defaultValue: settings.logo_url ?? "" },
-              { name: "favicon_url", label: "Favicon URL", defaultValue: settings.favicon_url ?? "" },
+              {
+                name: "logo_url",
+                label: "Logo upload",
+                type: "file",
+                accept: "image/*",
+                hint: "Upload a new logo image. Leave blank to keep the current logo.",
+                defaultValue: settings.logo_url ?? "",
+              },
+              {
+                name: "favicon_url",
+                label: "Favicon upload",
+                type: "file",
+                accept: "image/*",
+                hint: "Upload a square favicon image. Leave blank to keep the current favicon.",
+                defaultValue: settings.favicon_url ?? "",
+              },
             ]}
           />
         </TabsContent>
