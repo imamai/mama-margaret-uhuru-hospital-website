@@ -111,12 +111,13 @@ export async function updateDepartment(_prev: ActionResult | null, formData: For
   }
   if (bannerUrl) update.banner_image_url = bannerUrl
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_departments")
     .update(update as never)
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -124,9 +125,9 @@ export async function updateDepartment(_prev: ActionResult | null, formData: For
 
 export async function deleteDepartment(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_departments").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_departments").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }

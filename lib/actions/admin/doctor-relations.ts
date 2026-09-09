@@ -46,9 +46,9 @@ export async function addDoctorAvailability(_prev: ActionResult | null, formData
 
 export async function deleteDoctorAvailability(id: string, doctorId: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_doctor_availability").delete().eq("id", id)
+  const { data, error } = await supabase.from("margaret_doctor_availability").delete().eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate(doctorId)
   return { success: true }
@@ -86,9 +86,9 @@ export async function addDoctorPublication(_prev: ActionResult | null, formData:
 
 export async function deleteDoctorPublication(id: string, doctorId: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_doctor_publications").delete().eq("id", id)
+  const { data, error } = await supabase.from("margaret_doctor_publications").delete().eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate(doctorId)
   return { success: true }

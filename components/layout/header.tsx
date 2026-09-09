@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 import { EmergencyBar } from "@/components/layout/emergency-bar"
+import { MobileNav } from "@/components/layout/mobile-nav"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -78,11 +79,10 @@ export async function Header() {
         </NavigationMenu>
 
         <div className="flex items-center gap-2">
-          {null}
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/appointments">Book Appointment</Link>
           </Button>
-          {null}
+          <MobileNav items={primaryNav} hospitalName={settings.hospital_short_name || settings.hospital_name} />
         </div>
       </div>
     </header>

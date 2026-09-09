@@ -34,7 +34,7 @@ export async function updateApplicationStatus(
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_job_applications")
     .update({
       status: parsed.data.status,
@@ -42,8 +42,9 @@ export async function updateApplicationStatus(
       reviewed_at: new Date().toISOString(),
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/jobs/${parsed.data.jobId}/applications`)
   return { success: true }

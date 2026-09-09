@@ -82,6 +82,30 @@ export function SupplierRegistrationForm({ categories }: { categories: { id: str
         <Input id="address" name="address" />
       </div>
 
+      <div className="space-y-4 rounded-lg border p-4">
+        <p className="text-sm font-medium text-foreground">Registration documents</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="kraPinCertificate">KRA PIN Certificate</Label>
+            <Input id="kraPinCertificate" name="kraPinCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png" required />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="businessRegistrationCertificate">Business Registration Certificate</Label>
+            <Input
+              id="businessRegistrationCertificate"
+              name="businessRegistrationCertificate"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              required
+            />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="taxComplianceCertificate">Tax Compliance Certificate (optional)</Label>
+          <Input id="taxComplianceCertificate" name="taxComplianceCertificate" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+        </div>
+      </div>
+
       {categories.length > 0 ? (
         <div className="space-y-1.5">
           <Label htmlFor="categoryId">Supplier category</Label>

@@ -22,12 +22,13 @@ export async function updateSupplierStatus(id: string, status: (typeof STATUSES)
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_suppliers")
     .update({ status: parsed.data.status, reviewed_by: user?.id ?? null, reviewed_at: new Date().toISOString() })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath("/admin/suppliers")
   return { success: true }

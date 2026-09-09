@@ -92,16 +92,16 @@ export async function updatePage(_prev: ActionResult | null, formData: FormData)
   if (imageUrl) update.featured_image_url = imageUrl
 
   const { data, error } = await supabase.from("margaret_pages").update(update as never).eq("id", parsed.data.id).select("slug").maybeSingle()
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data) return { success: false, error: "You don't have permission to do this." }
   revalidate(data?.slug)
   return { success: true }
 }
 
 export async function deletePage(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_pages").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_pages").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }

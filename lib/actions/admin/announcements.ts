@@ -61,7 +61,7 @@ export async function updateAnnouncement(_prev: ActionResult | null, formData: F
   if (!parsed.data.id) return { success: false, error: "Missing record id." }
 
   const supabase = await createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_announcements")
     .update({
       title: parsed.data.title,
@@ -73,17 +73,18 @@ export async function updateAnnouncement(_prev: ActionResult | null, formData: F
       status: parsed.data.status,
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }
 
 export async function deleteAnnouncement(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_announcements").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_announcements").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }

@@ -54,7 +54,7 @@ export async function updateServiceCategory(_prev: ActionResult | null, formData
   if (!parsed.data.id) return { success: false, error: "Missing record id." }
 
   const supabase = await createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_service_categories")
     .update({
       name: parsed.data.name,
@@ -63,17 +63,18 @@ export async function updateServiceCategory(_prev: ActionResult | null, formData
       status: parsed.data.status,
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }
 
 export async function deleteServiceCategory(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_service_categories").delete().eq("id", id)
+  const { data, error } = await supabase.from("margaret_service_categories").delete().eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }

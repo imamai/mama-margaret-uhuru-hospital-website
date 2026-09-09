@@ -104,8 +104,8 @@ export async function updateHeroSlide(_prev: ActionResult | null, formData: Form
     update.image_url = imageUrl
   }
 
-  const { error } = await supabase.from("margaret_hero_slides").update(update as never).eq("id", parsed.data.id)
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  const { data, error } = await supabase.from("margaret_hero_slides").update(update as never).eq("id", parsed.data.id).select("id")
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -113,12 +113,13 @@ export async function updateHeroSlide(_prev: ActionResult | null, formData: Form
 
 export async function deleteHeroSlide(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_hero_slides")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -144,12 +145,15 @@ async function swapWithNeighbor(id: string, direction: "up" | "down"): Promise<A
   const current = slides[index]
   const neighbor = slides[neighborIndex]
 
-  const [{ error: err1 }, { error: err2 }] = await Promise.all([
-    supabase.from("margaret_hero_slides").update({ sort_order: neighbor.sort_order }).eq("id", current.id),
-    supabase.from("margaret_hero_slides").update({ sort_order: current.sort_order }).eq("id", neighbor.id),
+  const [
+    { data: d1, error: err1 },
+    { data: d2, error: err2 },
+  ] = await Promise.all([
+    supabase.from("margaret_hero_slides").update({ sort_order: neighbor.sort_order }).eq("id", current.id).select("id"),
+    supabase.from("margaret_hero_slides").update({ sort_order: current.sort_order }).eq("id", neighbor.id).select("id"),
   ])
 
-  if (err1 || err2) return { success: false, error: "You don't have permission to do this." }
+  if (err1 || err2 || !d1?.length || !d2?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }

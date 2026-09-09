@@ -130,9 +130,9 @@ export async function updateDoctor(_prev: ActionResult | null, formData: FormDat
   }
   if (photoUrl) update.photo_url = photoUrl
 
-  const { error } = await supabase.from("margaret_doctors").update(update as never).eq("id", parsed.data.id)
+  const { data, error } = await supabase.from("margaret_doctors").update(update as never).eq("id", parsed.data.id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -140,9 +140,9 @@ export async function updateDoctor(_prev: ActionResult | null, formData: FormDat
 
 export async function deleteDoctor(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_doctors").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_doctors").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }

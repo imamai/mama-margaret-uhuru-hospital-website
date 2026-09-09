@@ -11,12 +11,13 @@ async function upsertSettings(entries: { key: string; value: unknown }[]): Promi
   const supabase = await createClient()
 
   for (const entry of entries) {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("margaret_settings")
       .update({ setting_value: entry.value as never })
       .eq("setting_key", entry.key)
+      .select("setting_key")
 
-    if (error) {
+    if (error || !data?.length) {
       console.error(`Failed to update setting "${entry.key}":`, error)
       return { success: false, error: "You don't have permission to change settings." }
     }

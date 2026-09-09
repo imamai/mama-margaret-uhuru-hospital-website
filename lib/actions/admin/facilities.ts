@@ -91,17 +91,17 @@ export async function updateFacility(_prev: ActionResult | null, formData: FormD
   }
   if (imageUrl) update.image_url = imageUrl
 
-  const { error } = await supabase.from("margaret_facilities").update(update as never).eq("id", parsed.data.id)
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  const { data, error } = await supabase.from("margaret_facilities").update(update as never).eq("id", parsed.data.id).select("id")
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }
 
 export async function deleteFacility(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_facilities").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_facilities").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }

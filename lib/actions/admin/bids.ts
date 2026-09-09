@@ -27,12 +27,13 @@ export async function updateBidStatus(
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_bids")
     .update({ status: parsed.data.status, reviewed_by: user?.id ?? null, reviewed_at: new Date().toISOString() })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   return { success: true }
@@ -55,15 +56,16 @@ export async function updateBidScores(_prev: ActionResult | null, formData: Form
   if (!parsed.success) return { success: false, error: "Invalid input." }
 
   const supabase = await createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_bids")
     .update({
       technical_score: parsed.data.technicalScore ? Number(parsed.data.technicalScore) : null,
       financial_score: parsed.data.financialScore ? Number(parsed.data.financialScore) : null,
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   return { success: true }

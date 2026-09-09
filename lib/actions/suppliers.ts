@@ -27,6 +27,24 @@ const registerSchema = z
 
 export type SupplierRegisterResult = ActionResult | { success: true; needsEmailConfirmation: true }
 
+const MAX_REGISTRATION_DOC_BYTES = 10 * 1024 * 1024
+
+const REGISTRATION_DOCUMENT_FIELDS = [
+  { field: "kraPinCertificate", documentType: "kra_pin_certificate", title: "KRA PIN Certificate", required: true },
+  {
+    field: "businessRegistrationCertificate",
+    documentType: "business_registration_certificate",
+    title: "Business Registration Certificate",
+    required: true,
+  },
+  {
+    field: "taxComplianceCertificate",
+    documentType: "tax_compliance_certificate",
+    title: "Tax Compliance Certificate",
+    required: false,
+  },
+] as const
+
 export async function registerSupplier(
   _prev: SupplierRegisterResult | null,
   formData: FormData
@@ -46,6 +64,16 @@ export async function registerSupplier(
 
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+  }
+
+  for (const doc of REGISTRATION_DOCUMENT_FIELDS) {
+    const file = formData.get(doc.field)
+    if (doc.required && (!(file instanceof File) || file.size === 0)) {
+      return { success: false, error: `Please attach your ${doc.title}.` }
+    }
+    if (file instanceof File && file.size > MAX_REGISTRATION_DOC_BYTES) {
+      return { success: false, error: `${doc.title} must be smaller than 10MB.` }
+    }
   }
 
   const supabase = await createClient()
@@ -71,21 +99,44 @@ export async function registerSupplier(
     }
   }
 
-  const { error: insertError } = await supabase.from("margaret_suppliers").insert({
-    user_id: signUpData.user.id,
-    company_name: parsed.data.companyName,
-    contact_person: parsed.data.contactPerson,
-    email: parsed.data.email,
-    phone: parsed.data.phone,
-    registration_number: parsed.data.registrationNumber || null,
-    kra_pin: parsed.data.kraPin || null,
-    address: parsed.data.address || null,
-    category_id: parsed.data.categoryId || null,
-    status: "pending",
-  })
+  const { data: supplier, error: insertError } = await supabase
+    .from("margaret_suppliers")
+    .insert({
+      user_id: signUpData.user.id,
+      company_name: parsed.data.companyName,
+      contact_person: parsed.data.contactPerson,
+      email: parsed.data.email,
+      phone: parsed.data.phone,
+      registration_number: parsed.data.registrationNumber || null,
+      kra_pin: parsed.data.kraPin || null,
+      address: parsed.data.address || null,
+      category_id: parsed.data.categoryId || null,
+      status: "pending",
+    })
+    .select("id")
+    .single()
 
-  if (insertError) {
+  if (insertError || !supplier) {
     return { success: false, error: "Your account was created but the supplier profile could not be saved. Please contact us." }
+  }
+
+  for (const doc of REGISTRATION_DOCUMENT_FIELDS) {
+    const file = formData.get(doc.field)
+    if (!(file instanceof File) || file.size === 0) continue
+
+    const path = `suppliers/${supplier.id}/${Date.now()}-${file.name}`
+    const { error: uploadError } = await supabase.storage
+      .from("supplier-documents")
+      .upload(path, file, { contentType: file.type, upsert: false })
+
+    if (uploadError) continue
+
+    await supabase.from("margaret_supplier_documents").insert({
+      supplier_id: supplier.id,
+      document_type: doc.documentType,
+      title: doc.title,
+      file_url: path,
+    })
   }
 
   if (!signUpData.session) {

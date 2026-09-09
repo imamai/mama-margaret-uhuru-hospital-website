@@ -67,7 +67,7 @@ export async function updateTender(_prev: ActionResult | null, formData: FormDat
   if (!parsed.data.id) return { success: false, error: "Missing record id." }
 
   const supabase = await createClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_tenders")
     .update({
       title: parsed.data.title,
@@ -80,8 +80,9 @@ export async function updateTender(_prev: ActionResult | null, formData: FormDat
       status: parsed.data.status,
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -89,9 +90,9 @@ export async function updateTender(_prev: ActionResult | null, formData: FormDat
 
 export async function deleteTender(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_tenders").update({ deleted_at: new Date().toISOString() }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_tenders").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }
@@ -116,7 +117,7 @@ export async function answerClarification(_prev: ActionResult | null, formData: 
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("margaret_tender_clarifications")
     .update({
       answer: parsed.data.answer,
@@ -125,8 +126,9 @@ export async function answerClarification(_prev: ActionResult | null, formData: 
       answered_at: new Date().toISOString(),
     })
     .eq("id", parsed.data.id)
+    .select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   revalidatePath("/tenders")
@@ -182,9 +184,9 @@ export async function uploadTenderDocument(_prev: ActionResult | null, formData:
 
 export async function deleteTenderDocument(id: string, tenderId: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_tender_documents").delete().eq("id", id)
+  const { data, error } = await supabase.from("margaret_tender_documents").delete().eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/tenders/${tenderId}`)
   revalidatePath("/tenders")
@@ -217,7 +219,13 @@ export async function recordTenderAward(_prev: ActionResult | null, formData: Fo
 
   if (awardError) return { success: false, error: "You don't have permission to do this." }
 
-  await supabase.from("margaret_tenders").update({ status: "awarded" }).eq("id", parsed.data.tenderId)
+  const { data: awarded, error: statusError } = await supabase
+    .from("margaret_tenders")
+    .update({ status: "awarded" })
+    .eq("id", parsed.data.tenderId)
+    .select("id")
+
+  if (statusError || !awarded?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   revalidatePath("/tenders")

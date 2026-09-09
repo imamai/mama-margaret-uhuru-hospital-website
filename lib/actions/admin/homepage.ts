@@ -12,9 +12,9 @@ function revalidate() {
 
 export async function toggleSectionVisibility(id: string, nextVisible: boolean): Promise<ActionResult> {
   const supabase = await createClient()
-  const { error } = await supabase.from("margaret_homepage_sections").update({ is_visible: nextVisible }).eq("id", id)
+  const { data, error } = await supabase.from("margaret_homepage_sections").update({ is_visible: nextVisible }).eq("id", id).select("id")
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
   revalidate()
   return { success: true }
 }
@@ -38,12 +38,15 @@ async function swapWithNeighbor(id: string, direction: "up" | "down"): Promise<A
   const current = sections[index]
   const neighbor = sections[neighborIndex]
 
-  const [{ error: err1 }, { error: err2 }] = await Promise.all([
-    supabase.from("margaret_homepage_sections").update({ sort_order: neighbor.sort_order }).eq("id", current.id),
-    supabase.from("margaret_homepage_sections").update({ sort_order: current.sort_order }).eq("id", neighbor.id),
+  const [
+    { data: d1, error: err1 },
+    { data: d2, error: err2 },
+  ] = await Promise.all([
+    supabase.from("margaret_homepage_sections").update({ sort_order: neighbor.sort_order }).eq("id", current.id).select("id"),
+    supabase.from("margaret_homepage_sections").update({ sort_order: current.sort_order }).eq("id", neighbor.id).select("id"),
   ])
 
-  if (err1 || err2) return { success: false, error: "You don't have permission to do this." }
+  if (err1 || err2 || !d1?.length || !d2?.length) return { success: false, error: "You don't have permission to do this." }
 
   revalidate()
   return { success: true }

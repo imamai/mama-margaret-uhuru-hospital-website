@@ -98,9 +98,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   })).filter((group) => group.items.length > 0)
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <AdminSidebar groups={visibleGroups} hospitalName={settings.hospital_short_name} />
-      <main className="flex-1 overflow-y-auto bg-muted/20 p-8">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-muted/20 p-4 sm:p-6 lg:p-8">{children}</main>
     </div>
   )
 }
