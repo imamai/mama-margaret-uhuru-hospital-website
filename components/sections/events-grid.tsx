@@ -1,6 +1,7 @@
 import { CalendarDays, MapPin } from "lucide-react"
 
 import { SectionHeading } from "@/components/common/section-heading"
+import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { listUpcomingEvents } from "@/lib/data/events"
 
@@ -14,8 +15,11 @@ export async function EventsGrid() {
         <SectionHeading eyebrow="What's on" title="Upcoming Events" />
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
-            <Card key={event.id}>
-              <CardContent className="space-y-2 py-2">
+            <Card key={event.id} className="overflow-hidden py-0">
+              <div className="relative h-36">
+                <SmartImage src={event.featured_image_url} alt={event.title} kind="event" />
+              </div>
+              <CardContent className="space-y-2 py-4">
                 <p className="text-xs font-semibold tracking-wide text-brand-deep uppercase dark:text-brand-accent">
                   {event.event_type}
                 </p>

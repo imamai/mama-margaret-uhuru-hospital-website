@@ -1,6 +1,5 @@
-import { Award } from "lucide-react"
-
 import { SectionHeading } from "@/components/common/section-heading"
+import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { getAwards } from "@/lib/data/homepage"
 
@@ -13,18 +12,18 @@ export async function AwardsSection() {
       <SectionHeading eyebrow="Recognition" title="Awards & Accreditations" />
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {awards.map((award) => (
-          <Card key={award.id}>
-            <CardContent className="flex items-start gap-3 py-2">
-              <Award className="mt-0.5 size-6 shrink-0 text-brand-deep dark:text-brand-accent" aria-hidden="true" />
-              <div>
-                <h3 className="font-semibold text-foreground">{award.title}</h3>
-                {award.awarding_body ? (
-                  <p className="text-sm text-muted-foreground">
-                    {award.awarding_body}
-                    {award.awarded_year ? ` · ${award.awarded_year}` : ""}
-                  </p>
-                ) : null}
-              </div>
+          <Card key={award.id} className="overflow-hidden py-0">
+            <div className="relative h-32">
+              <SmartImage src={award.image_url} alt={award.title} kind="award" />
+            </div>
+            <CardContent className="py-4">
+              <h3 className="font-semibold text-foreground">{award.title}</h3>
+              {award.awarding_body ? (
+                <p className="text-sm text-muted-foreground">
+                  {award.awarding_body}
+                  {award.awarded_year ? ` · ${award.awarded_year}` : ""}
+                </p>
+              ) : null}
             </CardContent>
           </Card>
         ))}

@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-import { PlaceholderImage } from "@/components/common/placeholder-image"
+import { PlaceholderImage, type PlaceholderKind } from "@/components/common/placeholder-image"
 import { cn } from "@/lib/utils"
 
 /**
@@ -18,7 +18,7 @@ export function SmartImage({
 }: {
   src: string | null | undefined
   alt: string
-  kind?: "building" | "doctor" | "people" | "generic"
+  kind?: PlaceholderKind
   className?: string
   sizes?: string
   fill?: boolean

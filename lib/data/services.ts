@@ -17,7 +17,7 @@ export const listServices = cache(async (search?: string) => {
   const supabase = await createClient()
   let query = supabase
     .from("margaret_services")
-    .select("id, name, slug, category_id, description, price_info")
+    .select("id, name, slug, category_id, description, image_url, price_info")
     .eq("status", "published")
     .order("sort_order", { ascending: true })
 

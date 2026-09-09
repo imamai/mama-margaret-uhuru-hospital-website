@@ -59,8 +59,11 @@ export default async function DepartmentDetailPage({
               <h2 className="mb-4 text-xl font-bold">Services</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 {department.services.map((service) => (
-                  <Card key={service.id}>
-                    <CardContent className="py-2">
+                  <Card key={service.id} className="overflow-hidden py-0">
+                    <div className="relative h-32">
+                      <SmartImage src={service.image_url} alt={service.name} kind="generic" />
+                    </div>
+                    <CardContent className="py-4">
                       <h3 className="font-semibold text-foreground">{service.name}</h3>
                       {service.description ? (
                         <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{service.description}</p>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import { SectionHeading } from "@/components/common/section-heading"
+import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { listServiceCategories, listServices } from "@/lib/data/services"
@@ -43,8 +44,11 @@ export default async function ServicesPage({
                 {category.description ? <p className="mb-4 text-sm text-muted-foreground">{category.description}</p> : null}
                 <div className="grid gap-4 sm:grid-cols-2">
                   {(servicesByCategory.get(category.id) ?? []).map((service) => (
-                    <Card key={service.id}>
-                      <CardContent className="py-2">
+                    <Card key={service.id} className="overflow-hidden py-0">
+                      <div className="relative h-32">
+                        <SmartImage src={service.image_url} alt={service.name} kind="generic" />
+                      </div>
+                      <CardContent className="py-4">
                         <h3 className="font-semibold text-foreground">{service.name}</h3>
                         {service.description ? (
                           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{service.description}</p>

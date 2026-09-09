@@ -1,13 +1,16 @@
-import { Building2, ImageIcon, Stethoscope, Users } from "lucide-react"
+import { Award, Building2, CalendarDays, Handshake, ImageIcon, Stethoscope, Users } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-type PlaceholderKind = "building" | "doctor" | "people" | "generic"
+export type PlaceholderKind = "building" | "doctor" | "people" | "award" | "event" | "partner" | "generic"
 
 const ICONS: Record<PlaceholderKind, typeof Building2> = {
   building: Building2,
   doctor: Stethoscope,
   people: Users,
+  award: Award,
+  event: CalendarDays,
+  partner: Handshake,
   generic: ImageIcon,
 }
 
