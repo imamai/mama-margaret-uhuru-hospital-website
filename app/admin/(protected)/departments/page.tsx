@@ -40,7 +40,7 @@ function fieldsFor(row?: DepartmentRow): EntityFieldConfig[] {
     { name: "phone", label: "Phone", defaultValue: row?.phone ?? "" },
     { name: "email", label: "Email", defaultValue: row?.email ?? "" },
     { name: "operatingHours", label: "Operating hours (one per line)", type: "textarea", defaultValue: hoursText, hint: "Format: Day: Hours, e.g. Monday: 8:00 AM - 5:00 PM" },
-    { name: "bannerImage", label: row ? "Replace banner image" : "Banner image", type: "file", accept: "image/*", hint: "Leave blank to keep the current image." },
+    { name: "bannerImage", label: row ? "Replace banner image" : "Banner image", type: "image", hint: "Leave blank to keep the current image." },
     { name: "seoTitle", label: "SEO title (optional)", defaultValue: row?.seo_title ?? "" },
     { name: "seoDescription", label: "SEO description (optional)", type: "textarea", defaultValue: row?.seo_description ?? "" },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },

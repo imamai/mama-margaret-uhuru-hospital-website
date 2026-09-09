@@ -36,13 +36,23 @@ export function PlaceholderImage({
       role="img"
       aria-label={label ?? "Image coming soon"}
       className={cn(
-        "flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-brand-deep via-brand-primary to-brand-accent text-white",
+        "relative flex h-full w-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-brand-deep via-brand-primary to-brand-accent text-white transition-transform duration-500 ease-out group-hover/card:scale-105",
         className
       )}
     >
-      <Icon className="size-8 opacity-90" aria-hidden="true" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.09)_0px,rgba(255,255,255,0.09)_2px,transparent_2px,transparent_14px)]"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_28%_22%,rgba(255,255,255,0.3),transparent_60%)]"
+      />
+      <span className="relative flex size-14 items-center justify-center rounded-full bg-white/15 shadow-lg ring-1 ring-white/25 backdrop-blur-sm">
+        <Icon className="size-7 opacity-95" aria-hidden="true" />
+      </span>
       {label ? (
-        <span className="px-4 text-center text-xs font-medium opacity-90">{label}</span>
+        <span className="relative px-4 text-center text-xs font-medium opacity-90">{label}</span>
       ) : null}
     </div>
   )

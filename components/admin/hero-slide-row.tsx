@@ -49,9 +49,8 @@ function fieldsFor(slide: HeroSlideListItem): EntityFieldConfig[] {
     {
       name: "image",
       label: "Replace image",
-      type: "file",
-      accept: "image/*",
-      hint: "Leave blank to keep the current image. Recommended: at least 1600×900px, under 10MB.",
+      type: "image",
+      hint: "Leave both blank to keep the current image. Recommended: at least 1600×900px, under 10MB.",
     },
     {
       name: "focalPoint",

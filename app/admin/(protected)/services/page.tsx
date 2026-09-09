@@ -47,7 +47,7 @@ export default async function AdminServicesPage() {
       { name: "departmentId", label: "Department", type: "select", options: [{ value: "", label: "None" }, ...departmentOptions], defaultValue: row?.department_id ?? "" },
       { name: "description", label: "Description", type: "textarea" },
       { name: "priceInfo", label: "Price info", defaultValue: row?.price_info ?? "" },
-      { name: "image", label: row ? "Replace image" : "Image", type: "file", accept: "image/*", hint: "Leave blank to keep the current image." },
+      { name: "image", label: row ? "Replace image" : "Image", type: "image", hint: "Leave blank to keep the current image." },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
     ]
   }

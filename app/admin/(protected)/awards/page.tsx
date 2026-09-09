@@ -37,7 +37,7 @@ export default async function AdminAwardsPage() {
       { name: "departmentId", label: "Department", type: "select", options: [{ value: "", label: "None" }, ...departmentOptions], defaultValue: row?.department_id ?? "" },
       { name: "description", label: "Description", type: "textarea" },
       { name: "awardedYear", label: "Year awarded", type: "number", defaultValue: row?.awarded_year ? String(row.awarded_year) : undefined },
-      { name: "image", label: row ? "Replace image" : "Image", type: "file", accept: "image/*" },
+      { name: "image", label: row ? "Replace image" : "Image", type: "image" },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "published" },
     ]
   }

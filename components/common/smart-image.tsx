@@ -33,7 +33,7 @@ export function SmartImage({
       alt={alt}
       fill={fill}
       sizes={sizes ?? "(min-width: 1024px) 33vw, 100vw"}
-      className={cn("object-cover", className)}
+      className={cn("object-cover transition-transform duration-500 ease-out group-hover/card:scale-105", className)}
     />
   )
 }

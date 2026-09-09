@@ -19,10 +19,8 @@ const NEW_SLIDE_FIELDS: EntityFieldConfig[] = [
   {
     name: "image",
     label: "Image",
-    type: "file",
-    accept: "image/*",
-    required: true,
-    hint: "Recommended: at least 1600×900px, under 10MB.",
+    type: "image",
+    hint: "Upload a file or paste an image URL. Recommended: at least 1600×900px, under 10MB.",
   },
   {
     name: "focalPoint",

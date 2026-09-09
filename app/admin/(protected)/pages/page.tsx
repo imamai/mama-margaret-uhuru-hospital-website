@@ -40,7 +40,7 @@ export default async function AdminPagesPage() {
       },
       { name: "excerpt", label: "Excerpt", type: "textarea", defaultValue: row?.excerpt ?? "" },
       { name: "body", label: "Body", type: "textarea", defaultValue: row ? blocksToText(row.content) : "", hint: "Separate paragraphs with a blank line." },
-      { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "file", accept: "image/*" },
+      { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "image" },
       { name: "seoTitle", label: "SEO title" },
       { name: "seoDescription", label: "SEO description", type: "textarea" },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },

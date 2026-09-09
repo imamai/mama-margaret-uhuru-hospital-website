@@ -36,7 +36,7 @@ export default async function AdminTestimonialsPage() {
       { name: "quote", label: "Quote", type: "textarea", required: true, defaultValue: row?.quote },
       { name: "rating", label: "Rating (1-5)", type: "number", defaultValue: row?.rating ? String(row.rating) : undefined },
       { name: "departmentId", label: "Department", type: "select", options: [{ value: "", label: "None" }, ...departmentOptions], defaultValue: row?.department_id ?? "" },
-      { name: "photo", label: row ? "Replace photo" : "Photo", type: "file", accept: "image/*" },
+      { name: "photo", label: row ? "Replace photo" : "Photo", type: "image" },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
     ]
   }

@@ -50,7 +50,7 @@ export default async function AdminNewsPage() {
       { name: "categoryId", label: "Category", type: "select", options: [{ value: "", label: "None" }, ...categoryOptions], defaultValue: row?.category_id ?? "" },
       { name: "excerpt", label: "Excerpt", type: "textarea", defaultValue: row?.excerpt ?? "" },
       { name: "body", label: "Body", type: "textarea", defaultValue: row ? blocksToText(row.content) : "", hint: "Separate paragraphs with a blank line." },
-      { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "file", accept: "image/*" },
+      { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "image" },
       { name: "authorName", label: "Author name", defaultValue: row?.author_name ?? "" },
       { name: "tags", label: "Tags (comma separated)", defaultValue: row?.tags?.join(", ") ?? "" },
       { name: "isFeatured", label: "Featured on homepage", type: "checkbox", defaultValue: String(row?.is_featured ?? false) },

@@ -36,7 +36,7 @@ export default async function AdminClinicsPage() {
       { name: "departmentId", label: "Department", type: "select", options: [{ value: "", label: "None" }, ...departmentOptions], defaultValue: row?.department_id ?? "" },
       { name: "description", label: "Description", type: "textarea" },
       { name: "services", label: "Services (comma separated)", defaultValue: row?.services?.join(", ") ?? "" },
-      { name: "bannerImage", label: row ? "Replace banner image" : "Banner image", type: "file", accept: "image/*", hint: "Leave blank to keep the current image." },
+      { name: "bannerImage", label: row ? "Replace banner image" : "Banner image", type: "image", hint: "Leave blank to keep the current image." },
       { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
     ]
   }

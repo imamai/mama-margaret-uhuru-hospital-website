@@ -20,7 +20,7 @@ function fieldsFor(row?: Row): EntityFieldConfig[] {
   return [
     { name: "name", label: "Name", required: true, defaultValue: row?.name },
     { name: "websiteUrl", label: "Website URL" },
-    { name: "logo", label: row ? "Replace logo" : "Logo", type: "file", accept: "image/*" },
+    { name: "logo", label: row ? "Replace logo" : "Logo", type: "image" },
     { name: "sortOrder", label: "Sort order", type: "number", defaultValue: "0" },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "active" },
   ]

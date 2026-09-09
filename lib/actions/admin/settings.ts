@@ -67,26 +67,32 @@ async function getSettingValue(supabase: Awaited<ReturnType<typeof createClient>
   return typeof data.setting_value === "string" ? data.setting_value : null
 }
 
+function isValidAssetUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    return url.protocol === "http:" || url.protocol === "https:"
+  } catch {
+    return false
+  }
+}
+
 async function resolveAssetUrl(
   supabase: Awaited<ReturnType<typeof createClient>>,
   formData: FormData,
   fieldName: string,
   existingValue: string | null
 ): Promise<string> {
-  const rawValue = formData.get(fieldName)
-
-  if (rawValue instanceof File) {
-    const file = rawValue
-    if (!file.size) return existingValue ?? ""
+  const file = formData.get(fieldName)
+  if (file instanceof File && file.size > 0) {
     if (file.size > MAX_UPLOAD_BYTES) return existingValue ?? ""
-
     const uploadedUrl = await uploadPublicFile(supabase, "gallery", "branding", file)
     return uploadedUrl ?? existingValue ?? ""
   }
 
-  if (typeof rawValue === "string") {
-    const trimmedValue = rawValue.trim()
-    return trimmedValue || existingValue || ""
+  const pastedUrl = formData.get(`${fieldName}Url`)
+  if (typeof pastedUrl === "string" && pastedUrl.trim() !== "") {
+    const trimmed = pastedUrl.trim()
+    return isValidAssetUrl(trimmed) ? trimmed : (existingValue ?? "")
   }
 
   return existingValue ?? ""

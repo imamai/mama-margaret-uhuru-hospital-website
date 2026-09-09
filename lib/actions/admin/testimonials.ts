@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
-import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
+import { resolveImageInput } from "@/lib/actions/admin/storage"
 import type { ActionResult } from "@/lib/actions/forms"
 
 const schema = z.object({
@@ -33,11 +33,7 @@ function revalidate() {
 }
 
 async function maybeUploadImage(supabase: Awaited<ReturnType<typeof createClient>>, formData: FormData): Promise<string | null | undefined> {
-  const file = formData.get("photo")
-  if (!(file instanceof File) || file.size === 0) return undefined
-  if (!file.type.startsWith("image/")) return null
-  if (file.size > MAX_UPLOAD_BYTES) return null
-  return uploadPublicFile(supabase, "gallery", "testimonials", file)
+  return resolveImageInput(supabase, formData, "photo", "gallery", "testimonials")
 }
 
 export async function createTestimonial(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {

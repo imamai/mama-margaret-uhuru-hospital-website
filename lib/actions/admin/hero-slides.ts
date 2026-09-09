@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
-import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
+import { resolveImageInput } from "@/lib/actions/admin/storage"
 import type { ActionResult } from "@/lib/actions/forms"
 
 const FOCAL_POINTS = [
@@ -44,15 +44,10 @@ export async function createHeroSlide(_prev: ActionResult | null, formData: Form
   const parsed = parse(formData)
   if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
 
-  const file = formData.get("image")
-  if (!(file instanceof File) || file.size === 0) return { success: false, error: "Please choose an image." }
-  if (!file.type.startsWith("image/")) return { success: false, error: "File must be an image." }
-  if (file.size > MAX_UPLOAD_BYTES) return { success: false, error: "Image must be smaller than 10MB." }
-
   const supabase = await createClient()
 
-  const imageUrl = await uploadPublicFile(supabase, "hero-media", "slides", file)
-  if (!imageUrl) return { success: false, error: "You don't have permission to upload images." }
+  const imageUrl = await resolveImageInput(supabase, formData, "image", "hero-media", "slides")
+  if (!imageUrl) return { success: false, error: "Please choose an image file or paste an image URL." }
 
   const { data: last } = await supabase
     .from("margaret_hero_slides")
@@ -94,15 +89,9 @@ export async function updateHeroSlide(_prev: ActionResult | null, formData: Form
     status: parsed.data.status,
   }
 
-  const file = formData.get("image")
-  if (file instanceof File && file.size > 0) {
-    if (!file.type.startsWith("image/")) return { success: false, error: "File must be an image." }
-    if (file.size > MAX_UPLOAD_BYTES) return { success: false, error: "Image must be smaller than 10MB." }
-
-    const imageUrl = await uploadPublicFile(supabase, "hero-media", "slides", file)
-    if (!imageUrl) return { success: false, error: "You don't have permission to upload images." }
-    update.image_url = imageUrl
-  }
+  const imageUrl = await resolveImageInput(supabase, formData, "image", "hero-media", "slides")
+  if (imageUrl === null) return { success: false, error: "Image must be a valid file under 10MB or a valid URL." }
+  if (imageUrl) update.image_url = imageUrl
 
   const { data, error } = await supabase.from("margaret_hero_slides").update(update as never).eq("id", parsed.data.id).select("id")
   if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }

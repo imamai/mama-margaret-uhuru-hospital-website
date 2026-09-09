@@ -46,7 +46,7 @@ function fieldsFor(row: DoctorRow | undefined, departmentOptions: { value: strin
     { name: "languages", label: "Languages (comma separated)", defaultValue: row?.languages?.join(", ") ?? "" },
     { name: "linkedinUrl", label: "LinkedIn URL", defaultValue: row?.linkedin_url ?? "" },
     { name: "twitterUrl", label: "Twitter/X URL", defaultValue: row?.twitter_url ?? "" },
-    { name: "photo", label: row ? "Replace photo" : "Photo", type: "file", accept: "image/*", hint: "Leave blank to keep the current photo." },
+    { name: "photo", label: row ? "Replace photo" : "Photo", type: "image", hint: "Leave blank to keep the current photo." },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
   ]
 }

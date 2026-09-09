@@ -55,7 +55,7 @@ function fieldsFor(row?: Row): EntityFieldConfig[] {
     { name: "endsAt", label: "Ends at", type: "datetime-local", defaultValue: toLocalInput(row?.ends_at ?? null) },
     { name: "registrationRequired", label: "Registration required", type: "checkbox", defaultValue: String(row?.registration_required ?? false) },
     { name: "capacity", label: "Capacity", type: "number", defaultValue: row?.capacity ? String(row.capacity) : undefined },
-    { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "file", accept: "image/*" },
+    { name: "featuredImage", label: row ? "Replace featured image" : "Featured image", type: "image" },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "draft" },
   ]
 }
