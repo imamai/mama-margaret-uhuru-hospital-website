@@ -13876,7 +13876,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           document_type: string
-          file_url: string
+          file_url: string | null
           id: string
           is_required_return: boolean
           sort_order: number
@@ -13887,7 +13887,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           document_type?: string
-          file_url: string
+          file_url?: string | null
           id?: string
           is_required_return?: boolean
           sort_order?: number
@@ -13898,7 +13898,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           document_type?: string
-          file_url?: string
+          file_url?: string | null
           id?: string
           is_required_return?: boolean
           sort_order?: number

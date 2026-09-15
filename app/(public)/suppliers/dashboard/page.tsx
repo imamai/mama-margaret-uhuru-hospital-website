@@ -50,13 +50,13 @@ export default async function SupplierDashboardPage() {
         .order("sort_order")
     : { data: [] }
 
-  const slotsByTender = new Map<string, { id: string; title: string; fileUrl: string }[]>()
+  const slotsByTender = new Map<string, { id: string; title: string; fileUrl: string | null }[]>()
   for (const doc of requiredDocs ?? []) {
     const list = slotsByTender.get(doc.tender_id as string) ?? []
     list.push({
       id: doc.id as string,
       title: doc.title as string,
-      fileUrl: doc.file_url as string,
+      fileUrl: (doc.file_url as string | null) ?? null,
     })
     slotsByTender.set(doc.tender_id as string, list)
   }

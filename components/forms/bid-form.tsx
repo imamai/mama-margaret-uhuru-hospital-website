@@ -26,7 +26,7 @@ const initialState: ActionResult | null = null
 export interface BidSlot {
   id: string
   title: string
-  fileUrl: string
+  fileUrl: string | null
 }
 
 /**
@@ -115,15 +115,23 @@ export function BidForm({
                     <Label htmlFor={`slot_${slot.id}`} className="text-sm">
                       {slot.title}
                     </Label>
-                    <a
-                      href={slot.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary inline-flex items-center gap-1 text-xs hover:underline"
-                    >
-                      <Download className="size-3" aria-hidden="true" />
-                      Download blank
-                    </a>
+                    {slot.fileUrl ? (
+                      <a
+                        href={slot.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary inline-flex items-center gap-1 text-xs hover:underline"
+                      >
+                        <Download className="size-3" aria-hidden="true" />
+                        Download blank
+                      </a>
+                    ) : (
+                      // The blank lives inside the tender pack rather than as
+                      // its own file, so point there instead of nowhere.
+                      <span className="text-muted-foreground text-xs">
+                        In the tender document
+                      </span>
+                    )}
                   </div>
                   <Input
                     id={`slot_${slot.id}`}
@@ -134,6 +142,15 @@ export function BidForm({
                 </div>
               ))}
             </div>
+          )}
+
+          {slots.length === 0 && (
+            <p className="text-muted-foreground rounded-lg border border-dashed p-3 text-xs">
+              This tender does not list individual forms. Attach everything the
+              tender document asks for — including the completed, signed and
+              stamped quotation forms — as separate files, named so the
+              procurement office can tell them apart.
+            </p>
           )}
 
           <div className="space-y-1.5">

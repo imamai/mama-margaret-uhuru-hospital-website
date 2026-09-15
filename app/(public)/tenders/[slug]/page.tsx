@@ -80,14 +80,14 @@ export default async function TenderDetailPage({
           </section>
         ) : null}
 
-        {tender.documents.length > 0 ? (
+        {tender.documents.filter((d) => d.file_url).length > 0 ? (
           <section>
             <h2 className="mb-3 text-lg font-bold">Documents</h2>
             <ul className="space-y-2">
-              {tender.documents.map((doc) => (
+              {tender.documents.filter((d) => d.file_url).map((doc) => (
                 <li key={doc.id}>
                   <a
-                    href={doc.file_url}
+                    href={doc.file_url ?? undefined}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
