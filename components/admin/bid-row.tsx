@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { FileText } from "lucide-react"
+import { Check, FileText, X } from "lucide-react"
 import { toast } from "sonner"
 
 import { updateBidScores, updateBidStatus } from "@/lib/actions/admin/bids"
@@ -31,6 +31,7 @@ export function BidRow({
   financialScore,
   status,
   documents,
+  checklist = [],
 }: {
   id: string
   tenderId: string
@@ -40,6 +41,8 @@ export function BidRow({
   financialScore: number | null
   status: string
   documents: { title: string; signedUrl: string | null }[]
+  /** The forms this tender requires back, and whether each one arrived. */
+  checklist?: { title: string; returned: boolean }[]
 }) {
   const [state, formAction, pending] = useActionState(updateBidScores, scoresInitialState)
   const router = useRouter()
@@ -61,6 +64,35 @@ export function BidRow({
         {bidAmount ? `KES ${Number(bidAmount).toLocaleString()}` : "--"}
       </TableCell>
       <TableCell>
+        {/* Eligibility at a glance. The hospital's own rules disqualify a bid
+            missing any required form, so whether it is complete matters more
+            than what the files happen to be called. */}
+        {checklist.length > 0 && (
+          <div className="mb-2 space-y-0.5">
+            {(() => {
+              const missing = checklist.filter((c) => !c.returned)
+              return missing.length === 0 ? (
+                <p className="flex items-center gap-1 text-xs font-medium text-emerald-600">
+                  <Check className="size-3.5" aria-hidden="true" />
+                  All {checklist.length} required forms returned
+                </p>
+              ) : (
+                <div className="text-xs">
+                  <p className="text-destructive flex items-center gap-1 font-medium">
+                    <X className="size-3.5" aria-hidden="true" />
+                    {missing.length} of {checklist.length} required forms missing
+                  </p>
+                  <ul className="text-muted-foreground mt-0.5 list-disc pl-4">
+                    {missing.map((c) => (
+                      <li key={c.title}>{c.title}</li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })()}
+          </div>
+        )}
+
         <div className="flex flex-col gap-1">
           {documents.map((doc, i) =>
             doc.signedUrl ? (

@@ -5,7 +5,14 @@ import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
 
-export type ActionResult = { success: true } | { success: false; error: string }
+/**
+ * `warning` is for work that succeeded but is not finished — a bid saved with
+ * required forms still missing. Refusing the submission outright near a
+ * deadline would be worse than accepting it and saying what is outstanding.
+ */
+export type ActionResult =
+  | { success: true; warning?: string }
+  | { success: false; error: string }
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Please enter your full name.").max(200),

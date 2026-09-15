@@ -38,6 +38,29 @@ export default async function SupplierDashboardPage() {
 
   const bidByTender = new Map((myBids ?? []).map((b) => [b.tender_id, b.status]))
 
+  // The forms each open tender asks to be signed and returned. Fetched once
+  // for all of them rather than per card, so the page still costs two queries.
+  const tenderIds = (openTenders ?? []).map((t) => t.id as string)
+  const { data: requiredDocs } = tenderIds.length
+    ? await supabase
+        .from("margaret_tender_documents")
+        .select("id, tender_id, title, file_url, sort_order")
+        .in("tender_id", tenderIds)
+        .eq("is_required_return", true)
+        .order("sort_order")
+    : { data: [] }
+
+  const slotsByTender = new Map<string, { id: string; title: string; fileUrl: string }[]>()
+  for (const doc of requiredDocs ?? []) {
+    const list = slotsByTender.get(doc.tender_id as string) ?? []
+    list.push({
+      id: doc.id as string,
+      title: doc.title as string,
+      fileUrl: doc.file_url as string,
+    })
+    slotsByTender.set(doc.tender_id as string, list)
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
       <div className="mb-8 flex items-start justify-between gap-4">
@@ -104,7 +127,11 @@ export default async function SupplierDashboardPage() {
                           Bid {bidStatus.replace("_", " ")}
                         </Badge>
                       ) : (
-                        <BidForm tenderId={tender.id} tenderTitle={tender.title} />
+                        <BidForm
+                          tenderId={tender.id}
+                          tenderTitle={tender.title}
+                          slots={slotsByTender.get(tender.id) ?? []}
+                        />
                       )}
                     </CardContent>
                   </Card>

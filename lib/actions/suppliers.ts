@@ -223,14 +223,60 @@ export async function submitBid(_prev: ActionResult | null, formData: FormData):
     return { success: false, error: "You may have already submitted a bid for this tender, or something went wrong." }
   }
 
-  const files = formData.getAll("documents").filter((f): f is File => f instanceof File && f.size > 0)
+  // The forms this tender asks to be returned. Each one is a named slot on the
+  // form, so a returned file arrives already labelled as "this is SD2" rather
+  // than as whatever the supplier happened to call the scan.
+  const { data: required } = await supabase
+    .from("margaret_tender_documents")
+    .select("id, title")
+    .eq("tender_id", tenderId)
+    .eq("is_required_return", true)
+    .order("sort_order")
 
-  for (const file of files) {
+  const missing: string[] = []
+
+  for (const slot of required ?? []) {
+    const file = formData.get(`slot_${slot.id}`)
+
+    if (!(file instanceof File) || file.size === 0) {
+      missing.push(slot.title as string)
+      continue
+    }
+    if (file.size > MAX_BID_FILE_BYTES) {
+      missing.push(`${slot.title} (over 15MB)`)
+      continue
+    }
+
+    const path = `bids/${bid.id}/${slot.id}-${Date.now()}-${file.name}`
+    const { error: uploadError } = await supabase.storage
+      .from("bid-documents")
+      .upload(path, file, { contentType: file.type, upsert: false })
+
+    if (uploadError) {
+      missing.push(slot.title as string)
+      continue
+    }
+
+    await supabase.from("margaret_bid_documents").insert({
+      bid_id: bid.id,
+      tender_document_id: slot.id,
+      document_type: slot.title,
+      title: file.name,
+      file_url: path,
+      bucket: "bid-documents",
+    })
+  }
+
+  // Anything else the supplier wants to add — a company profile, a brochure —
+  // still goes up, unnamed, because the checklist is about what is required.
+  const extras = formData.getAll("documents").filter((f): f is File => f instanceof File && f.size > 0)
+
+  for (const file of extras) {
     if (file.size > MAX_BID_FILE_BYTES) continue
 
-    const path = `bids/${bid.id}/${Date.now()}-${file.name}`
+    const path = `bids/${bid.id}/extra-${Date.now()}-${file.name}`
     const { error: uploadError } = await supabase.storage
-      .from("tender-documents")
+      .from("bid-documents")
       .upload(path, file, { contentType: file.type, upsert: false })
 
     if (uploadError) continue
@@ -239,9 +285,21 @@ export async function submitBid(_prev: ActionResult | null, formData: FormData):
       bid_id: bid.id,
       title: file.name,
       file_url: path,
+      bucket: "bid-documents",
     })
   }
 
   revalidatePath("/suppliers/dashboard")
+
+  // The bid is saved either way — a submission held back for a missing scan
+  // near a deadline would be worse than an incomplete one the desk can chase.
+  // But the supplier is told plainly, while there is still time to fix it.
+  if (missing.length > 0) {
+    return {
+      success: true,
+      warning: `Your bid was submitted, but these required forms are still missing: ${missing.join(", ")}. Upload them before the closing date or the bid may be rejected at preliminary examination.`,
+    }
+  }
+
   return { success: true }
 }

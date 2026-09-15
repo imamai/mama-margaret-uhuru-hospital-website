@@ -7,6 +7,25 @@ import { createClient } from "@/lib/supabase/server"
 import { slugify } from "@/lib/utils"
 import type { ActionResult } from "@/lib/actions/forms"
 
+/**
+ * Say what actually went wrong.
+ *
+ * Every write here used to report "You don't have permission to do this" for
+ * any failure at all, so a duplicate tender number — which the admin can fix
+ * in five seconds — read as a rights problem they cannot fix at all. Postgres
+ * already distinguishes these; this passes that distinction through.
+ */
+function writeError(code: string | undefined, message: string | undefined): string {
+  if (code === "23505") return "That tender number or slug is already in use."
+  if (code === "23503") return "That refers to a record that no longer exists."
+  if (code === "23514") return "One of those values is not allowed."
+  if (code === "42501" || code === "PGRST301") return "You don't have permission to do this."
+  return message ? `We couldn't save that: ${message}` : "We couldn't save that. Try again."
+}
+
+/** An update that changes nothing is RLS refusing, not a database error. */
+const REFUSED = "You don't have permission to do this."
+
 const tenderSchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
   title: z.string().trim().min(2, "Title is required.").max(300),
@@ -55,7 +74,7 @@ export async function createTender(_prev: ActionResult | null, formData: FormDat
     status: parsed.data.status,
   })
 
-  if (error) return { success: false, error: "You don't have permission to do this, or the slug/tender number is already in use." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
 
   revalidate()
   return { success: true }
@@ -82,7 +101,8 @@ export async function updateTender(_prev: ActionResult | null, formData: FormDat
     .eq("id", parsed.data.id)
     .select("id")
 
-  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
+  if (!data?.length) return { success: false, error: REFUSED }
 
   revalidate()
   return { success: true }
@@ -92,7 +112,8 @@ export async function deleteTender(id: string): Promise<ActionResult> {
   const supabase = await createClient()
   const { data, error } = await supabase.from("margaret_tenders").update({ deleted_at: new Date().toISOString() }).eq("id", id).select("id")
 
-  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
+  if (!data?.length) return { success: false, error: REFUSED }
 
   revalidate()
   return { success: true }
@@ -128,7 +149,8 @@ export async function answerClarification(_prev: ActionResult | null, formData: 
     .eq("id", parsed.data.id)
     .select("id")
 
-  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
+  if (!data?.length) return { success: false, error: REFUSED }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   revalidatePath("/tenders")
@@ -139,6 +161,10 @@ const documentSchema = z.object({
   tenderId: z.string().uuid(),
   title: z.string().trim().min(1, "Title is required.").max(200),
   documentType: z.enum(["tender_document", "addendum", "clarification", "opening_result", "award_notice"]),
+  // A form the supplier has to sign, stamp and send back, rather than a notice
+  // they only need to read. This is what turns the pack into a checklist.
+  isRequiredReturn: z.enum(["true", "false"]).default("false"),
+  sortOrder: z.coerce.number().int().min(0).max(999).default(0),
 })
 
 const MAX_DOC_BYTES = 20 * 1024 * 1024
@@ -148,6 +174,8 @@ export async function uploadTenderDocument(_prev: ActionResult | null, formData:
     tenderId: formData.get("tenderId"),
     title: formData.get("title"),
     documentType: formData.get("documentType") ?? "tender_document",
+    isRequiredReturn: formData.get("isRequiredReturn") ?? "false",
+    sortOrder: formData.get("sortOrder") ?? 0,
   })
   if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
 
@@ -173,9 +201,11 @@ export async function uploadTenderDocument(_prev: ActionResult | null, formData:
     title: parsed.data.title,
     file_url: publicUrl,
     document_type: parsed.data.documentType,
+    is_required_return: parsed.data.isRequiredReturn === "true",
+    sort_order: parsed.data.sortOrder,
   })
 
-  if (error) return { success: false, error: "You don't have permission to do this." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   revalidatePath("/tenders")
@@ -186,7 +216,8 @@ export async function deleteTenderDocument(id: string, tenderId: string): Promis
   const supabase = await createClient()
   const { data, error } = await supabase.from("margaret_tender_documents").delete().eq("id", id).select("id")
 
-  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
+  if (error) return { success: false, error: writeError(error.code, error.message) }
+  if (!data?.length) return { success: false, error: REFUSED }
 
   revalidatePath(`/admin/tenders/${tenderId}`)
   revalidatePath("/tenders")

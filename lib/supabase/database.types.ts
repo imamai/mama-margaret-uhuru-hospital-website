@@ -11389,23 +11389,32 @@ export type Database = {
       margaret_bid_documents: {
         Row: {
           bid_id: string
+          bucket: string
           created_at: string
+          document_type: string | null
           file_url: string
           id: string
+          tender_document_id: string | null
           title: string
         }
         Insert: {
           bid_id: string
+          bucket?: string
           created_at?: string
+          document_type?: string | null
           file_url: string
           id?: string
+          tender_document_id?: string | null
           title: string
         }
         Update: {
           bid_id?: string
+          bucket?: string
           created_at?: string
+          document_type?: string | null
           file_url?: string
           id?: string
+          tender_document_id?: string | null
           title?: string
         }
         Relationships: [
@@ -13869,6 +13878,8 @@ export type Database = {
           document_type: string
           file_url: string
           id: string
+          is_required_return: boolean
+          sort_order: number
           tender_id: string
           title: string
         }
@@ -13878,6 +13889,8 @@ export type Database = {
           document_type?: string
           file_url: string
           id?: string
+          is_required_return?: boolean
+          sort_order?: number
           tender_id: string
           title: string
         }
@@ -13887,6 +13900,8 @@ export type Database = {
           document_type?: string
           file_url?: string
           id?: string
+          is_required_return?: boolean
+          sort_order?: number
           tender_id?: string
           title?: string
         }

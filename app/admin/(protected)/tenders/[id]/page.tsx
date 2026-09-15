@@ -31,7 +31,7 @@ export default async function AdminTenderDetailPage({
   if (!tender) notFound()
 
   const [{ data: documents }, { data: clarifications }, { data: award }, { data: bids }] = await Promise.all([
-    supabase.from("margaret_tender_documents").select("id, title, file_url, document_type").eq("tender_id", id).order("created_at"),
+    supabase.from("margaret_tender_documents").select("id, title, file_url, document_type, is_required_return, sort_order").eq("tender_id", id).order("sort_order").order("created_at"),
     supabase.from("margaret_tender_clarifications").select("id, question, answer, asked_by_name, status").eq("tender_id", id).order("created_at"),
     supabase.from("margaret_tender_awards").select("id, awarded_supplier_name").eq("tender_id", id).maybeSingle(),
     supabase
@@ -49,15 +49,49 @@ export default async function AdminTenderDetailPage({
 
   const bidIds = (bids ?? []).map((b) => b.id)
   const { data: bidDocs } = bidIds.length
-    ? await supabase.from("margaret_bid_documents").select("id, bid_id, title, file_url").in("bid_id", bidIds)
+    ? await supabase
+        .from("margaret_bid_documents")
+        .select("id, bid_id, title, file_url, bucket, document_type, tender_document_id")
+        .in("bid_id", bidIds)
     : { data: [] }
 
+  // Files written before the bid-documents bucket existed still live in
+  // tender-documents, which is why each row carries its own bucket.
   const docsByBid = new Map<string, { title: string; signedUrl: string | null }[]>()
+  const returnedSlots = new Map<string, Set<string>>()
+
   for (const doc of bidDocs ?? []) {
-    const { data: signed } = await supabase.storage.from("tender-documents").createSignedUrl(doc.file_url, 60 * 10)
+    const { data: signed } = await supabase.storage
+      .from((doc.bucket as string) ?? "tender-documents")
+      .createSignedUrl(doc.file_url, 60 * 10)
+
     const list = docsByBid.get(doc.bid_id) ?? []
-    list.push({ title: doc.title, signedUrl: signed?.signedUrl ?? null })
+    list.push({
+      title: (doc.document_type as string | null) ?? doc.title,
+      signedUrl: signed?.signedUrl ?? null,
+    })
     docsByBid.set(doc.bid_id, list)
+
+    if (doc.tender_document_id) {
+      const set = returnedSlots.get(doc.bid_id) ?? new Set<string>()
+      set.add(doc.tender_document_id as string)
+      returnedSlots.set(doc.bid_id, set)
+    }
+  }
+
+  // What this tender asks to be signed and sent back, so a bid can be read as
+  // complete or not without opening a single attachment.
+  const requiredSlots = (documents ?? [])
+    .filter((d) => d.is_required_return)
+    .map((d) => ({ id: d.id as string, title: d.title as string }))
+
+  const checklistByBid = new Map<string, { title: string; returned: boolean }[]>()
+  for (const bid of bids ?? []) {
+    const returned = returnedSlots.get(bid.id) ?? new Set<string>()
+    checklistByBid.set(
+      bid.id,
+      requiredSlots.map((slot) => ({ title: slot.title, returned: returned.has(slot.id) })),
+    )
   }
 
   return (
@@ -175,6 +209,7 @@ export default async function AdminTenderDetailPage({
                     financialScore={bid.financial_score}
                     status={bid.status}
                     documents={docsByBid.get(bid.id) ?? []}
+                    checklist={checklistByBid.get(bid.id) ?? []}
                   />
                 ))
               )}
