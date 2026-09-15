@@ -7,6 +7,7 @@ import { ClarificationAnswerForm } from "@/components/admin/clarification-answer
 import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog } from "@/components/admin/entity-form-dialog"
 import { TenderDocumentUploadForm } from "@/components/admin/tender-document-upload-form"
+import { AddStandardFormsButton } from "@/components/admin/add-standard-forms-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -109,7 +110,17 @@ export default async function AdminTenderDetailPage({
       </div>
 
       <section className="mb-10">
-        <h2 className="mb-3 text-lg font-bold">Documents</h2>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold">Documents</h2>
+            <p className="text-muted-foreground text-sm">
+              {requiredSlots.length > 0
+                ? `${requiredSlots.length} form${requiredSlots.length === 1 ? "" : "s"} must be signed and returned by every bidder.`
+                : "No forms are marked for return, so bidders are only shown a plain file box."}
+            </p>
+          </div>
+          <AddStandardFormsButton tenderId={tender.id} />
+        </div>
         <TenderDocumentUploadForm tenderId={tender.id} />
         <div className="mt-4 overflow-x-auto rounded-xl border bg-background">
           <Table>
@@ -131,15 +142,24 @@ export default async function AdminTenderDetailPage({
                 (documents ?? []).map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell>
-                      <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-brand-deep hover:underline dark:text-brand-accent">
-                        {doc.title}
-                      </a>
+                      {doc.file_url ? (
+                        <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-brand-deep hover:underline dark:text-brand-accent">
+                          {doc.title}
+                        </a>
+                      ) : (
+                        <span>{doc.title}</span>
+                      )}
+                      {doc.is_required_return ? (
+                        <span className="text-muted-foreground ml-2 text-xs">
+                          must be returned{doc.file_url ? "" : " · no blank attached"}
+                        </span>
+                      ) : null}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{doc.document_type.replace("_", " ")}</TableCell>
                     <TableCell className="text-right">
                       <DeleteButton
                         id={doc.id}
-                        action={(docId) => deleteTenderDocument(docId, tender.id)}
+                        action={deleteTenderDocument}
                         confirmMessage={`Delete "${doc.title}"?`}
                       />
                     </TableCell>

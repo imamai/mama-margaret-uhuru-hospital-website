@@ -91,7 +91,7 @@ export default async function AdminDoctorDetailPage({
                     <TableCell className="text-right">
                       <DeleteButton
                         id={slot.id}
-                        action={(slotId) => deleteDoctorAvailability(slotId, doctor.id)}
+                        action={deleteDoctorAvailability}
                         confirmMessage="Delete this availability slot?"
                       />
                     </TableCell>
@@ -138,7 +138,7 @@ export default async function AdminDoctorDetailPage({
                     <TableCell className="text-right">
                       <DeleteButton
                         id={pub.id}
-                        action={(pubId) => deleteDoctorPublication(pubId, doctor.id)}
+                        action={deleteDoctorPublication}
                         confirmMessage={`Delete "${pub.title}"?`}
                       />
                     </TableCell>

@@ -212,15 +212,31 @@ export async function uploadTenderDocument(_prev: ActionResult | null, formData:
   return { success: true }
 }
 
-export async function deleteTenderDocument(id: string, tenderId: string): Promise<ActionResult> {
+/**
+ * Takes only the document id.
+ *
+ * It used to take the tender id as a second argument, which forced the page to
+ * pass `(docId) => deleteTenderDocument(docId, tender.id)` into a client
+ * component. A plain arrow defined in a server component is not a server
+ * action, and React refuses to serialise it — so the row threw as soon as one
+ * existed to render, and the whole page returned a server error. Reading the
+ * parent from the row instead means the action can be handed over directly.
+ */
+export async function deleteTenderDocument(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { data, error } = await supabase.from("margaret_tender_documents").delete().eq("id", id).select("id")
+
+  const { data, error } = await supabase
+    .from("margaret_tender_documents")
+    .delete()
+    .eq("id", id)
+    .select("id, tender_id")
 
   if (error) return { success: false, error: writeError(error.code, error.message) }
   if (!data?.length) return { success: false, error: REFUSED }
 
-  revalidatePath(`/admin/tenders/${tenderId}`)
+  revalidatePath(`/admin/tenders/${data[0].tender_id}`)
   revalidatePath("/tenders")
+  revalidatePath("/suppliers/dashboard")
   return { success: true }
 }
 
@@ -260,5 +276,63 @@ export async function recordTenderAward(_prev: ActionResult | null, formData: Fo
 
   revalidatePath(`/admin/tenders/${parsed.data.tenderId}`)
   revalidatePath("/tenders")
+  return { success: true }
+}
+
+/**
+ * The forms every RFQ this hospital issues asks to be signed and returned.
+ *
+ * Taken from the standard template's own list of quotation and qualification
+ * documents, in its order. They are the same on every RFQ, so typing them out
+ * per tender is nine chances to leave one off — and a form left off the list is
+ * a form the supplier is never asked for and the desk never misses.
+ *
+ * No blanks attached: they live inside the RFQ pack, which is uploaded as one
+ * document. These rows exist to name the slots.
+ */
+const STANDARD_RFQ_FORMS = [
+  "Form of Quotation",
+  "Price Schedule Form",
+  "Schedule of Requirements — conformity to technical specifications",
+  "Form for Disclosure of Interest",
+  "Certificate of Independent Quotation Determination",
+  "Self-Declaration Form",
+  "Confidential Business Questionnaire (S33)",
+  "Form SD1 — not debarred under the Public Procurement and Asset Disposal Act",
+  "Form SD2 — no corrupt or fraudulent practice",
+] as const
+
+export async function addStandardRfqForms(tenderId: string): Promise<ActionResult> {
+  const supabase = await createClient()
+
+  // Whatever is already listed stays; this only fills in what is missing, so
+  // pressing it twice is harmless and a hand-edited title is never overwritten.
+  const { data: existing } = await supabase
+    .from("margaret_tender_documents")
+    .select("title")
+    .eq("tender_id", tenderId)
+
+  const have = new Set((existing ?? []).map((d) => (d.title as string).toLowerCase()))
+  const missing = STANDARD_RFQ_FORMS.filter((t) => !have.has(t.toLowerCase()))
+
+  if (missing.length === 0) {
+    return { success: true, warning: "Every standard form is already listed on this tender." }
+  }
+
+  const { error } = await supabase.from("margaret_tender_documents").insert(
+    missing.map((title) => ({
+      tender_id: tenderId,
+      title,
+      document_type: "tender_document",
+      is_required_return: true,
+      sort_order: STANDARD_RFQ_FORMS.indexOf(title) + 1,
+      file_url: null,
+    })),
+  )
+
+  if (error) return { success: false, error: writeError(error.code, error.message) }
+
+  revalidatePath(`/admin/tenders/${tenderId}`)
+  revalidatePath("/suppliers/dashboard")
   return { success: true }
 }

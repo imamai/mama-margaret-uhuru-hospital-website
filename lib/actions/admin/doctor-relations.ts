@@ -44,13 +44,25 @@ export async function addDoctorAvailability(_prev: ActionResult | null, formData
   return { success: true }
 }
 
-export async function deleteDoctorAvailability(id: string, doctorId: string): Promise<ActionResult> {
+/**
+ * Takes only the row id; the doctor is read back from the deleted row.
+ *
+ * Passing `(slotId) => deleteDoctorAvailability(slotId, doctor.id)` into a
+ * client component hands React a plain arrow rather than a server action, which
+ * it refuses to serialise — so the page threw as soon as there was a row to
+ * render a delete button for.
+ */
+export async function deleteDoctorAvailability(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { data, error } = await supabase.from("margaret_doctor_availability").delete().eq("id", id).select("id")
+  const { data, error } = await supabase
+    .from("margaret_doctor_availability")
+    .delete()
+    .eq("id", id)
+    .select("id, doctor_id")
 
   if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
-  revalidate(doctorId)
+  revalidate(data[0].doctor_id)
   return { success: true }
 }
 
@@ -84,12 +96,17 @@ export async function addDoctorPublication(_prev: ActionResult | null, formData:
   return { success: true }
 }
 
-export async function deleteDoctorPublication(id: string, doctorId: string): Promise<ActionResult> {
+/** Takes only the row id — see deleteDoctorAvailability. */
+export async function deleteDoctorPublication(id: string): Promise<ActionResult> {
   const supabase = await createClient()
-  const { data, error } = await supabase.from("margaret_doctor_publications").delete().eq("id", id).select("id")
+  const { data, error } = await supabase
+    .from("margaret_doctor_publications")
+    .delete()
+    .eq("id", id)
+    .select("id, doctor_id")
 
   if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
 
-  revalidate(doctorId)
+  revalidate(data[0].doctor_id)
   return { success: true }
 }
