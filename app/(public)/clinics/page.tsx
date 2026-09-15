@@ -25,7 +25,7 @@ export default async function ClinicsPage() {
           {clinics.map((clinic) => (
             <Card key={clinic.id} className="overflow-hidden py-0">
               <Link href={`/clinics/${clinic.slug}`} className="group">
-                <div className="relative h-40">
+                <div className="relative aspect-[16/10]">
                   <SmartImage src={clinic.banner_image_url} alt={clinic.name} kind="building" />
                 </div>
                 <CardContent className="py-5">

@@ -35,8 +35,8 @@ export default async function ClinicDetailPage({
 
   return (
     <div>
-      <div className="relative h-56 sm:h-72">
-        <SmartImage src={clinic.banner_image_url} alt={clinic.name} kind="building" />
+      <div className="relative h-56 sm:h-72 lg:h-[26rem]">
+        <SmartImage src={clinic.banner_image_url} alt={clinic.name} kind="building" sizes="100vw" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-6">

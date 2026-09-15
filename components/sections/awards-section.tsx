@@ -13,7 +13,7 @@ export async function AwardsSection() {
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {awards.map((award) => (
           <Card key={award.id} className="overflow-hidden py-0">
-            <div className="relative h-32">
+            <div className="relative aspect-[16/10]">
               <SmartImage src={award.image_url} alt={award.title} kind="award" />
             </div>
             <CardContent className="py-4">

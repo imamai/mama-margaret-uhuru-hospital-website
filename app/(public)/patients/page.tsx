@@ -23,8 +23,8 @@ export default async function PatientsPage() {
 
   return (
     <div>
-      <div className="relative h-48 sm:h-64">
-        <SmartImage src={page?.featured_image_url} alt={page?.title ?? "Patient Information"} kind="people" />
+      <div className="relative h-48 sm:h-64 lg:h-[22rem]">
+        <SmartImage src={page?.featured_image_url} alt={page?.title ?? "Patient Information"} kind="people" sizes="100vw" />
       </div>
       <div className="mx-auto max-w-3xl px-4 py-16">
         <SectionHeading eyebrow="Patients" title={page?.title ?? "Patient Information"} align="left" className="max-w-none" />

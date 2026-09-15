@@ -21,8 +21,8 @@ export default async function AboutPage() {
 
   return (
     <div>
-      <div className="relative h-48 sm:h-64">
-        <SmartImage src={page?.featured_image_url} alt={page?.title ?? "About Us"} kind="building" />
+      <div className="relative h-48 sm:h-64 lg:h-[22rem]">
+        <SmartImage src={page?.featured_image_url} alt={page?.title ?? "About Us"} kind="building" sizes="100vw" />
       </div>
       <div className="mx-auto max-w-3xl px-4 py-16">
         <SectionHeading eyebrow="About us" title={page?.title ?? "About Us"} align="left" className="max-w-none" />

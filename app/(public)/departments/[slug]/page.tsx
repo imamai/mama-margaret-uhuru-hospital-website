@@ -35,8 +35,8 @@ export default async function DepartmentDetailPage({
 
   return (
     <div>
-      <div className="relative h-56 sm:h-72">
-        <SmartImage src={department.banner_image_url} alt={department.name} kind="building" />
+      <div className="relative h-56 sm:h-72 lg:h-[26rem]">
+        <SmartImage src={department.banner_image_url} alt={department.name} kind="building" sizes="100vw" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-6">
@@ -60,7 +60,7 @@ export default async function DepartmentDetailPage({
               <div className="grid gap-4 sm:grid-cols-2">
                 {department.services.map((service) => (
                   <Card key={service.id} className="overflow-hidden py-0">
-                    <div className="relative h-32">
+                    <div className="relative aspect-[16/10]">
                       <SmartImage src={service.image_url} alt={service.name} kind="generic" />
                     </div>
                     <CardContent className="py-4">

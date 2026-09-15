@@ -22,7 +22,7 @@ export async function DepartmentsGrid() {
         {departments.slice(0, 6).map((department) => (
           <Card key={department.id} className="overflow-hidden py-0">
             <Link href={`/departments/${department.slug}`} className="group">
-              <div className="relative h-40">
+              <div className="relative aspect-[16/10]">
                 <SmartImage src={department.banner_image_url} alt={department.name} kind="building" />
               </div>
               <CardContent className="py-5">

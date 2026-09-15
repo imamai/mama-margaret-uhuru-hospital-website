@@ -45,7 +45,7 @@ export default async function ServicesPage({
                 <div className="grid gap-4 sm:grid-cols-2">
                   {(servicesByCategory.get(category.id) ?? []).map((service) => (
                     <Card key={service.id} className="overflow-hidden py-0">
-                      <div className="relative h-32">
+                      <div className="relative aspect-[16/10]">
                         <SmartImage src={service.image_url} alt={service.name} kind="generic" />
                       </div>
                       <CardContent className="py-4">
