@@ -9,6 +9,7 @@ const GROUPS: { key: string; label: string; items: { key: string; label: string;
     key: "hospital",
     label: "Hospital",
     items: [
+      { key: "appointments", label: "Appointments", href: "/admin/appointments", permissionPrefix: "appointments" },
       { key: "departments", label: "Departments", href: "/admin/departments", permissionPrefix: "departments" },
       { key: "doctors", label: "Doctors", href: "/admin/doctors", permissionPrefix: "doctors" },
       { key: "service-categories", label: "Service Categories", href: "/admin/service-categories", permissionPrefix: "services" },
