@@ -18,6 +18,8 @@ export type SiteSettings = {
   mission: string
   vision: string
   brand_colors: BrandColors
+  /** The palette "Restore" returns to. The shipped one until the hospital sets its own. */
+  brand_colors_default: BrandColors
   logo_url: string | null
   favicon_url: string | null
   emergency_phone: string
@@ -46,6 +48,7 @@ const DEFAULTS: SiteSettings = {
   mission: "",
   vision: "",
   brand_colors: { ...DEFAULT_BRAND_COLORS },
+  brand_colors_default: { ...DEFAULT_BRAND_COLORS },
   logo_url: null,
   favicon_url: null,
   // The hospital's real emergency line. This is a fallback for a missing row,

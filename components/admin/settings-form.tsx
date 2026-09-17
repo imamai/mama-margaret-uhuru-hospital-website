@@ -19,15 +19,16 @@ export function SettingsForm({
   fields,
   action,
   submitLabel = "Save changes",
-  defaults,
-  restoreLabel = "Restore defaults",
+  restores,
+  setDefault,
 }: {
   fields: EntityFieldConfig[]
   action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>
   submitLabel?: string
-  /** Field name -> the shipped value, which enables the restore button. */
-  defaults?: Record<string, string>
-  restoreLabel?: string
+  /** One button per palette worth coming back to, each a field name -> value map. */
+  restores?: { label: string; hint?: string; values: Record<string, string> }[]
+  /** Renders a tick that records what is being saved as the new default. */
+  setDefault?: { name: string; label: string; hint?: string }
 }) {
   const [state, formAction, pending] = useActionState<ActionResult | null, FormData>(action, null)
 
@@ -35,11 +36,11 @@ export function SettingsForm({
   // carrying the shipped values -- the colour boxes hold their own state, and
   // nothing short of a remount puts it back. Nothing is written until Save is
   // pressed, so a mis-click costs one press of the browser's back button.
-  const [restoredAt, setRestoredAt] = useState(0)
+  const [restored, setRestored] = useState<{ at: number; values: Record<string, string> } | null>(null)
 
-  const shown = restoredAt
+  const shown = restored
     ? fields.map((field) =>
-        defaults?.[field.name] ? { ...field, defaultValue: defaults[field.name] } : field
+        restored.values[field.name] ? { ...field, defaultValue: restored.values[field.name] } : field
       )
     : fields
 
@@ -54,7 +55,7 @@ export function SettingsForm({
 
   return (
     <form action={formAction} encType="multipart/form-data" className="max-w-xl space-y-4">
-      <div key={restoredAt} className="space-y-4">
+      <div key={restored?.at ?? 0} className="space-y-4">
       {shown.map((field) => (
         <div key={field.name} className="space-y-1.5">
           <Label htmlFor={field.name}>{field.label}</Label>
@@ -90,13 +91,41 @@ export function SettingsForm({
       ))}
       </div>
 
-      {defaults ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-dashed p-3">
-          <Button type="button" variant="outline" size="sm" onClick={() => setRestoredAt((n) => n + 1)}>
-            {restoreLabel}
-          </Button>
+      {setDefault ? (
+        <label className="flex items-start gap-2.5 rounded-lg border p-3 text-sm">
+          <input
+            type="checkbox"
+            name={setDefault.name}
+            value="true"
+            className="mt-0.5 size-4 rounded border-input"
+          />
+          <span>
+            {setDefault.label}
+            {setDefault.hint ? (
+              <span className="block text-xs text-muted-foreground">{setDefault.hint}</span>
+            ) : null}
+          </span>
+        </label>
+      ) : null}
+
+      {restores?.length ? (
+        <div className="space-y-2 rounded-lg border border-dashed p-3">
+          <div className="flex flex-wrap gap-2">
+            {restores.map((restore, i) => (
+              <Button
+                key={restore.label}
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setRestored({ at: Date.now() + i, values: restore.values })}
+              >
+                {restore.label}
+              </Button>
+            ))}
+          </div>
           <p className="text-xs text-muted-foreground">
-            Puts the original values back in the boxes. Nothing changes on the site until you save.
+            {restores.find((r) => r.hint)?.hint ??
+              "Puts those values back in the boxes. Nothing changes on the site until you save."}
           </p>
         </div>
       ) : null}

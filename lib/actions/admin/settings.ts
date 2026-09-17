@@ -118,16 +118,24 @@ export async function updateBrandingSettings(_prev: ActionResult | null, formDat
   const logoUrl = await resolveAssetUrl(supabase, formData, "logo_url", existingLogoUrl)
   const faviconUrl = await resolveAssetUrl(supabase, formData, "favicon_url", existingFaviconUrl)
 
+  const colors = {
+    primary: parsed.data.primary,
+    deep: parsed.data.deep,
+    accent: parsed.data.accent,
+    dark_grey: parsed.data.dark_grey,
+    light_grey: parsed.data.light_grey,
+  }
+
+  // Ticked, this palette also becomes the one "Restore" comes back to. Saved
+  // in the same write as the palette itself, so the default can never end up
+  // describing colours the site never actually wore.
+  const setAsDefault = formData.get("setAsDefault") === "true"
+
   return upsertSettings([
+    ...(setAsDefault ? [{ key: "brand_colors_default", value: colors }] : []),
     {
       key: "brand_colors",
-      value: {
-        primary: parsed.data.primary,
-        deep: parsed.data.deep,
-        accent: parsed.data.accent,
-        dark_grey: parsed.data.dark_grey,
-        light_grey: parsed.data.light_grey,
-      },
+      value: colors,
     },
     { key: "logo_url", value: logoUrl },
     { key: "favicon_url", value: faviconUrl },

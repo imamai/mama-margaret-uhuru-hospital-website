@@ -13,6 +13,11 @@ import { DEFAULT_BRAND_COLORS } from "@/lib/brand-defaults"
 export default async function AdminSettingsPage() {
   const settings = await getSiteSettings()
 
+  // Whether the hospital has set a palette of its own, or is still on the one
+  // the site shipped with.
+  const hospitalDefaultIsCustom =
+    JSON.stringify(settings.brand_colors_default) !== JSON.stringify(DEFAULT_BRAND_COLORS)
+
   return (
     <div>
       <div className="mb-6">
@@ -52,8 +57,29 @@ export default async function AdminSettingsPage() {
         <TabsContent value="branding" className="pt-6">
           <SettingsForm
             action={updateBrandingSettings}
-            defaults={{ ...DEFAULT_BRAND_COLORS }}
-            restoreLabel="Restore default colours"
+            setDefault={{
+              name: "setAsDefault",
+              label: "Make these the hospital's default colours",
+              hint: "Restore brings them back later. Tick this once you are happy with how the site looks.",
+            }}
+            restores={[
+              // The hospital's own default first, and only offered when it is
+              // actually different -- two buttons saying the same thing is
+              // worse than one.
+              ...(hospitalDefaultIsCustom
+                ? [
+                    {
+                      label: "Restore hospital colours",
+                      values: { ...settings.brand_colors_default },
+                      hint: "Puts those values back in the boxes. Nothing changes on the site until you save.",
+                    },
+                  ]
+                : []),
+              {
+                label: hospitalDefaultIsCustom ? "Restore original site colours" : "Restore default colours",
+                values: { ...DEFAULT_BRAND_COLORS },
+              },
+            ]}
             fields={[
               {
                 name: "primary",
