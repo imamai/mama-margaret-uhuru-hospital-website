@@ -79,6 +79,7 @@ const GROUPS: { key: string; label: string; items: { key: string; label: string;
       { key: "footer-sections", label: "Footer Sections", href: "/admin/footer-sections", permissionPrefix: "footer" },
       { key: "downloads", label: "Downloads", href: "/admin/downloads", permissionPrefix: "downloads" },
       { key: "settings", label: "Settings", href: "/admin/settings", permissionPrefix: "settings" },
+      { key: "staff", label: "Staff", href: "/admin/staff", permissionPrefix: "users" },
     ],
   },
 ]
@@ -93,11 +94,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     getSiteSettings(),
   ])
 
-  const visibleGroups: AdminNavGroup[] = GROUPS.map((group) => ({
-    key: group.key,
-    label: group.label,
-    items: superAdmin ? group.items : group.items.filter((m) => permissions.includes(`${m.permissionPrefix}.view`)),
-  })).filter((group) => group.items.length > 0)
+  const visibleGroups: AdminNavGroup[] = [
+    ...GROUPS.map((group) => ({
+      key: group.key,
+      label: group.label,
+      items: superAdmin ? group.items : group.items.filter((m) => permissions.includes(`${m.permissionPrefix}.view`)),
+    })).filter((group) => group.items.length > 0),
+    // Outside the permission filter on purpose: your own account is not a
+    // module you are granted, and someone with no role at all still has to be
+    // able to reach their password.
+    {
+      key: "account",
+      label: "Your account",
+      items: [{ key: "account", label: "My Account", href: "/admin/account", permissionPrefix: "" }],
+    },
+  ]
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">

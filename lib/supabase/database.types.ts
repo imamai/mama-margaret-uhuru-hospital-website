@@ -15385,6 +15385,21 @@ export type Database = {
           role_slug: string
         }[]
       }
+      margaret_find_user_by_email: {
+        Args: { p_email: string }
+        Returns: string | null
+      }
+      margaret_list_staff: {
+        Args: never
+        Returns: {
+          user_id: string
+          email: string
+          full_name: string
+          last_sign_in_at: string | null
+          created_at: string
+          roles: Json
+        }[]
+      }
       margaret_has_permission: {
         Args: { permission_key: string }
         Returns: boolean
