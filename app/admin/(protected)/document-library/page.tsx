@@ -1,10 +1,12 @@
-import { Download, FileText } from "lucide-react"
+import { Download, FileText, Pencil } from "lucide-react"
 
 import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
+import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { LibraryUploadForm } from "@/components/admin/library-upload-form"
 import { Badge } from "@/components/ui/badge"
-import { deleteLibraryDocument } from "@/lib/actions/admin/document-library"
+import { Button } from "@/components/ui/button"
+import { deleteLibraryDocument, updateLibraryDocument } from "@/lib/actions/admin/document-library"
 import { createClient } from "@/lib/supabase/server"
 
 type LibraryRow = {
@@ -16,6 +18,7 @@ type LibraryRow = {
   file_size: number | null
   category: string
   sort_order: number
+  status: string
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -45,7 +48,7 @@ export default async function AdminDocumentLibraryPage() {
 
   const { data, error } = await supabase
     .from("margaret_document_library")
-    .select("id, title, description, file_url, file_name, file_size, category, sort_order")
+    .select("id, title, description, file_url, file_name, file_size, category, sort_order, status")
     .is("deleted_at", null)
     .order("category")
     .order("sort_order")
@@ -62,6 +65,38 @@ export default async function AdminDocumentLibraryPage() {
 
   const rows = (data ?? []) as LibraryRow[]
 
+  function fieldsFor(doc: LibraryRow): EntityFieldConfig[] {
+    return [
+      { name: "title", label: "Title", required: true, defaultValue: doc.title },
+      { name: "description", label: "Description", type: "textarea", defaultValue: doc.description ?? "" },
+      {
+        name: "category",
+        label: "Category",
+        type: "select",
+        options: Object.entries(CATEGORY_LABELS).map(([value, label]) => ({ value, label })),
+        defaultValue: doc.category,
+      },
+      { name: "sortOrder", label: "Order", type: "number", defaultValue: String(doc.sort_order) },
+      {
+        name: "status",
+        label: "Status",
+        type: "select",
+        options: [
+          { value: "active", label: "Active" },
+          { value: "inactive", label: "Inactive (hidden when attaching)" },
+        ],
+        defaultValue: doc.status,
+      },
+      {
+        name: "file",
+        label: "Replace the file",
+        type: "file",
+        accept: ".pdf,.doc,.docx",
+        hint: "Optional. Tenders this is already attached to keep the file they were published with.",
+      },
+    ]
+  }
+
   const columns: DataTableColumn[] = [
     { key: "title", label: "Document" },
     { key: "category", label: "Category" },
@@ -77,9 +112,10 @@ export default async function AdminDocumentLibraryPage() {
         <div className="font-medium">{doc.title}</div>
         {doc.description ? <div className="text-xs text-muted-foreground">{doc.description}</div> : null}
       </div>,
-      <Badge key="cat" variant="secondary">
-        {CATEGORY_LABELS[doc.category] ?? doc.category}
-      </Badge>,
+      <div key="cat" className="flex flex-wrap gap-1">
+        <Badge variant="secondary">{CATEGORY_LABELS[doc.category] ?? doc.category}</Badge>
+        {doc.status !== "active" ? <Badge variant="outline">Inactive</Badge> : null}
+      </div>,
       fileSize(doc.file_size),
       <a
         key="file"
@@ -93,7 +129,18 @@ export default async function AdminDocumentLibraryPage() {
       </a>,
     ],
     actions: (
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-1">
+        <EntityFormDialog
+          trigger={
+            <Button variant="ghost" size="icon-sm" aria-label="Edit">
+              <Pencil className="size-4" aria-hidden="true" />
+            </Button>
+          }
+          title={doc.title}
+          fields={fieldsFor(doc)}
+          action={updateLibraryDocument}
+          hiddenFields={{ id: doc.id }}
+        />
         <DeleteButton
           id={doc.id}
           action={deleteLibraryDocument}

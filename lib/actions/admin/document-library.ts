@@ -82,6 +82,86 @@ export async function uploadLibraryDocument(
   return { success: true }
 }
 
+const updateSchema = uploadSchema.extend({
+  id: z.string().uuid(),
+  status: z.enum(["active", "inactive"]).default("active"),
+})
+
+/**
+ * Edits a library document, and replaces its file if a new one is chosen.
+ *
+ * Replacing is safe: a tender already carrying this document holds its own
+ * copy of the file's address, so what was published with it does not change.
+ */
+export async function updateLibraryDocument(
+  _prev: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const parsed = updateSchema.safeParse({
+    id: formData.get("id") ?? "",
+    title: formData.get("title") ?? "",
+    description: formData.get("description") ?? "",
+    category: formData.get("category") ?? "rfq_form",
+    sortOrder: formData.get("sortOrder") ?? 0,
+    status: formData.get("status") ?? "active",
+  })
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+
+  const supabase = await createClient()
+
+  const fields: {
+    title: string
+    description: string | null
+    category: string
+    sort_order: number
+    status: string
+    updated_at: string
+    file_url?: string
+    file_name?: string
+    file_size?: number
+    content_type?: string | null
+  } = {
+    title: parsed.data.title,
+    description: parsed.data.description || null,
+    category: parsed.data.category,
+    sort_order: parsed.data.sortOrder,
+    status: parsed.data.status,
+    updated_at: new Date().toISOString(),
+  }
+
+  const file = formData.get("file")
+  if (file instanceof File && file.size > 0) {
+    if (file.size > MAX_DOC_BYTES) return { success: false, error: "File must be smaller than 20MB." }
+
+    const path = `library/${Date.now()}-${file.name}`
+    const { error: uploadError } = await supabase.storage
+      .from("downloads")
+      .upload(path, file, { contentType: file.type, upsert: false })
+
+    if (uploadError) return { success: false, error: "You don't have permission to upload documents." }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("downloads").getPublicUrl(path)
+
+    fields.file_url = publicUrl
+    fields.file_name = file.name
+    fields.file_size = file.size
+    fields.content_type = file.type || null
+  }
+
+  const { data, error } = await supabase
+    .from("margaret_document_library")
+    .update(fields)
+    .eq("id", parsed.data.id)
+    .select("id")
+
+  if (error || !data?.length) return { success: false, error: "You don't have permission to do this." }
+
+  revalidate()
+  return { success: true }
+}
+
 /** Soft delete: tenders that already carry a copy are unaffected. */
 export async function deleteLibraryDocument(id: string): Promise<ActionResult> {
   const supabase = await createClient()
