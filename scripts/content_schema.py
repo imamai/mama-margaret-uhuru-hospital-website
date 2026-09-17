@@ -69,7 +69,7 @@ TABLES = [
         "derive": {"slug": "full_name"},
         "columns": [
             "full_name", "title", "specialization", "department_slug",
-            "qualifications", "years_experience", "email", "phone", "sort_order", "status",
+            "years_experience", "email", "phone", "sort_order", "status",
         ],
         "notes": (
             "Photographs are uploaded in the admin, not here — a filename in this sheet "

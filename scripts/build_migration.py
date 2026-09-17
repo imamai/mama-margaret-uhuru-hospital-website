@@ -100,8 +100,10 @@ def upsert(table, key, columns, record):
     where = " and ".join(
         f"{c} = {expr}" for c, expr in pairs if c in keys
     )
+    # A blank cell leaves the existing value alone. Clearing a field is done in
+    # the admin, deliberately, not by leaving a cell empty in a spreadsheet.
     sets = ", ".join(
-        f"{c} = {expr}" for c, expr in pairs if c not in keys
+        f"{c} = coalesce({expr}, {c})" for c, expr in pairs if c not in keys
     )
 
     cols = ", ".join(c for c, _ in pairs)

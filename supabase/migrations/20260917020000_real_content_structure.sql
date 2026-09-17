@@ -6,12 +6,12 @@
 
 /* Departments — 24 row(s) */
 
-update margaret_departments set name = 'Accident and Emergency', description = 'Accident and Emergency operates 24 hours and provides immediate, life saving care to patients with acute illness, severe injuries or sudden medical trauma.', phone = null, email = null, location = null, sort_order = 1, status = 'published', updated_at = now() where slug = 'accident-and-emergency';
+update margaret_departments set name = coalesce('Accident and Emergency', name), description = coalesce('Accident and Emergency operates 24 hours and provides immediate, life saving care to patients with acute illness, severe injuries or sudden medical trauma.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(1, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'accident-and-emergency';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Accident and Emergency', 'Accident and Emergency operates 24 hours and provides immediate, life saving care to patients with acute illness, severe injuries or sudden medical trauma.', null, null, null, 1, 'published', 'accident-and-emergency'
 where not exists (select 1 from margaret_departments where slug = 'accident-and-emergency');
 
-update margaret_departments set name = 'Laboratory Services', description = 'The Laboratory at MMUH provides comprehensive diagnostic testing services to support accurate diagnosis, treatment, and patient management. Our laboratory operates 24 hours a day, 7 days a week, ensuring timely access to critical diagnostic services for both inpatients and outpatients, including emergencies.
+update margaret_departments set name = coalesce('Laboratory Services', name), description = coalesce('The Laboratory at MMUH provides comprehensive diagnostic testing services to support accurate diagnosis, treatment, and patient management. Our laboratory operates 24 hours a day, 7 days a week, ensuring timely access to critical diagnostic services for both inpatients and outpatients, including emergencies.
 We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation.
 Our Services
 • Haematology – Full blood count, erythrocyte sedimentation rate (ESR), Coagulation profile
@@ -21,7 +21,7 @@ Our Services
 • Immunoassays/ Serology tests – Thyroid Function Tests (TFTs), HbA1c, HBsAg, HAV, HCV,
 • Microbiology tests -Gram stain, Ziehl Nelsen(ZN), Wet Preparation Urine microscopy, Indian Ink, Cell Count, CSF / Serum Crag, ASOT Test, Helicobacter Pylori, Gen-expert & TB LAM, CSF) Analysis
 • HTS - including Viral load, CD4 count and Early Infant Diagnosis (EID).
-Our team of qualified and experienced laboratory personnel is dedicated to delivering accurate, reliable, and timely results.', phone = null, email = null, location = null, sort_order = 2, status = 'published', updated_at = now() where slug = 'laboratory-services';
+Our team of qualified and experienced laboratory personnel is dedicated to delivering accurate, reliable, and timely results.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(2, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'laboratory-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Laboratory Services', 'The Laboratory at MMUH provides comprehensive diagnostic testing services to support accurate diagnosis, treatment, and patient management. Our laboratory operates 24 hours a day, 7 days a week, ensuring timely access to critical diagnostic services for both inpatients and outpatients, including emergencies.
 We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation.
@@ -36,21 +36,21 @@ Our Services
 Our team of qualified and experienced laboratory personnel is dedicated to delivering accurate, reliable, and timely results.', null, null, null, 2, 'published', 'laboratory-services'
 where not exists (select 1 from margaret_departments where slug = 'laboratory-services');
 
-update margaret_departments set name = 'Radiology Services', description = 'The Radiology Department is a specialized medical unit that uses imaging technology to diagnose and treat diseases.
+update margaret_departments set name = coalesce('Radiology Services', name), description = coalesce('The Radiology Department is a specialized medical unit that uses imaging technology to diagnose and treat diseases.
 
-We provide accurate, timely imaging services including X-ray and Ultrasound. Our team of expert radiologists, radiographers, and support staff is committed to patient safety, quality imaging, and precise diagnosis to support excellent clinical care.', phone = null, email = null, location = null, sort_order = 3, status = 'published', updated_at = now() where slug = 'radiology-services';
+We provide accurate, timely imaging services including X-ray and Ultrasound. Our team of expert radiologists, radiographers, and support staff is committed to patient safety, quality imaging, and precise diagnosis to support excellent clinical care.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(3, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'radiology-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Radiology Services', 'The Radiology Department is a specialized medical unit that uses imaging technology to diagnose and treat diseases.
 
 We provide accurate, timely imaging services including X-ray and Ultrasound. Our team of expert radiologists, radiographers, and support staff is committed to patient safety, quality imaging, and precise diagnosis to support excellent clinical care.', null, null, null, 3, 'published', 'radiology-services'
 where not exists (select 1 from margaret_departments where slug = 'radiology-services');
 
-update margaret_departments set name = 'Dental Services', description = null, phone = null, email = null, location = null, sort_order = 4, status = 'published', updated_at = now() where slug = 'dental-services';
+update margaret_departments set name = coalesce('Dental Services', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(4, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dental-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Dental Services', null, null, null, null, 4, 'published', 'dental-services'
 where not exists (select 1 from margaret_departments where slug = 'dental-services');
 
-update margaret_departments set name = 'Ophthalmology', description = 'Eye Department
+update margaret_departments set name = coalesce('Ophthalmology', name), description = coalesce('Eye Department
 Services available
 - Screening
 - Treatment
@@ -58,7 +58,7 @@ Services available
 - Informed Refferals
 - Spectacles prescription
 - Students mentorship/trainnings
-- Health Education.', phone = null, email = null, location = null, sort_order = 5, status = 'published', updated_at = now() where slug = 'ophthalmology';
+- Health Education.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(5, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'ophthalmology';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Ophthalmology', 'Eye Department
 Services available
@@ -71,12 +71,12 @@ Services available
 - Health Education.', null, null, null, 5, 'published', 'ophthalmology'
 where not exists (select 1 from margaret_departments where slug = 'ophthalmology');
 
-update margaret_departments set name = 'Comprehensive Care Clinic', description = 'We offer care and treatment, lab investigations CD4 count, viral load, HIV testing, PITC and adherence treatment', phone = null, email = null, location = null, sort_order = 6, status = 'published', updated_at = now() where slug = 'comprehensive-care-clinic';
+update margaret_departments set name = coalesce('Comprehensive Care Clinic', name), description = coalesce('We offer care and treatment, lab investigations CD4 count, viral load, HIV testing, PITC and adherence treatment', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(6, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'comprehensive-care-clinic';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Comprehensive Care Clinic', 'We offer care and treatment, lab investigations CD4 count, viral load, HIV testing, PITC and adherence treatment', null, null, null, 6, 'published', 'comprehensive-care-clinic'
 where not exists (select 1 from margaret_departments where slug = 'comprehensive-care-clinic');
 
-update margaret_departments set name = 'Mother, Child Health & Family Planning', description = 'Mother, Child Health and Family Planning Department
+update margaret_departments set name = coalesce('Mother, Child Health & Family Planning', name), description = coalesce('Mother, Child Health and Family Planning Department
 The Mother, Child Health and Family Planning (MCH/FP) Department provides integrated health services aimed at promoting the health and well-being of women, mothers, newborns, children, and families. The department focuses on prevention, early detection, treatment, health education, and appropriate referrals.
 Key services include:
 Antenatal and postnatal care
@@ -88,7 +88,7 @@ Family planning and reproductive health services
 Prevention and management of maternal and child illnesses
 Health education and counselling
 Referral and follow-up of clients requiring specialized care
-The overall goal is to reduce maternal, newborn and child morbidity and mortality while promoting healthy families and responsible reproductive choices.', phone = null, email = null, location = null, sort_order = 7, status = 'published', updated_at = now() where slug = 'mother-child-health-family-planning';
+The overall goal is to reduce maternal, newborn and child morbidity and mortality while promoting healthy families and responsible reproductive choices.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(7, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'mother-child-health-family-planning';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Mother, Child Health & Family Planning', 'Mother, Child Health and Family Planning Department
 The Mother, Child Health and Family Planning (MCH/FP) Department provides integrated health services aimed at promoting the health and well-being of women, mothers, newborns, children, and families. The department focuses on prevention, early detection, treatment, health education, and appropriate referrals.
@@ -105,7 +105,7 @@ Referral and follow-up of clients requiring specialized care
 The overall goal is to reduce maternal, newborn and child morbidity and mortality while promoting healthy families and responsible reproductive choices.', null, null, null, 7, 'published', 'mother-child-health-family-planning'
 where not exists (select 1 from margaret_departments where slug = 'mother-child-health-family-planning');
 
-update margaret_departments set name = 'Nutrition Clinic', description = 'Inpatient Clinical Nutrition
+update margaret_departments set name = coalesce('Nutrition Clinic', name), description = coalesce('Inpatient Clinical Nutrition
 Proper nutrition during a hospital stay drastically reduces healing period, prevents complications, and builds immune resilience. Our inpatient services include:
 • Nutritional Assessment & Care Planning: Universal screening of patients upon admission to identify, prevent, and treat malnutrition.
 • Critical Care & Specialized Nutrition: Formulating precise Enteral (tube feeding) and nutrition regimens for patients in the medical and surgical wards.
@@ -123,7 +123,7 @@ We offer comprehensive care at every developmental stage to guarantee proper gro
 • Prenatal & Gestational Support: Nutritional tracking for expectant mothers, focusing on the health of the mother including acceptable gestational weight gain, prevention and management of nutritional deficiencies, gestational Diabetes eclampsia etc.
 • Infant and Young Child Feeding (IYCF): Direct and one-on-one support to ensure optimal and exclusive breastfeeding for the first six months of life, management of breast feeding challenges/difficulties, and complimentary feeding from 6-59 months for optimal growth and development.
 • Growth monitoring& promotion, Vitamin A supplementation and provision of antihelmiths:
- Malnutrition Clinic(OTC): Comprehensive management of acute malnutrition and rehabilitation through personalized nutrition counselling, use of therapeutic feeds and approaches like PdHear', phone = null, email = null, location = null, sort_order = 8, status = 'published', updated_at = now() where slug = 'nutrition-clinic';
+ Malnutrition Clinic(OTC): Comprehensive management of acute malnutrition and rehabilitation through personalized nutrition counselling, use of therapeutic feeds and approaches like PdHear', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(8, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'nutrition-clinic';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Nutrition Clinic', 'Inpatient Clinical Nutrition
 Proper nutrition during a hospital stay drastically reduces healing period, prevents complications, and builds immune resilience. Our inpatient services include:
@@ -146,7 +146,7 @@ We offer comprehensive care at every developmental stage to guarantee proper gro
  Malnutrition Clinic(OTC): Comprehensive management of acute malnutrition and rehabilitation through personalized nutrition counselling, use of therapeutic feeds and approaches like PdHear', null, null, null, 8, 'published', 'nutrition-clinic'
 where not exists (select 1 from margaret_departments where slug = 'nutrition-clinic');
 
-update margaret_departments set name = 'Pharmacy Services', description = 'The Pharmacy Department at Mama Margaret Uhuru Hospital is committed to ensuring safe, effective and affordable access to medicines for all patients. We support clinical care through accurate dispensing, patient counseling and close collaboration with doctors, nurses and staff across all departments.
+update margaret_departments set name = coalesce('Pharmacy Services', name), description = coalesce('The Pharmacy Department at Mama Margaret Uhuru Hospital is committed to ensuring safe, effective and affordable access to medicines for all patients. We support clinical care through accurate dispensing, patient counseling and close collaboration with doctors, nurses and staff across all departments.
 
 Drug Availability
 We maintain over 90% availability of essential medicines as per the Kenya Essential Medicines List. All tracer medicines for maternity, pediatrics, NCDs and emergency care are in stock.
@@ -167,7 +167,7 @@ Safety and Quality
 
 Updates and Alerts
 .AMR - Implementation of antibiotic prescribing guidelines to reduce resistance
-. All patients advised to carry valid prescriptions for refill', phone = null, email = null, location = null, sort_order = 9, status = 'published', updated_at = now() where slug = 'pharmacy-services';
+. All patients advised to carry valid prescriptions for refill', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(9, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'pharmacy-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Pharmacy Services', 'The Pharmacy Department at Mama Margaret Uhuru Hospital is committed to ensuring safe, effective and affordable access to medicines for all patients. We support clinical care through accurate dispensing, patient counseling and close collaboration with doctors, nurses and staff across all departments.
 
@@ -193,22 +193,22 @@ Updates and Alerts
 . All patients advised to carry valid prescriptions for refill', null, null, null, 9, 'published', 'pharmacy-services'
 where not exists (select 1 from margaret_departments where slug = 'pharmacy-services');
 
-update margaret_departments set name = 'Medical Social Work', description = 'The Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', phone = null, email = null, location = null, sort_order = 10, status = 'published', updated_at = now() where slug = 'medical-social-work';
+update margaret_departments set name = coalesce('Medical Social Work', name), description = coalesce('The Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(10, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'medical-social-work';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Medical Social Work', 'The Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', null, null, null, 10, 'published', 'medical-social-work'
 where not exists (select 1 from margaret_departments where slug = 'medical-social-work');
 
-update margaret_departments set name = 'SGBV Centre (Tumaini Clinic)', description = 'The department also hosts Tumaini Clinic, which provides specialized support and services to clients affected by Sexual and Gender-Based Violence (SGBV), including counselling, referral, follow-up and coordination of appropriate care.', phone = null, email = null, location = null, sort_order = 11, status = 'published', updated_at = now() where slug = 'sgbv-centre-tumaini-clinic';
+update margaret_departments set name = coalesce('SGBV Centre (Tumaini Clinic)', name), description = coalesce('The department also hosts Tumaini Clinic, which provides specialized support and services to clients affected by Sexual and Gender-Based Violence (SGBV), including counselling, referral, follow-up and coordination of appropriate care.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(11, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'sgbv-centre-tumaini-clinic';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'SGBV Centre (Tumaini Clinic)', 'The department also hosts Tumaini Clinic, which provides specialized support and services to clients affected by Sexual and Gender-Based Violence (SGBV), including counselling, referral, follow-up and coordination of appropriate care.', null, null, null, 11, 'published', 'sgbv-centre-tumaini-clinic'
 where not exists (select 1 from margaret_departments where slug = 'sgbv-centre-tumaini-clinic');
 
-update margaret_departments set name = 'Health Information Systems', description = 'The main key role of this department is to serve as the main back borne of patient data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records management, clinical coding of diseases, cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors, Ensure the dept is in accordance with data protection act (2019), cordinate vital statistic by processing all births and deaths notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', phone = null, email = null, location = null, sort_order = 12, status = 'published', updated_at = now() where slug = 'health-information-systems';
+update margaret_departments set name = coalesce('Health Information Systems', name), description = coalesce('The main key role of this department is to serve as the main back borne of patient data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records management, clinical coding of diseases, cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors, Ensure the dept is in accordance with data protection act (2019), cordinate vital statistic by processing all births and deaths notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(12, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'health-information-systems';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Health Information Systems', 'The main key role of this department is to serve as the main back borne of patient data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records management, clinical coding of diseases, cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors, Ensure the dept is in accordance with data protection act (2019), cordinate vital statistic by processing all births and deaths notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', null, null, null, 12, 'published', 'health-information-systems'
 where not exists (select 1 from margaret_departments where slug = 'health-information-systems');
 
-update margaret_departments set name = 'Orthopaedics & Trauma', description = 'Mama Margaret Uhuru Hospital — Orthopaedic & Trauma Department
+update margaret_departments set name = coalesce('Orthopaedics & Trauma', name), description = coalesce('Mama Margaret Uhuru Hospital — Orthopaedic & Trauma Department
 
 This is the department that handles your kind of problem — back pain with tingling, fractures, joint injuries, road traffic accidents, falls.
 
@@ -216,7 +216,7 @@ What we do:
 - Trauma: Fractures, dislocations, open wounds, RTA, boda injuries, falls — 24hr casualty cover
 - Spine: Back pain, tingling, sciatica, disc problems, TB spine screening, referrals for MRI
 - Orthopaedics: Arthritis, bone infections, clubfoot clinic, casting/plaster, minor orthopaedic surgeries
-- Rehab: Works with Physiotherapy for back exercises, traction, post-op rehab', phone = null, email = null, location = null, sort_order = 13, status = 'published', updated_at = now() where slug = 'orthopaedics-trauma';
+- Rehab: Works with Physiotherapy for back exercises, traction, post-op rehab', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(13, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'orthopaedics-trauma';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Orthopaedics & Trauma', 'Mama Margaret Uhuru Hospital — Orthopaedic & Trauma Department
 
@@ -229,7 +229,7 @@ What we do:
 - Rehab: Works with Physiotherapy for back exercises, traction, post-op rehab', null, null, null, 13, 'published', 'orthopaedics-trauma'
 where not exists (select 1 from margaret_departments where slug = 'orthopaedics-trauma');
 
-update margaret_departments set name = 'Occupational Therapy', description = 'Our occupational therapy department at MMUH is committed to offering the following services
+update margaret_departments set name = coalesce('Occupational Therapy', name), description = coalesce('Our occupational therapy department at MMUH is committed to offering the following services
 
 *Activities of daily living training to help individuals regain independence in feeding, toileting, bathing, dressing and grooming
 
@@ -237,7 +237,7 @@ update margaret_departments set name = 'Occupational Therapy', description = 'Ou
 
 *Pediatric care which includes assessment and play based therapy for children with physical, cognitive, developmental and learning challenges
 
-*Assistive devices which include assessing, recommending and fabricating of splints or custom made adaptive tools to aid mobility and function.', phone = null, email = null, location = null, sort_order = 14, status = 'published', updated_at = now() where slug = 'occupational-therapy';
+*Assistive devices which include assessing, recommending and fabricating of splints or custom made adaptive tools to aid mobility and function.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(14, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'occupational-therapy';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Occupational Therapy', 'Our occupational therapy department at MMUH is committed to offering the following services
 
@@ -250,7 +250,7 @@ select 'Occupational Therapy', 'Our occupational therapy department at MMUH is c
 *Assistive devices which include assessing, recommending and fabricating of splints or custom made adaptive tools to aid mobility and function.', null, null, null, 14, 'published', 'occupational-therapy'
 where not exists (select 1 from margaret_departments where slug = 'occupational-therapy');
 
-update margaret_departments set name = 'Physiotherapy', description = '” Healing Through Motion, Empowering Recovery”
+update margaret_departments set name = coalesce('Physiotherapy', name), description = coalesce('” Healing Through Motion, Empowering Recovery”
 At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life.
 Services offered both in patient and outpatient basis.
 Our Services
@@ -262,7 +262,7 @@ Our Services
 • Post Surgical Care – Recovery after any surgery preventing complications, scar mobilization
 • Women’s Health Physiotherapy – Pelvic floor rehabilitation, prenatal and postnatal care, menopause related support
 • Disability assessment - Specialized physical assessments conducted in collaboration with other departments.
-• Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', phone = null, email = null, location = null, sort_order = 15, status = 'published', updated_at = now() where slug = 'physiotherapy';
+• Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(15, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'physiotherapy';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Physiotherapy', '” Healing Through Motion, Empowering Recovery”
 At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life.
@@ -279,47 +279,47 @@ Our Services
 • Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', null, null, null, 15, 'published', 'physiotherapy'
 where not exists (select 1 from margaret_departments where slug = 'physiotherapy');
 
-update margaret_departments set name = 'Orthopaedic Technology', description = 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions the department helps improve mobility, function, comfort, independence and quality of life, including follow-up,', phone = null, email = null, location = null, sort_order = 16, status = 'published', updated_at = now() where slug = 'orthopaedic-technology';
+update margaret_departments set name = coalesce('Orthopaedic Technology', name), description = coalesce('The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions the department helps improve mobility, function, comfort, independence and quality of life, including follow-up,', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(16, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'orthopaedic-technology';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Orthopaedic Technology', 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions the department helps improve mobility, function, comfort, independence and quality of life, including follow-up,', null, null, null, 16, 'published', 'orthopaedic-technology'
 where not exists (select 1 from margaret_departments where slug = 'orthopaedic-technology');
 
-update margaret_departments set name = 'Maternity', description = null, phone = null, email = null, location = null, sort_order = 17, status = 'published', updated_at = now() where slug = 'maternity';
+update margaret_departments set name = coalesce('Maternity', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(17, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'maternity';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Maternity', null, null, null, null, 17, 'published', 'maternity'
 where not exists (select 1 from margaret_departments where slug = 'maternity');
 
-update margaret_departments set name = 'Medical Ward', description = null, phone = null, email = null, location = null, sort_order = 18, status = 'published', updated_at = now() where slug = 'medical-ward';
+update margaret_departments set name = coalesce('Medical Ward', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(18, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'medical-ward';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Medical Ward', null, null, null, null, 18, 'published', 'medical-ward'
 where not exists (select 1 from margaret_departments where slug = 'medical-ward');
 
-update margaret_departments set name = 'Surgical Ward', description = null, phone = null, email = null, location = null, sort_order = 19, status = 'published', updated_at = now() where slug = 'surgical-ward';
+update margaret_departments set name = coalesce('Surgical Ward', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(19, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'surgical-ward';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Surgical Ward', null, null, null, null, 19, 'published', 'surgical-ward'
 where not exists (select 1 from margaret_departments where slug = 'surgical-ward');
 
-update margaret_departments set name = 'Paediatric Ward', description = null, phone = null, email = null, location = null, sort_order = 20, status = 'published', updated_at = now() where slug = 'paediatric-ward';
+update margaret_departments set name = coalesce('Paediatric Ward', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(20, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'paediatric-ward';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Paediatric Ward', null, null, null, null, 20, 'published', 'paediatric-ward'
 where not exists (select 1 from margaret_departments where slug = 'paediatric-ward');
 
-update margaret_departments set name = 'Newborn Unit (NBU)', description = null, phone = null, email = null, location = null, sort_order = 21, status = 'published', updated_at = now() where slug = 'newborn-unit-nbu';
+update margaret_departments set name = coalesce('Newborn Unit (NBU)', name), description = coalesce(null, description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(21, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'newborn-unit-nbu';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Newborn Unit (NBU)', null, null, null, null, 21, 'published', 'newborn-unit-nbu'
 where not exists (select 1 from margaret_departments where slug = 'newborn-unit-nbu');
 
-update margaret_departments set name = 'Supply Chain Management', description = 'Reliable supply ensuring essential medicine, consumamble equipment and services are available when they are needed', phone = null, email = null, location = null, sort_order = 22, status = 'published', updated_at = now() where slug = 'supply-chain-management';
+update margaret_departments set name = coalesce('Supply Chain Management', name), description = coalesce('Reliable supply ensuring essential medicine, consumamble equipment and services are available when they are needed', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(22, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'supply-chain-management';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Supply Chain Management', 'Reliable supply ensuring essential medicine, consumamble equipment and services are available when they are needed', null, null, null, 22, 'published', 'supply-chain-management'
 where not exists (select 1 from margaret_departments where slug = 'supply-chain-management');
 
-update margaret_departments set name = 'Biomedical Engineering', description = 'Medical Engineering Department is responsible for the management, maintenance, safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration, user training, techical assessment and equipment lifecycle management, ensuring reliable and quality patient care.', phone = null, email = null, location = null, sort_order = 23, status = 'published', updated_at = now() where slug = 'biomedical-engineering';
+update margaret_departments set name = coalesce('Biomedical Engineering', name), description = coalesce('Medical Engineering Department is responsible for the management, maintenance, safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration, user training, techical assessment and equipment lifecycle management, ensuring reliable and quality patient care.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(23, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'biomedical-engineering';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Biomedical Engineering', 'Medical Engineering Department is responsible for the management, maintenance, safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration, user training, techical assessment and equipment lifecycle management, ensuring reliable and quality patient care.', null, null, null, 23, 'published', 'biomedical-engineering'
 where not exists (select 1 from margaret_departments where slug = 'biomedical-engineering');
 
-update margaret_departments set name = 'Farewell Services', description = 'In a hospital, the mortuary (also called morgue) has a much bigger role than just keeping bodies. It''s part of patient care, law, and public health.
+update margaret_departments set name = coalesce('Farewell Services', name), description = coalesce('In a hospital, the mortuary (also called morgue) has a much bigger role than just keeping bodies. It''s part of patient care, law, and public health.
 
 Here are its full roles:
 
@@ -356,7 +356,7 @@ Here are its full roles:
 8. Teaching and Research
 - In teaching hospitals, the mortuary is used to train medical students, nurses, and morticians.
 
-In short: it protects dignity of the dead, gives answers about cause of death, protects the living from infection, helps families, and helps the law.', phone = null, email = null, location = null, sort_order = 24, status = 'published', updated_at = now() where slug = 'farewell-services';
+In short: it protects dignity of the dead, gives answers about cause of death, protects the living from infection, helps families, and helps the law.', description), phone = coalesce(null, phone), email = coalesce(null, email), location = coalesce(null, location), sort_order = coalesce(24, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'farewell-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Farewell Services', 'In a hospital, the mortuary (also called morgue) has a much bigger role than just keeping bodies. It''s part of patient care, law, and public health.
 
@@ -400,247 +400,247 @@ where not exists (select 1 from margaret_departments where slug = 'farewell-serv
 
 /* Specialised clinics — 9 row(s) */
 
-update margaret_clinics set name = 'Medical Outpatient Clinic (MOPC)', description = null, department_id = null, sort_order = 1, status = 'published', updated_at = now() where slug = 'medical-outpatient-clinic-mopc';
+update margaret_clinics set name = coalesce('Medical Outpatient Clinic (MOPC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(1, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'medical-outpatient-clinic-mopc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Medical Outpatient Clinic (MOPC)', null, null, 1, 'published', 'medical-outpatient-clinic-mopc'
 where not exists (select 1 from margaret_clinics where slug = 'medical-outpatient-clinic-mopc');
 
-update margaret_clinics set name = 'Surgical Outpatient Clinic (SOPC)', description = null, department_id = null, sort_order = 2, status = 'published', updated_at = now() where slug = 'surgical-outpatient-clinic-sopc';
+update margaret_clinics set name = coalesce('Surgical Outpatient Clinic (SOPC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(2, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'surgical-outpatient-clinic-sopc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Surgical Outpatient Clinic (SOPC)', null, null, 2, 'published', 'surgical-outpatient-clinic-sopc'
 where not exists (select 1 from margaret_clinics where slug = 'surgical-outpatient-clinic-sopc');
 
-update margaret_clinics set name = 'Paediatric Outpatient Clinic (POPC)', description = null, department_id = null, sort_order = 3, status = 'published', updated_at = now() where slug = 'paediatric-outpatient-clinic-popc';
+update margaret_clinics set name = coalesce('Paediatric Outpatient Clinic (POPC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(3, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'paediatric-outpatient-clinic-popc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Paediatric Outpatient Clinic (POPC)', null, null, 3, 'published', 'paediatric-outpatient-clinic-popc'
 where not exists (select 1 from margaret_clinics where slug = 'paediatric-outpatient-clinic-popc');
 
-update margaret_clinics set name = 'Gynaecology Outpatient Clinic (GOPC)', description = null, department_id = null, sort_order = 4, status = 'published', updated_at = now() where slug = 'gynaecology-outpatient-clinic-gopc';
+update margaret_clinics set name = coalesce('Gynaecology Outpatient Clinic (GOPC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(4, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'gynaecology-outpatient-clinic-gopc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Gynaecology Outpatient Clinic (GOPC)', null, null, 4, 'published', 'gynaecology-outpatient-clinic-gopc'
 where not exists (select 1 from margaret_clinics where slug = 'gynaecology-outpatient-clinic-gopc');
 
-update margaret_clinics set name = 'High Risk Clinic (HRC)', description = null, department_id = null, sort_order = 5, status = 'published', updated_at = now() where slug = 'high-risk-clinic-hrc';
+update margaret_clinics set name = coalesce('High Risk Clinic (HRC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(5, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'high-risk-clinic-hrc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'High Risk Clinic (HRC)', null, null, 5, 'published', 'high-risk-clinic-hrc'
 where not exists (select 1 from margaret_clinics where slug = 'high-risk-clinic-hrc');
 
-update margaret_clinics set name = 'Orthopaedic Outpatient Clinic (OOPC)', description = null, department_id = null, sort_order = 6, status = 'published', updated_at = now() where slug = 'orthopaedic-outpatient-clinic-oopc';
+update margaret_clinics set name = coalesce('Orthopaedic Outpatient Clinic (OOPC)', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(6, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'orthopaedic-outpatient-clinic-oopc';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Orthopaedic Outpatient Clinic (OOPC)', null, null, 6, 'published', 'orthopaedic-outpatient-clinic-oopc'
 where not exists (select 1 from margaret_clinics where slug = 'orthopaedic-outpatient-clinic-oopc');
 
-update margaret_clinics set name = 'Chest Clinic', description = null, department_id = null, sort_order = 7, status = 'published', updated_at = now() where slug = 'chest-clinic';
+update margaret_clinics set name = coalesce('Chest Clinic', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(7, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'chest-clinic';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Chest Clinic', null, null, 7, 'published', 'chest-clinic'
 where not exists (select 1 from margaret_clinics where slug = 'chest-clinic');
 
-update margaret_clinics set name = 'Dermatology Clinic', description = null, department_id = null, sort_order = 8, status = 'published', updated_at = now() where slug = 'dermatology-clinic';
+update margaret_clinics set name = coalesce('Dermatology Clinic', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(8, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dermatology-clinic';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Dermatology Clinic', null, null, 8, 'published', 'dermatology-clinic'
 where not exists (select 1 from margaret_clinics where slug = 'dermatology-clinic');
 
-update margaret_clinics set name = 'Eye Clinic', description = null, department_id = null, sort_order = 9, status = 'published', updated_at = now() where slug = 'eye-clinic';
+update margaret_clinics set name = coalesce('Eye Clinic', name), description = coalesce(null, description), department_id = coalesce(null, department_id), sort_order = coalesce(9, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'eye-clinic';
 insert into margaret_clinics (name, description, department_id, sort_order, status, slug)
 select 'Eye Clinic', null, null, 9, 'published', 'eye-clinic'
 where not exists (select 1 from margaret_clinics where slug = 'eye-clinic');
 
 /* Consultant clinic timetable — 13 row(s) */
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Mutuku', specialist_role = 'Chest Specialist', room = null, status = 'published', updated_at = now() where day_of_week = 1 and clinic_label = 'Chest Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Mutuku', specialist_name), specialist_role = coalesce('Chest Specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 1 and clinic_label = 'Chest Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 1, 'Chest Clinic', '08:00', null, 'Mutuku', 'Chest Specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 1 and clinic_label = 'Chest Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Obare', specialist_role = 'Physician', room = null, status = 'published', updated_at = now() where day_of_week = 2 and clinic_label = 'Medical Outpatient Clinic (MOPC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Obare', specialist_name), specialist_role = coalesce('Physician', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 2 and clinic_label = 'Medical Outpatient Clinic (MOPC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 2, 'Medical Outpatient Clinic (MOPC)', '08:00', null, 'Dr Obare', 'Physician', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 2 and clinic_label = 'Medical Outpatient Clinic (MOPC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Mange', specialist_role = 'Obs/Gyne', room = null, status = 'published', updated_at = now() where day_of_week = 2 and clinic_label = 'High Risk Clinic (HRC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Mange', specialist_name), specialist_role = coalesce('Obs/Gyne', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 2 and clinic_label = 'High Risk Clinic (HRC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 2, 'High Risk Clinic (HRC)', '08:00', null, 'Dr Mange', 'Obs/Gyne', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 2 and clinic_label = 'High Risk Clinic (HRC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Jane Kamau', specialist_role = 'Skin specialist', room = null, status = 'published', updated_at = now() where day_of_week = 2 and clinic_label = 'Dermatology Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Jane Kamau', specialist_name), specialist_role = coalesce('Skin specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 2 and clinic_label = 'Dermatology Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 2, 'Dermatology Clinic', '08:00', null, 'Jane Kamau', 'Skin specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 2 and clinic_label = 'Dermatology Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Lilian', specialist_role = 'Eye Specialist', room = null, status = 'published', updated_at = now() where day_of_week = 2 and clinic_label = 'Eye Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Lilian', specialist_name), specialist_role = coalesce('Eye Specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 2 and clinic_label = 'Eye Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 2, 'Eye Clinic', '08:00', null, 'Lilian', 'Eye Specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 2 and clinic_label = 'Eye Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Jemimah', specialist_role = 'PAEDITIRICIAN', room = null, status = 'published', updated_at = now() where day_of_week = 3 and clinic_label = 'Paediatric Outpatient Clinic (POPC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Jemimah', specialist_name), specialist_role = coalesce('PAEDITIRICIAN', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 3 and clinic_label = 'Paediatric Outpatient Clinic (POPC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 3, 'Paediatric Outpatient Clinic (POPC)', '08:00', null, 'Dr Jemimah', 'PAEDITIRICIAN', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 3 and clinic_label = 'Paediatric Outpatient Clinic (POPC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Athuman', specialist_role = 'Orthopaedic Surgeon', room = null, status = 'published', updated_at = now() where day_of_week = 3 and clinic_label = 'Orthopaedic Outpatient Clinic (OOPC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Athuman', specialist_name), specialist_role = coalesce('Orthopaedic Surgeon', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 3 and clinic_label = 'Orthopaedic Outpatient Clinic (OOPC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 3, 'Orthopaedic Outpatient Clinic (OOPC)', '08:00', null, 'Dr Athuman', 'Orthopaedic Surgeon', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 3 and clinic_label = 'Orthopaedic Outpatient Clinic (OOPC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Mutuku', specialist_role = 'Chest Specialist', room = null, status = 'published', updated_at = now() where day_of_week = 3 and clinic_label = 'Chest Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Mutuku', specialist_name), specialist_role = coalesce('Chest Specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 3 and clinic_label = 'Chest Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 3, 'Chest Clinic', '08:00', null, 'Mutuku', 'Chest Specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 3 and clinic_label = 'Chest Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Mange', specialist_role = 'Obs/Gyne', room = null, status = 'published', updated_at = now() where day_of_week = 4 and clinic_label = 'Gynaecology Outpatient Clinic (GOPC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Mange', specialist_name), specialist_role = coalesce('Obs/Gyne', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 4 and clinic_label = 'Gynaecology Outpatient Clinic (GOPC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 4, 'Gynaecology Outpatient Clinic (GOPC)', '08:00', null, 'Dr Mange', 'Obs/Gyne', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 4 and clinic_label = 'Gynaecology Outpatient Clinic (GOPC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Jane Kamau', specialist_role = 'Skin specialist', room = null, status = 'published', updated_at = now() where day_of_week = 4 and clinic_label = 'Dermatology Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Jane Kamau', specialist_name), specialist_role = coalesce('Skin specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 4 and clinic_label = 'Dermatology Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 4, 'Dermatology Clinic', '08:00', null, 'Jane Kamau', 'Skin specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 4 and clinic_label = 'Dermatology Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Dr Wambugu', specialist_role = 'Surgeon', room = null, status = 'published', updated_at = now() where day_of_week = 5 and clinic_label = 'Surgical Outpatient Clinic (SOPC)' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Dr Wambugu', specialist_name), specialist_role = coalesce('Surgeon', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 5 and clinic_label = 'Surgical Outpatient Clinic (SOPC)' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 5, 'Surgical Outpatient Clinic (SOPC)', '08:00', null, 'Dr Wambugu', 'Surgeon', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 5 and clinic_label = 'Surgical Outpatient Clinic (SOPC)' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Mutuku', specialist_role = 'Chest Specialist', room = null, status = 'published', updated_at = now() where day_of_week = 5 and clinic_label = 'Chest Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Mutuku', specialist_name), specialist_role = coalesce('Chest Specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 5 and clinic_label = 'Chest Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 5, 'Chest Clinic', '08:00', null, 'Mutuku', 'Chest Specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 5 and clinic_label = 'Chest Clinic' and start_time = '08:00');
 
-update margaret_clinic_schedule set end_time = null, specialist_name = 'Lilian', specialist_role = 'Eye Specialist', room = null, status = 'published', updated_at = now() where day_of_week = 5 and clinic_label = 'Eye Clinic' and start_time = '08:00';
+update margaret_clinic_schedule set end_time = coalesce(null, end_time), specialist_name = coalesce('Lilian', specialist_name), specialist_role = coalesce('Eye Specialist', specialist_role), room = coalesce(null, room), status = coalesce('published', status), updated_at = now() where day_of_week = 5 and clinic_label = 'Eye Clinic' and start_time = '08:00';
 insert into margaret_clinic_schedule (day_of_week, clinic_label, start_time, end_time, specialist_name, specialist_role, room, status)
 select 5, 'Eye Clinic', '08:00', null, 'Lilian', 'Eye Specialist', null, 'published'
 where not exists (select 1 from margaret_clinic_schedule where day_of_week = 5 and clinic_label = 'Eye Clinic' and start_time = '08:00');
 
 /* Doctors — 11 row(s) */
 
-update margaret_doctors set full_name = 'Dr. Mange Mwenda', title = 'Dr.', specialization = 'Obstetrics & Gynaecology', department_id = (select id from margaret_departments where slug = 'maternity' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 1, status = 'published', updated_at = now() where slug = 'dr-mange-mwenda';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Mange Mwenda', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, null, 1, 'published', 'dr-mange-mwenda'
+update margaret_doctors set full_name = coalesce('Dr. Mange Mwenda', full_name), title = coalesce('Dr.', title), specialization = coalesce('Obstetrics & Gynaecology', specialization), department_id = coalesce((select id from margaret_departments where slug = 'maternity' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(1, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-mange-mwenda';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Mange Mwenda', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, 1, 'published', 'dr-mange-mwenda'
 where not exists (select 1 from margaret_doctors where slug = 'dr-mange-mwenda');
 
-update margaret_doctors set full_name = 'Dr. Rukia Aden Bulle', title = 'Dr.', specialization = 'Obstetrics & Gynaecology', department_id = (select id from margaret_departments where slug = 'maternity' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 2, status = 'published', updated_at = now() where slug = 'dr-rukia-aden-bulle';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Rukia Aden Bulle', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, null, 2, 'published', 'dr-rukia-aden-bulle'
+update margaret_doctors set full_name = coalesce('Dr. Rukia Aden Bulle', full_name), title = coalesce('Dr.', title), specialization = coalesce('Obstetrics & Gynaecology', specialization), department_id = coalesce((select id from margaret_departments where slug = 'maternity' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(2, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-rukia-aden-bulle';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Rukia Aden Bulle', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, 2, 'published', 'dr-rukia-aden-bulle'
 where not exists (select 1 from margaret_doctors where slug = 'dr-rukia-aden-bulle');
 
-update margaret_doctors set full_name = 'Dr. Zephaniah Ashira', title = 'Dr.', specialization = 'Obstetrics & Gynaecology', department_id = (select id from margaret_departments where slug = 'maternity' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 3, status = 'published', updated_at = now() where slug = 'dr-zephaniah-ashira';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Zephaniah Ashira', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, null, 3, 'published', 'dr-zephaniah-ashira'
+update margaret_doctors set full_name = coalesce('Dr. Zephaniah Ashira', full_name), title = coalesce('Dr.', title), specialization = coalesce('Obstetrics & Gynaecology', specialization), department_id = coalesce((select id from margaret_departments where slug = 'maternity' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(3, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-zephaniah-ashira';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Zephaniah Ashira', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, 3, 'published', 'dr-zephaniah-ashira'
 where not exists (select 1 from margaret_doctors where slug = 'dr-zephaniah-ashira');
 
-update margaret_doctors set full_name = 'Dr. Mary Wanjiku', title = 'Dr.', specialization = 'Obstetrics & Gynaecology', department_id = (select id from margaret_departments where slug = 'maternity' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 4, status = 'published', updated_at = now() where slug = 'dr-mary-wanjiku';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Mary Wanjiku', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, null, 4, 'published', 'dr-mary-wanjiku'
+update margaret_doctors set full_name = coalesce('Dr. Mary Wanjiku', full_name), title = coalesce('Dr.', title), specialization = coalesce('Obstetrics & Gynaecology', specialization), department_id = coalesce((select id from margaret_departments where slug = 'maternity' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(4, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-mary-wanjiku';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Mary Wanjiku', 'Dr.', 'Obstetrics & Gynaecology', (select id from margaret_departments where slug = 'maternity' limit 1), null, null, null, 4, 'published', 'dr-mary-wanjiku'
 where not exists (select 1 from margaret_doctors where slug = 'dr-mary-wanjiku');
 
-update margaret_doctors set full_name = 'Dr. Dorcas Obare', title = 'Dr.', specialization = 'Physician', department_id = (select id from margaret_departments where slug = 'medical-ward' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 5, status = 'published', updated_at = now() where slug = 'dr-dorcas-obare';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Dorcas Obare', 'Dr.', 'Physician', (select id from margaret_departments where slug = 'medical-ward' limit 1), null, null, null, null, 5, 'published', 'dr-dorcas-obare'
+update margaret_doctors set full_name = coalesce('Dr. Dorcas Obare', full_name), title = coalesce('Dr.', title), specialization = coalesce('Physician', specialization), department_id = coalesce((select id from margaret_departments where slug = 'medical-ward' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(5, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-dorcas-obare';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Dorcas Obare', 'Dr.', 'Physician', (select id from margaret_departments where slug = 'medical-ward' limit 1), null, null, null, 5, 'published', 'dr-dorcas-obare'
 where not exists (select 1 from margaret_doctors where slug = 'dr-dorcas-obare');
 
-update margaret_doctors set full_name = 'Dr. Kenneth Mwarabu', title = 'Dr.', specialization = 'General Surgeon', department_id = (select id from margaret_departments where slug = 'surgical-ward' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 6, status = 'published', updated_at = now() where slug = 'dr-kenneth-mwarabu';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Kenneth Mwarabu', 'Dr.', 'General Surgeon', (select id from margaret_departments where slug = 'surgical-ward' limit 1), null, null, null, null, 6, 'published', 'dr-kenneth-mwarabu'
+update margaret_doctors set full_name = coalesce('Dr. Kenneth Mwarabu', full_name), title = coalesce('Dr.', title), specialization = coalesce('General Surgeon', specialization), department_id = coalesce((select id from margaret_departments where slug = 'surgical-ward' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(6, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-kenneth-mwarabu';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Kenneth Mwarabu', 'Dr.', 'General Surgeon', (select id from margaret_departments where slug = 'surgical-ward' limit 1), null, null, null, 6, 'published', 'dr-kenneth-mwarabu'
 where not exists (select 1 from margaret_doctors where slug = 'dr-kenneth-mwarabu');
 
-update margaret_doctors set full_name = 'Dr. Bernard Kelvin', title = 'Dr.', specialization = 'General Surgeon', department_id = (select id from margaret_departments where slug = 'surgical-ward' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 7, status = 'published', updated_at = now() where slug = 'dr-bernard-kelvin';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Bernard Kelvin', 'Dr.', 'General Surgeon', (select id from margaret_departments where slug = 'surgical-ward' limit 1), null, null, null, null, 7, 'published', 'dr-bernard-kelvin'
+update margaret_doctors set full_name = coalesce('Dr. Bernard Kelvin', full_name), title = coalesce('Dr.', title), specialization = coalesce('General Surgeon', specialization), department_id = coalesce((select id from margaret_departments where slug = 'surgical-ward' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(7, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-bernard-kelvin';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Bernard Kelvin', 'Dr.', 'General Surgeon', (select id from margaret_departments where slug = 'surgical-ward' limit 1), null, null, null, 7, 'published', 'dr-bernard-kelvin'
 where not exists (select 1 from margaret_doctors where slug = 'dr-bernard-kelvin');
 
-update margaret_doctors set full_name = 'Dr. Jemimah Karingi', title = 'Dr.', specialization = 'Paediatrician', department_id = (select id from margaret_departments where slug = 'paediatric-ward' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 8, status = 'published', updated_at = now() where slug = 'dr-jemimah-karingi';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Jemimah Karingi', 'Dr.', 'Paediatrician', (select id from margaret_departments where slug = 'paediatric-ward' limit 1), null, null, null, null, 8, 'published', 'dr-jemimah-karingi'
+update margaret_doctors set full_name = coalesce('Dr. Jemimah Karingi', full_name), title = coalesce('Dr.', title), specialization = coalesce('Paediatrician', specialization), department_id = coalesce((select id from margaret_departments where slug = 'paediatric-ward' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(8, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-jemimah-karingi';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Jemimah Karingi', 'Dr.', 'Paediatrician', (select id from margaret_departments where slug = 'paediatric-ward' limit 1), null, null, null, 8, 'published', 'dr-jemimah-karingi'
 where not exists (select 1 from margaret_doctors where slug = 'dr-jemimah-karingi');
 
-update margaret_doctors set full_name = 'Dr. Serah Mbotela', title = 'Dr.', specialization = 'Paediatrician', department_id = (select id from margaret_departments where slug = 'paediatric-ward' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 9, status = 'published', updated_at = now() where slug = 'dr-serah-mbotela';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Serah Mbotela', 'Dr.', 'Paediatrician', (select id from margaret_departments where slug = 'paediatric-ward' limit 1), null, null, null, null, 9, 'published', 'dr-serah-mbotela'
+update margaret_doctors set full_name = coalesce('Dr. Serah Mbotela', full_name), title = coalesce('Dr.', title), specialization = coalesce('Paediatrician', specialization), department_id = coalesce((select id from margaret_departments where slug = 'paediatric-ward' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(9, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-serah-mbotela';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Serah Mbotela', 'Dr.', 'Paediatrician', (select id from margaret_departments where slug = 'paediatric-ward' limit 1), null, null, null, 9, 'published', 'dr-serah-mbotela'
 where not exists (select 1 from margaret_doctors where slug = 'dr-serah-mbotela');
 
-update margaret_doctors set full_name = 'Dr. Athuman Mohamed', title = 'Dr.', specialization = 'Orthopaedic Surgeon', department_id = (select id from margaret_departments where slug = 'orthopaedics-trauma' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 10, status = 'published', updated_at = now() where slug = 'dr-athuman-mohamed';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Athuman Mohamed', 'Dr.', 'Orthopaedic Surgeon', (select id from margaret_departments where slug = 'orthopaedics-trauma' limit 1), null, null, null, null, 10, 'published', 'dr-athuman-mohamed'
+update margaret_doctors set full_name = coalesce('Dr. Athuman Mohamed', full_name), title = coalesce('Dr.', title), specialization = coalesce('Orthopaedic Surgeon', specialization), department_id = coalesce((select id from margaret_departments where slug = 'orthopaedics-trauma' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(10, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-athuman-mohamed';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Athuman Mohamed', 'Dr.', 'Orthopaedic Surgeon', (select id from margaret_departments where slug = 'orthopaedics-trauma' limit 1), null, null, null, 10, 'published', 'dr-athuman-mohamed'
 where not exists (select 1 from margaret_doctors where slug = 'dr-athuman-mohamed');
 
-update margaret_doctors set full_name = 'Dr. Abigael Mosomi', title = 'Dr.', specialization = 'Radiologist', department_id = (select id from margaret_departments where slug = 'radiology-services' limit 1), qualifications = null, years_experience = null, email = null, phone = null, sort_order = 11, status = 'published', updated_at = now() where slug = 'dr-abigael-mosomi';
-insert into margaret_doctors (full_name, title, specialization, department_id, qualifications, years_experience, email, phone, sort_order, status, slug)
-select 'Dr. Abigael Mosomi', 'Dr.', 'Radiologist', (select id from margaret_departments where slug = 'radiology-services' limit 1), null, null, null, null, 11, 'published', 'dr-abigael-mosomi'
+update margaret_doctors set full_name = coalesce('Dr. Abigael Mosomi', full_name), title = coalesce('Dr.', title), specialization = coalesce('Radiologist', specialization), department_id = coalesce((select id from margaret_departments where slug = 'radiology-services' limit 1), department_id), years_experience = coalesce(null, years_experience), email = coalesce(null, email), phone = coalesce(null, phone), sort_order = coalesce(11, sort_order), status = coalesce('published', status), updated_at = now() where slug = 'dr-abigael-mosomi';
+insert into margaret_doctors (full_name, title, specialization, department_id, years_experience, email, phone, sort_order, status, slug)
+select 'Dr. Abigael Mosomi', 'Dr.', 'Radiologist', (select id from margaret_departments where slug = 'radiology-services' limit 1), null, null, null, 11, 'published', 'dr-abigael-mosomi'
 where not exists (select 1 from margaret_doctors where slug = 'dr-abigael-mosomi');
 
 /* Patient testimonials — 6 row(s) */
 
-update margaret_testimonials set quote = 'The services are good, thank you for saving my baby, SHALOM!', rating = 5, sort_order = 1, status = 'published', updated_at = now() where patient_name = 'Phoebe Owino';
+update margaret_testimonials set quote = coalesce('The services are good, thank you for saving my baby, SHALOM!', quote), rating = coalesce(5, rating), sort_order = coalesce(1, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Phoebe Owino';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Phoebe Owino', 'The services are good, thank you for saving my baby, SHALOM!', 5, 1, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Phoebe Owino');
 
-update margaret_testimonials set quote = 'The hospital is very clean and the services are very good, next time I prefer to come again', rating = 5, sort_order = 2, status = 'published', updated_at = now() where patient_name = 'Kennedy Wambua';
+update margaret_testimonials set quote = coalesce('The hospital is very clean and the services are very good, next time I prefer to come again', quote), rating = coalesce(5, rating), sort_order = coalesce(2, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Kennedy Wambua';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Kennedy Wambua', 'The hospital is very clean and the services are very good, next time I prefer to come again', 5, 2, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Kennedy Wambua');
 
-update margaret_testimonials set quote = 'Excellent Services and the staff were very helpful', rating = 5, sort_order = 3, status = 'published', updated_at = now() where patient_name = 'Peter';
+update margaret_testimonials set quote = coalesce('Excellent Services and the staff were very helpful', quote), rating = coalesce(5, rating), sort_order = coalesce(3, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Peter';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Peter', 'Excellent Services and the staff were very helpful', 5, 3, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Peter');
 
-update margaret_testimonials set quote = 'I appreciate the medics for perfect services', rating = 5, sort_order = 4, status = 'published', updated_at = now() where patient_name = 'Jose Kioko';
+update margaret_testimonials set quote = coalesce('I appreciate the medics for perfect services', quote), rating = coalesce(5, rating), sort_order = coalesce(4, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Jose Kioko';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Jose Kioko', 'I appreciate the medics for perfect services', 5, 4, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Jose Kioko');
 
-update margaret_testimonials set quote = 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital, the doctors are very dilligent with their work, I would like to give the hospital a five star rank. Great Services!', rating = 5, sort_order = 5, status = 'published', updated_at = now() where patient_name = 'Sharon Odhiambo';
+update margaret_testimonials set quote = coalesce('I am satisfied with the services offered at Mama Margaret Uhuru Hospital, the doctors are very dilligent with their work, I would like to give the hospital a five star rank. Great Services!', quote), rating = coalesce(5, rating), sort_order = coalesce(5, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Sharon Odhiambo';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Sharon Odhiambo', 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital, the doctors are very dilligent with their work, I would like to give the hospital a five star rank. Great Services!', 5, 5, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Sharon Odhiambo');
 
-update margaret_testimonials set quote = 'Since my wife was admitted and discharged, the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', rating = 5, sort_order = 6, status = 'published', updated_at = now() where patient_name = 'Brian Kevin';
+update margaret_testimonials set quote = coalesce('Since my wife was admitted and discharged, the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', quote), rating = coalesce(5, rating), sort_order = coalesce(6, sort_order), status = coalesce('published', status), updated_at = now() where patient_name = 'Brian Kevin';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
 select 'Brian Kevin', 'Since my wife was admitted and discharged, the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', 5, 6, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Brian Kevin');
 
 /* Partners — 6 row(s) */
 
-update margaret_partners set partner_type = 'ngo', website_url = null, sort_order = 1, status = 'active', updated_at = now() where name = 'Msf';
+update margaret_partners set partner_type = coalesce('ngo', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(1, sort_order), status = coalesce('active', status), updated_at = now() where name = 'MSF';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
-select 'Msf', 'ngo', null, 1, 'active'
-where not exists (select 1 from margaret_partners where name = 'Msf');
+select 'MSF', 'ngo', null, 1, 'active'
+where not exists (select 1 from margaret_partners where name = 'MSF');
 
-update margaret_partners set partner_type = 'ngo', website_url = null, sort_order = 2, status = 'active', updated_at = now() where name = 'Jphiego';
+update margaret_partners set partner_type = coalesce('ngo', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(2, sort_order), status = coalesce('active', status), updated_at = now() where name = 'Jhpiego';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
-select 'Jphiego', 'ngo', null, 2, 'active'
-where not exists (select 1 from margaret_partners where name = 'Jphiego');
+select 'Jhpiego', 'ngo', null, 2, 'active'
+where not exists (select 1 from margaret_partners where name = 'Jhpiego');
 
-update margaret_partners set partner_type = 'ngo', website_url = null, sort_order = 3, status = 'active', updated_at = now() where name = 'Unicef';
+update margaret_partners set partner_type = coalesce('ngo', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(3, sort_order), status = coalesce('active', status), updated_at = now() where name = 'UNICEF';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
-select 'Unicef', 'ngo', null, 3, 'active'
-where not exists (select 1 from margaret_partners where name = 'Unicef');
+select 'UNICEF', 'ngo', null, 3, 'active'
+where not exists (select 1 from margaret_partners where name = 'UNICEF');
 
-update margaret_partners set partner_type = 'ngo', website_url = null, sort_order = 4, status = 'active', updated_at = now() where name = 'Ciheb';
+update margaret_partners set partner_type = coalesce('ngo', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(4, sort_order), status = coalesce('active', status), updated_at = now() where name = 'CIHEB';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
-select 'Ciheb', 'ngo', null, 4, 'active'
-where not exists (select 1 from margaret_partners where name = 'Ciheb');
+select 'CIHEB', 'ngo', null, 4, 'active'
+where not exists (select 1 from margaret_partners where name = 'CIHEB');
 
-update margaret_partners set partner_type = 'academic', website_url = null, sort_order = 5, status = 'active', updated_at = now() where name = 'Kmtc';
+update margaret_partners set partner_type = coalesce('academic', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(5, sort_order), status = coalesce('active', status), updated_at = now() where name = 'KMTC';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
-select 'Kmtc', 'academic', null, 5, 'active'
-where not exists (select 1 from margaret_partners where name = 'Kmtc');
+select 'KMTC', 'academic', null, 5, 'active'
+where not exists (select 1 from margaret_partners where name = 'KMTC');
 
-update margaret_partners set partner_type = 'academic', website_url = null, sort_order = 6, status = 'active', updated_at = now() where name = 'Pumwani Maternity School';
+update margaret_partners set partner_type = coalesce('academic', partner_type), website_url = coalesce(null, website_url), sort_order = coalesce(6, sort_order), status = coalesce('active', status), updated_at = now() where name = 'Pumwani Maternity School';
 insert into margaret_partners (name, partner_type, website_url, sort_order, status)
 select 'Pumwani Maternity School', 'academic', null, 6, 'active'
 where not exists (select 1 from margaret_partners where name = 'Pumwani Maternity School');
 
 /* Insurance partners — 2 row(s) */
 
-update margaret_insurance_partners set website_url = null, sort_order = 1, status = 'active', updated_at = now() where name = 'SHA (Social Health Authority)';
+update margaret_insurance_partners set website_url = coalesce(null, website_url), sort_order = coalesce(1, sort_order), status = coalesce('active', status), updated_at = now() where name = 'SHA (Social Health Authority)';
 insert into margaret_insurance_partners (name, website_url, sort_order, status)
 select 'SHA (Social Health Authority)', null, 1, 'active'
 where not exists (select 1 from margaret_insurance_partners where name = 'SHA (Social Health Authority)');
 
-update margaret_insurance_partners set website_url = null, sort_order = 2, status = 'active', updated_at = now() where name = 'APA Insurance';
+update margaret_insurance_partners set website_url = coalesce(null, website_url), sort_order = coalesce(2, sort_order), status = coalesce('active', status), updated_at = now() where name = 'APA Insurance';
 insert into margaret_insurance_partners (name, website_url, sort_order, status)
 select 'APA Insurance', null, 2, 'active'
 where not exists (select 1 from margaret_insurance_partners where name = 'APA Insurance');
@@ -649,69 +649,69 @@ where not exists (select 1 from margaret_insurance_partners where name = 'APA In
 
 /* Homepage figures — 4 row(s) */
 
-update margaret_stats set value = '2', sort_order = 1, status = 'active', updated_at = now() where label = 'Years of Service';
+update margaret_stats set value = coalesce('2', value), sort_order = coalesce(1, sort_order), status = coalesce('active', status), updated_at = now() where label = 'Years of Service';
 insert into margaret_stats (label, value, sort_order, status)
 select 'Years of Service', '2', 1, 'active'
 where not exists (select 1 from margaret_stats where label = 'Years of Service');
 
-update margaret_stats set value = '450', sort_order = 2, status = 'active', updated_at = now() where label = 'Bed Capacity';
+update margaret_stats set value = coalesce('450', value), sort_order = coalesce(2, sort_order), status = coalesce('active', status), updated_at = now() where label = 'Bed Capacity';
 insert into margaret_stats (label, value, sort_order, status)
 select 'Bed Capacity', '450', 2, 'active'
 where not exists (select 1 from margaret_stats where label = 'Bed Capacity');
 
-update margaret_stats set value = '86,940', sort_order = 3, status = 'active', updated_at = now() where label = 'Outpatients Annually';
+update margaret_stats set value = coalesce('86,940', value), sort_order = coalesce(3, sort_order), status = coalesce('active', status), updated_at = now() where label = 'Outpatients Annually';
 insert into margaret_stats (label, value, sort_order, status)
 select 'Outpatients Annually', '86,940', 3, 'active'
 where not exists (select 1 from margaret_stats where label = 'Outpatients Annually');
 
-update margaret_stats set value = '11', sort_order = 4, status = 'active', updated_at = now() where label = 'Specialist Doctors';
+update margaret_stats set value = coalesce('11', value), sort_order = coalesce(4, sort_order), status = coalesce('active', status), updated_at = now() where label = 'Specialist Doctors';
 insert into margaret_stats (label, value, sort_order, status)
 select 'Specialist Doctors', '11', 4, 'active'
 where not exists (select 1 from margaret_stats where label = 'Specialist Doctors');
 
 /* Contact details and about — 9 row(s) */
 
-update margaret_settings set setting_value = to_jsonb('Mama Margaret Uhuru Hospital'::text), updated_at = now() where setting_key = 'hospital_name';
+update margaret_settings set setting_value = coalesce(to_jsonb('Mama Margaret Uhuru Hospital'::text), setting_value), updated_at = now() where setting_key = 'hospital_name';
 insert into margaret_settings (setting_key, setting_value)
 select 'hospital_name', to_jsonb('Mama Margaret Uhuru Hospital'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'hospital_name');
 
-update margaret_settings set setting_value = to_jsonb('MMUH'::text), updated_at = now() where setting_key = 'hospital_short_name';
+update margaret_settings set setting_value = coalesce(to_jsonb('MMUH'::text), setting_value), updated_at = now() where setting_key = 'hospital_short_name';
 insert into margaret_settings (setting_key, setting_value)
 select 'hospital_short_name', to_jsonb('MMUH'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'hospital_short_name');
 
-update margaret_settings set setting_value = to_jsonb('0794-416-498'::text), updated_at = now() where setting_key = 'emergency_phone';
+update margaret_settings set setting_value = coalesce(to_jsonb('0794-416-498'::text), setting_value), updated_at = now() where setting_key = 'emergency_phone';
 insert into margaret_settings (setting_key, setting_value)
 select 'emergency_phone', to_jsonb('0794-416-498'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'emergency_phone');
 
-update margaret_settings set setting_value = to_jsonb('Coming soon'::text), updated_at = now() where setting_key = 'ambulance_phone';
+update margaret_settings set setting_value = coalesce(to_jsonb('Coming soon'::text), setting_value), updated_at = now() where setting_key = 'ambulance_phone';
 insert into margaret_settings (setting_key, setting_value)
 select 'ambulance_phone', to_jsonb('Coming soon'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'ambulance_phone');
 
-update margaret_settings set setting_value = to_jsonb('0794-414-425'::text), updated_at = now() where setting_key = 'general_phone';
+update margaret_settings set setting_value = coalesce(to_jsonb('0794-414-425'::text), setting_value), updated_at = now() where setting_key = 'general_phone';
 insert into margaret_settings (setting_key, setting_value)
 select 'general_phone', to_jsonb('0794-414-425'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'general_phone');
 
-update margaret_settings set setting_value = to_jsonb('mamamargaretuhuruhosp2024@gmail.com'::text), updated_at = now() where setting_key = 'email';
+update margaret_settings set setting_value = coalesce(to_jsonb('mamamargaretuhuruhosp2024@gmail.com'::text), setting_value), updated_at = now() where setting_key = 'email';
 insert into margaret_settings (setting_key, setting_value)
 select 'email', to_jsonb('mamamargaretuhuruhosp2024@gmail.com'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'email');
 
-update margaret_settings set setting_value = to_jsonb('Outering Road, Off Kamunde Road Nairobi'::text), updated_at = now() where setting_key = 'address';
+update margaret_settings set setting_value = coalesce(to_jsonb('Outering Road, Off Kamunde Road Nairobi'::text), setting_value), updated_at = now() where setting_key = 'address';
 insert into margaret_settings (setting_key, setting_value)
 select 'address', to_jsonb('Outering Road, Off Kamunde Road Nairobi'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'address');
 
-update margaret_settings set setting_value = to_jsonb('To provide accessible, comprehensive, client-centred healthcare through equitable, quality, evidence-based and efficient services, supported by continuous improvement, innovation, training, research and strategic partnerships'::text), updated_at = now() where setting_key = 'mission';
+update margaret_settings set setting_value = coalesce(to_jsonb('To provide accessible, comprehensive, client-centred healthcare through equitable, quality, evidence-based and efficient services, supported by continuous improvement, innovation, training, research and strategic partnerships'::text), setting_value), updated_at = now() where setting_key = 'mission';
 insert into margaret_settings (setting_key, setting_value)
 select 'mission', to_jsonb('To provide accessible, comprehensive, client-centred healthcare through equitable, quality, evidence-based and efficient services, supported by continuous improvement, innovation, training, research and strategic partnerships'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'mission');
 
-update margaret_settings set setting_value = to_jsonb('To be the premier institution for value-based healthcare services in Nairobi'::text), updated_at = now() where setting_key = 'vision';
+update margaret_settings set setting_value = coalesce(to_jsonb('To be the premier institution for value-based healthcare services in Nairobi'::text), setting_value), updated_at = now() where setting_key = 'vision';
 insert into margaret_settings (setting_key, setting_value)
 select 'vision', to_jsonb('To be the premier institution for value-based healthcare services in Nairobi'::text)
 where not exists (select 1 from margaret_settings where setting_key = 'vision');

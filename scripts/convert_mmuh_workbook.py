@@ -73,6 +73,12 @@ SPECIALITY = {
     "Paeditrician": "Paediatrician",
 }
 
+# Acronyms stay acronyms; only names written in capitals for emphasis are reset.
+PARTNER_NAMES = {
+    "JPHIEGO": "Jhpiego",
+    "PUMWANI MATERNITY SCHOOL": "Pumwani Maternity School",
+}
+
 CLINIC_NAMES = {
     "Medical Outpatient Clinic (MOPC)": ["MOPC"],
     "Surgical Outpatient Clinic (SOPC)": ["SOPC"],
@@ -219,13 +225,13 @@ def main(src_path, out_path):
             "title": "Dr.",
             "specialization": SPECIALITY.get(str(spec).strip(), str(spec).strip()),
             "department_slug": dept_slug.get(mapped, ""),
-            "qualifications": "", "years_experience": "", "email": "", "phone": "",
+            "years_experience": "", "email": "", "phone": "",
             "sort_order": len(doctors) + 1,
             "status": "published",
         })
     write_sheet(out, "Doctors",
                 ["full_name", "title", "specialization", "department_slug",
-                 "qualifications", "years_experience", "email", "phone", "sort_order", "status"],
+                 "years_experience", "email", "phone", "sort_order", "status"],
                 "Photographs are uploaded in the admin, not here. department_slug must "
                 "match a slug on the Departments sheet.",
                 doctors)
@@ -252,7 +258,7 @@ def main(src_path, out_path):
     partners = []
     for name, kind in ((r[0], r[1]) for r in rows_of(src["Our Partners"], 5)):
         partners.append({
-            "name": str(name).strip().title() if str(name).isupper() else str(name).strip(),
+            "name": PARTNER_NAMES.get(str(name).strip(), str(name).strip()),
             "partner_type": TYPES.get(str(kind).strip(), "general"),
             "website_url": "",
             "sort_order": len(partners) + 1,

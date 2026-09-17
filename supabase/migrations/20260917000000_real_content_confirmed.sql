@@ -41,7 +41,13 @@ select
     'insurance',    (select jsonb_agg(to_jsonb(t)) from margaret_insurance_partners t),
     'awards',       (select jsonb_agg(to_jsonb(t)) from margaret_awards t),
     'events',       (select jsonb_agg(to_jsonb(t)) from margaret_events t),
-    'settings',     (select jsonb_agg(to_jsonb(t)) from margaret_settings t)
+    'settings',     (select jsonb_agg(to_jsonb(t)) from margaret_settings t),
+    -- Not changed here, but the migrations that follow rewrite them, and this is
+    -- the last point at which the seeded versions still exist.
+    'departments',  (select jsonb_agg(to_jsonb(t)) from margaret_departments t),
+    'clinics',      (select jsonb_agg(to_jsonb(t)) from margaret_clinics t),
+    'doctors',      (select jsonb_agg(to_jsonb(t)) from margaret_doctors t),
+    'pages',        (select jsonb_agg(to_jsonb(t)) from margaret_pages t)
   )
 where not exists (
   select 1 from margaret_archive_seed_content
@@ -70,7 +76,7 @@ update margaret_testimonials
    and patient_name in ('Jane K.', 'Samuel M.');
 
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
-select v.patient_name, v.quote, 5, v.sort_order, 'active'
+select v.patient_name, v.quote, 5, v.sort_order, 'published'
 from (values
   ('Phoebe Owino',    'The services are good, thank you for saving my baby, SHALOM!', 1),
   ('Kennedy Wambua',  'The hospital is very clean and the services are very good, next time I prefer to come again', 2),
