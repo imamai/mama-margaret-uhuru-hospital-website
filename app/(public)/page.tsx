@@ -14,6 +14,7 @@ import { NewsGrid } from "@/components/sections/news-grid"
 import { PartnersSection } from "@/components/sections/partners-section"
 import { StatsBar } from "@/components/sections/stats-bar"
 import { TestimonialsCarousel } from "@/components/sections/testimonials-carousel"
+import { VideoSection } from "@/components/sections/video-section"
 import { getVisibleHomepageSections } from "@/lib/data/homepage"
 import { getSiteSettings } from "@/lib/data/settings"
 import { pageMetadata } from "@/lib/seo"
@@ -27,6 +28,7 @@ const SECTION_COMPONENTS: Record<string, () => Promise<JSX.Element | null>> = {
   news: NewsGrid,
   events: EventsGrid,
   testimonials: TestimonialsCarousel,
+  video: VideoSection,
   insurance: InsurancePartnersSection,
   gallery: GallerySection,
   awards: AwardsSection,

@@ -6,6 +6,7 @@ import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
 import type { ActionResult } from "@/lib/actions/forms"
 import { MAX_UPLOAD_BYTES, uploadPublicFile } from "@/lib/actions/admin/storage"
+import { youTubeId } from "@/lib/video"
 
 async function upsertSettings(entries: { key: string; value: unknown }[]): Promise<ActionResult> {
   const supabase = await createClient()
@@ -171,6 +172,32 @@ export async function updateSeoSettings(_prev: ActionResult | null, formData: Fo
     {
       key: "seo_defaults",
       value: { title: parsed.data.title || "", description: parsed.data.description || "", og_image: parsed.data.og_image || "" },
+    },
+  ])
+}
+
+const videoSchema = z.object({
+  url: z.string().trim().max(500).optional().or(z.literal("")),
+  title: z.string().trim().max(200).optional().or(z.literal("")),
+  description: z.string().trim().max(500).optional().or(z.literal("")),
+})
+
+export async function updateVideoSettings(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
+  const parsed = videoSchema.safeParse(Object.fromEntries(formData.entries()))
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Invalid input." }
+
+  // Reject a link we cannot read rather than saving one that renders nothing:
+  // the section hides itself on a bad URL, so without this the admin would see
+  // "Saved" and then an unchanged homepage, with no clue why.
+  const url = parsed.data.url || ""
+  if (url && !youTubeId(url)) {
+    return { success: false, error: "That does not look like a YouTube link. Paste the address from the video's page, e.g. https://www.youtube.com/watch?v=..." }
+  }
+
+  return upsertSettings([
+    {
+      key: "homepage_video",
+      value: { url, title: parsed.data.title || "", description: parsed.data.description || "" },
     },
   ])
 }

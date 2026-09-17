@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         // host and one project — the optimizer cannot be pointed anywhere else.
         pathname: "/storage/v1/**",
       },
+      {
+        // YouTube poster frames for the homepage video section. Only the
+        // thumbnail host, and only its /vi/ path -- the player itself is an
+        // iframe and never goes through the image optimizer.
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        pathname: "/vi/**",
+      },
     ],
 
     /**
