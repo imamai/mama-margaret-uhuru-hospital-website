@@ -21,6 +21,8 @@ export type SiteSettings = {
   favicon_url: string | null
   emergency_phone: string
   ambulance_phone: string
+  general_phone: string
+  email: string
   address: string
   social_links: Record<string, string>
   seo_defaults: { title: string; description: string; og_image: string }
@@ -51,8 +53,13 @@ const DEFAULTS: SiteSettings = {
   },
   logo_url: null,
   favicon_url: null,
-  emergency_phone: "999",
+  // The hospital's real emergency line. This is a fallback for a missing row,
+  // and a fallback that dials the wrong number is worse than no number at all —
+  // it renders in the header bar, the footer and the emergency banner.
+  emergency_phone: "0794-416-498",
   ambulance_phone: "",
+  general_phone: "",
+  email: "",
   address: "",
   social_links: {},
   seo_defaults: { title: "Mama Margaret Uhuru Hospital", description: "", og_image: "" },

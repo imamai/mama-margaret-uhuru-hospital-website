@@ -27,7 +27,15 @@ export async function EmergencyBanner() {
             <PhoneCall className="size-4" aria-hidden="true" />
             Emergency: {settings.emergency_phone}
           </a>
-          {settings.ambulance_phone ? (
+          {/* The hospital has no ambulance line yet and asked for "Coming soon"
+              in its place. A value with no digits in it is not dialable, so it is
+              shown as plain text rather than a tel: link that goes nowhere. */}
+          {settings.ambulance_phone && !/\d/.test(settings.ambulance_phone) ? (
+            <span className="flex items-center gap-2 rounded-lg border border-white/25 px-4 py-2.5 text-sm font-semibold text-white/70">
+              <PhoneCall className="size-4" aria-hidden="true" />
+              Ambulance: {settings.ambulance_phone}
+            </span>
+          ) : settings.ambulance_phone ? (
             <a
               href={`tel:${settings.ambulance_phone}`}
               className="flex items-center gap-2 rounded-lg border border-white/40 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
