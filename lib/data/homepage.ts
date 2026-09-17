@@ -83,14 +83,3 @@ export const getPartners = cache(async () => {
   return data ?? []
 })
 
-export const getGallery = cache(async (limit = 12) => {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from("margaret_gallery")
-    .select("id, title, media_type, file_url, thumbnail_url, caption")
-    .is("deleted_at", null)
-    .eq("status", "published")
-    .order("sort_order", { ascending: true })
-    .limit(limit)
-  return data ?? []
-})

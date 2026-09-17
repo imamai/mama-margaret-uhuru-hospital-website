@@ -1,9 +1,12 @@
 import { SectionHeading } from "@/components/common/section-heading"
 import { SmartImage } from "@/components/common/smart-image"
-import { getGallery } from "@/lib/data/homepage"
+import { listPhotos } from "@/lib/data/media"
 
 export async function GallerySection() {
-  const items = await getGallery(8)
+  // Photos only. margaret_gallery also holds videos, which belong on /media
+  // behind a play button -- a YouTube poster frame dropped into this grid looks
+  // like a photograph and does nothing when tapped.
+  const items = (await listPhotos()).slice(0, 8)
   if (items.length === 0) return null
 
   return (
