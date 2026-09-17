@@ -12871,6 +12871,27 @@ export type Database = {
           },
         ]
       }
+      margaret_maintenance_accounts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       margaret_menus: {
         Row: {
           created_at: string
@@ -15389,8 +15410,12 @@ export type Database = {
         Args: { p_email: string }
         Returns: string | null
       }
-      margaret_list_staff: {
+      margaret_hidden_staff_count: {
         Args: never
+        Returns: number
+      }
+      margaret_list_staff: {
+        Args: { p_include_hidden?: boolean }
         Returns: {
           user_id: string
           email: string
@@ -15398,6 +15423,7 @@ export type Database = {
           last_sign_in_at: string | null
           created_at: string
           roles: Json
+          hidden: boolean
         }[]
       }
       margaret_has_permission: {

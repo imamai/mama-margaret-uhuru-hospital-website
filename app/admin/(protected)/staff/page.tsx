@@ -1,10 +1,12 @@
-import { KeyRound, Plus, ShieldCheck, UserPlus } from "lucide-react"
+import Link from "next/link"
+import { Eye, EyeOff, KeyRound, Plus, ShieldCheck, UserPlus } from "lucide-react"
 
 import { DataTable, type DataTableColumn, type DataTableRow } from "@/components/admin/data-table"
 import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog, type EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { MaintenanceToggle } from "@/components/admin/maintenance-toggle"
 import {
   createStaff,
   grantExistingUser,
@@ -22,6 +24,7 @@ type StaffRow = {
   last_sign_in_at: string | null
   created_at: string
   roles: { id: string; name: string; slug: string }[]
+  hidden: boolean
 }
 
 type Role = { id: string; name: string; description: string | null }
@@ -42,13 +45,21 @@ function when(value: string | null): string {
  * both the right meaning -- they are no longer staff here -- and the safe one,
  * since this Supabase project is shared with other sites.
  */
-export default async function AdminStaffPage() {
+export default async function AdminStaffPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ show?: string }>
+}) {
   const supabase = await createClient()
+  const showAll = (await searchParams).show === "all"
 
-  const [{ data: staffData, error }, { data: roleData }] = await Promise.all([
-    supabase.rpc("margaret_list_staff"),
-    supabase.from("margaret_roles").select("id, name, description").eq("status", "active").order("name"),
-  ])
+  const [{ data: staffData, error }, { data: roleData }, { data: hiddenCount }, { data: superAdmin }] =
+    await Promise.all([
+      supabase.rpc("margaret_list_staff", { p_include_hidden: showAll }),
+      supabase.from("margaret_roles").select("id, name, description").eq("status", "active").order("name"),
+      supabase.rpc("margaret_hidden_staff_count"),
+      supabase.rpc("margaret_is_super_admin"),
+    ])
 
   if (error) {
     return (
@@ -62,6 +73,7 @@ export default async function AdminStaffPage() {
   const staff = (staffData ?? []) as StaffRow[]
   const roles = (roleData ?? []) as Role[]
   const accountsCreatable = canCreateAccounts()
+  const withheld = showAll ? 0 : (hiddenCount ?? 0)
 
   /** One checkbox per role; the action reads every field named "role:<id>". */
   function roleFields(selected: string[] = []): EntityFieldConfig[] {
@@ -110,7 +122,14 @@ export default async function AdminStaffPage() {
     searchText: `${person.full_name} ${person.email} ${person.roles.map((r) => r.name).join(" ")}`.toLowerCase(),
     cells: [
       <div key="who">
-        <div className="font-medium">{person.full_name || "—"}</div>
+        <div className="flex items-center gap-2">
+          <span className="font-medium">{person.full_name || "—"}</span>
+          {person.hidden ? (
+            <Badge variant="outline" className="gap-1 font-normal">
+              <EyeOff className="size-3" aria-hidden="true" /> Maintenance
+            </Badge>
+          ) : null}
+        </div>
         <div className="text-xs text-muted-foreground">{person.email}</div>
       </div>,
       <div key="roles" className="flex flex-wrap gap-1">
@@ -158,6 +177,8 @@ export default async function AdminStaffPage() {
             hiddenFields={{ userId: person.user_id }}
           />
         ) : null}
+
+        {superAdmin ? <MaintenanceToggle userId={person.user_id} hidden={person.hidden} /> : null}
 
         <DeleteButton
           id={person.user_id}
@@ -211,6 +232,37 @@ export default async function AdminStaffPage() {
       ) : null}
 
       <DataTable columns={columns} rows={rows} searchable />
+
+      {withheld > 0 || showAll ? (
+        <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          {showAll ? (
+            <>
+              <Eye className="size-4" aria-hidden="true" />
+              Showing maintenance accounts — the people who look after the site, not hospital staff.
+              <Link href="/admin/staff" className="font-medium text-foreground underline underline-offset-4">
+                Hide them
+              </Link>
+            </>
+          ) : (
+            <>
+              <EyeOff className="size-4" aria-hidden="true" />
+              {withheld === 1
+                ? "One maintenance account is not shown here."
+                : `${withheld} maintenance accounts are not shown here.`}
+              {superAdmin ? (
+                <Link
+                  href="/admin/staff?show=all"
+                  className="font-medium text-foreground underline underline-offset-4"
+                >
+                  Show them
+                </Link>
+              ) : (
+                <span>A super admin can show them.</span>
+              )}
+            </>
+          )}
+        </p>
+      ) : null}
 
       <section className="mt-10">
         <h2 className="mb-1 text-lg font-bold">What each role can do</h2>

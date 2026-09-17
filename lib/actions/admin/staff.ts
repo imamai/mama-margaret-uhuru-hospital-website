@@ -231,6 +231,36 @@ export async function resetStaffPassword(_prev: ActionResult | null, formData: F
 }
 
 /**
+ * Marks an account as maintenance, or stops it being one.
+ *
+ * Only a super admin, because this decides what other administrators see. The
+ * database enforces that too; this check is so the refusal reads properly
+ * instead of arriving as an RLS failure.
+ */
+export async function setMaintenanceAccount(userId: string, hidden: boolean): Promise<ActionResult> {
+  const check = await guard()
+  if (!check.ok) return { success: false, error: check.error }
+
+  const { data: superAdmin } = await check.supabase.rpc("margaret_is_super_admin")
+  if (!superAdmin) {
+    return { success: false, error: "Only a super admin can hide or show a maintenance account." }
+  }
+
+  if (hidden) {
+    const { error } = await check.supabase
+      .from("margaret_maintenance_accounts")
+      .upsert({ user_id: userId, created_by: check.currentUserId }, { onConflict: "user_id" })
+    if (error) return { success: false, error: "We couldn't hide that account." }
+  } else {
+    const { error } = await check.supabase.from("margaret_maintenance_accounts").delete().eq("user_id", userId)
+    if (error) return { success: false, error: "We couldn't show that account." }
+  }
+
+  revalidate()
+  return { success: true }
+}
+
+/**
  * Takes away every role this site has given someone.
  *
  * Their login survives: it may belong to another site in this project, and in
