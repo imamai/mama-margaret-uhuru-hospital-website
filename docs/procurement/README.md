@@ -44,17 +44,21 @@ them, or when one form is revised on its own.
 own RFQ. It is included so it exists when a tender does need it — do not attach it
 otherwise.
 
-## Two things to check before the first tender goes out
+## The letterhead address
 
-1. **The letterhead email.** These carry `mamamargaretuhuruhosp2024@gmail.com`, the
-   address published on the website. The RFQ that was shared used
-   `mamamargaretuhuruhosp@gmail.com`. One of the two is wrong; correct the source and
-   regenerate before issuing.
-2. **Table B.** The hospital's RFQ refers to "Table B. Quotation Submission Table"
-   three times — in the Form of Quotation and twice in the contract — but no Table B
-   appears in the document. Suppliers are being asked to price an attachment that was
-   never attached. `02b` supplies one; check it matches how the office wants prices
-   broken down, and that the VAT rate is right for the category being bought.
+`mamamargaretuhuruhosp2024@gmail.com`, confirmed by the hospital on 21 September 2026
+and the same address published on the website. An earlier RFQ used
+`mamamargaretuhuruhosp@gmail.com`; that one is not to be used. Enquiries about a
+quotation reach the CEO's office, Procurement Section, at the postal address on the
+same letterhead.
+
+## One thing to check before the first tender goes out
+
+**Table B.** The hospital's RFQ refers to "Table B. Quotation Submission Table" three
+times — in the Form of Quotation and twice in the contract — but no Table B appears in
+the document. Suppliers are being asked to price an attachment that was never attached.
+`02b` supplies one; check it matches how the office wants prices broken down, and that
+the VAT line is right for the category being bought.
 
 ## Regenerating
 
