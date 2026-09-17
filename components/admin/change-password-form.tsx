@@ -1,12 +1,12 @@
 "use client"
 
-import { useActionState, useEffect, useRef } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import { changeMyPassword } from "@/lib/actions/admin/account"
 import type { ActionResult } from "@/lib/actions/forms"
+import { PasswordField } from "@/components/admin/password-field"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 const initialState: ActionResult | null = null
@@ -19,40 +19,40 @@ const initialState: ActionResult | null = null
  */
 export function ChangePasswordForm() {
   const [state, formAction, pending] = useActionState(changeMyPassword, initialState)
-  const formRef = useRef<HTMLFormElement>(null)
+  // Bumped on success to remount the fields. The boxes hold their own state so
+  // they can be revealed and generated, and a plain form.reset() would leave
+  // that state — and the password — sitting on screen.
+  const [formKey, setFormKey] = useState(0)
 
   useEffect(() => {
     if (!state) return
     if (state.success) {
       toast.success("Your password has been changed.")
-      formRef.current?.reset()
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormKey((key) => key + 1)
     } else {
       toast.error(state.error)
     }
   }, [state])
 
   return (
-    <form ref={formRef} action={formAction} className="max-w-sm space-y-4">
+    <form key={formKey} action={formAction} className="max-w-sm space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="currentPassword">Current password</Label>
-        <Input
-          id="currentPassword"
-          name="currentPassword"
-          type="password"
-          autoComplete="current-password"
-          required
-        />
+        <PasswordField id="currentPassword" name="currentPassword" autoComplete="current-password" required />
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="newPassword">New password</Label>
-        <Input id="newPassword" name="newPassword" type="password" autoComplete="new-password" required />
-        <p className="text-xs text-muted-foreground">At least 10 characters.</p>
+        <PasswordField id="newPassword" name="newPassword" required offerGenerator />
+        <p className="text-xs text-muted-foreground">
+          At least 10 characters. Generate one if you like — copy it somewhere safe before saving.
+        </p>
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="confirmPassword">Confirm new password</Label>
-        <Input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required />
+        <PasswordField id="confirmPassword" name="confirmPassword" required />
       </div>
 
       <Button type="submit" disabled={pending}>

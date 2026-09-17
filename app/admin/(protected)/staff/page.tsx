@@ -79,10 +79,11 @@ export default async function AdminStaffPage() {
     { name: "email", label: "Email address", required: true, defaultValue: "", hint: "This is what they sign in with." },
     {
       name: "password",
-      label: "Temporary password",
+      label: "Starting password",
+      type: "password",
+      offerGenerator: true,
       required: true,
-      defaultValue: "",
-      hint: "At least 10 characters. Give it to them directly — they can change it under My Account.",
+      hint: "At least 10 characters. Generate one, hand it over directly, and they can change it under My Account.",
     },
     ...roleFields(),
   ]
@@ -147,8 +148,9 @@ export default async function AdminStaffPage() {
               {
                 name: "password",
                 label: "New password",
+                type: "password",
+                offerGenerator: true,
                 required: true,
-                defaultValue: "",
                 hint: "At least 10 characters. Tell them to change it once they are in.",
               },
             ]}

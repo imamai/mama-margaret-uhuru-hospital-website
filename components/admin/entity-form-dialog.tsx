@@ -16,19 +16,32 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { PasswordField } from "@/components/admin/password-field"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
 export type EntityFieldConfig = {
   name: string
   label: string
-  type?: "text" | "textarea" | "number" | "date" | "datetime-local" | "select" | "checkbox" | "file" | "image"
+  type?:
+    | "text"
+    | "textarea"
+    | "number"
+    | "date"
+    | "datetime-local"
+    | "select"
+    | "checkbox"
+    | "file"
+    | "image"
+    | "password"
   required?: boolean
   options?: { value: string; label: string }[]
   defaultValue?: string
   /** For type "file": accept attribute (e.g. "image/*") and helper text. */
   accept?: string
   hint?: string
+  /** For type "password": offer a generated one alongside the box. */
+  offerGenerator?: boolean
 }
 
 /**
@@ -90,7 +103,14 @@ export function EntityFormDialog({
                 {field.label}
                 {field.required ? <span className="text-destructive"> *</span> : null}
               </Label>
-              {field.type === "textarea" ? (
+              {field.type === "password" ? (
+                <PasswordField
+                  id={field.name}
+                  name={field.name}
+                  required={field.required}
+                  offerGenerator={field.offerGenerator}
+                />
+              ) : field.type === "textarea" ? (
                 <Textarea id={field.name} name={field.name} required={field.required} defaultValue={field.defaultValue} rows={4} />
               ) : field.type === "select" ? (
                 <select
