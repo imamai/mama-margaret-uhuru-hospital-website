@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/forms/contact-form"
 import { SectionHeading } from "@/components/common/section-heading"
 import { getSiteSettings } from "@/lib/data/settings"
 import { pageMetadata } from "@/lib/seo"
+import { toMapEmbedUrl } from "@/lib/maps"
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us & Location",
@@ -15,6 +16,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default async function ContactPage() {
   const settings = await getSiteSettings()
+  const mapEmbedUrl = toMapEmbedUrl(settings.google_maps_embed_url)
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
@@ -57,15 +59,27 @@ export default async function ContactPage() {
             </div>
           </div>
 
-          {settings.google_maps_embed_url ? (
+          {mapEmbedUrl ? (
             <div className="mt-4 aspect-video overflow-hidden rounded-2xl border">
               <iframe
-                src={settings.google_maps_embed_url}
-                title="Hospital location map"
+                src={mapEmbedUrl}
+                title={`Map showing ${settings.hospital_name}`}
                 className="h-full w-full"
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
+          ) : settings.google_maps_embed_url ? (
+            // The saved link cannot be framed and carries no coordinates to
+            // rebuild one from. A working link out beats an empty grey box.
+            <a
+              href={settings.google_maps_embed_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4"
+            >
+              <MapPin className="size-4" aria-hidden="true" /> View {settings.hospital_name} on Google Maps
+            </a>
           ) : null}
         </div>
 

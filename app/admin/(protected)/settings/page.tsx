@@ -107,7 +107,12 @@ export default async function AdminSettingsPage() {
             action={updateIntegrationSettings}
             fields={[
               { name: "google_analytics_id", label: "Google Analytics ID", defaultValue: settings.google_analytics_id },
-              { name: "google_maps_embed_url", label: "Google Maps embed URL", defaultValue: settings.google_maps_embed_url },
+              {
+                name: "google_maps_embed_url",
+                label: "Google Maps URL",
+                defaultValue: settings.google_maps_embed_url,
+                hint: "Paste the ordinary link from Google Maps — Share → Copy link. It is converted to an embeddable map automatically, and its coordinates are published to Google so the hospital shows correctly in “hospital near me” searches.",
+              },
             ]}
           />
         </TabsContent>

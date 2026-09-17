@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import type { SiteSettings } from "@/lib/data/settings"
+import { parseMapCoords } from "@/lib/maps"
 
 /** The live site. Used whenever the environment cannot be trusted. */
 const PRODUCTION_URL = "https://mamamargaretuhuruhospital.co.ke"
@@ -154,22 +155,6 @@ export function pageMetadata({
 
 const ORG_ID = `${SITE_URL}/#hospital`
 
-/**
- * The hospital's own map pin, read from the Google Maps URL an administrator
- * pasted into Site Settings. Coordinates carry real weight in "hospital near
- * me" searches, and this is the one place the hospital has already stated them.
- */
-function geoFromMapsUrl(url?: string | null): { latitude: number; longitude: number } | null {
-  if (!url) return null
-  // Prefer the !3d<lat>!4d<lng> pair (the resolved place) over the @lat,lng
-  // viewport centre, which is only where the camera happened to sit.
-  const place = url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)
-  const source = place ?? url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)
-  if (!source) return null
-  const latitude = Number(source[1])
-  const longitude = Number(source[2])
-  return Number.isFinite(latitude) && Number.isFinite(longitude) ? { latitude, longitude } : null
-}
 
 /**
  * Splits the single free-text address into a PostalAddress. The stored value is
@@ -191,7 +176,9 @@ function postalAddress(address: string) {
 
 export function hospitalJsonLd(settings: SiteSettings, medicalSpecialties: string[] = []) {
   const sameAs = Object.values(settings.social_links ?? {}).filter((v): v is string => !!v && v.trim().length > 0)
-  const geo = geoFromMapsUrl(settings.google_maps_embed_url)
+  // The hospital's own map pin. Coordinates carry real weight in "hospital
+  // near me" searches, and this is the one place the hospital has stated them.
+  const geo = parseMapCoords(settings.google_maps_embed_url)
   const phones = [dialableOrNull(settings.general_phone), dialableOrNull(settings.emergency_phone)].filter(
     (v): v is string => !!v,
   )
