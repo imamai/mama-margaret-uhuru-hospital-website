@@ -79,6 +79,7 @@ const GROUPS: { key: string; label: string; items: { key: string; label: string;
       { key: "menus", label: "Menus", href: "/admin/menus", permissionPrefix: "menus" },
       { key: "footer-sections", label: "Footer Sections", href: "/admin/footer-sections", permissionPrefix: "footer" },
       { key: "downloads", label: "Downloads", href: "/admin/downloads", permissionPrefix: "downloads" },
+      { key: "seo", label: "SEO Readiness", href: "/admin/seo", permissionPrefix: "settings" },
       { key: "settings", label: "Settings", href: "/admin/settings", permissionPrefix: "settings" },
       { key: "staff", label: "Staff", href: "/admin/staff", permissionPrefix: "users" },
     ],

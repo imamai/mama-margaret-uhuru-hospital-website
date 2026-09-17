@@ -7,13 +7,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { listDoctors } from "@/lib/data/doctors"
 import { getSiteSettings } from "@/lib/data/settings"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
-  return {
-    title: "Our Doctors",
-    description: `Meet the specialists and consultants at ${settings.hospital_name}.`,
-  }
+  return pageMetadata({
+    title: "Our Doctors & Specialists",
+    description: `Meet the doctors, specialists and consultants at ${settings.hospital_name} in Nairobi. Search by name or specialisation and book an appointment.`,
+    path: "/doctors",
+  })
 }
 
 export default async function DoctorsPage({

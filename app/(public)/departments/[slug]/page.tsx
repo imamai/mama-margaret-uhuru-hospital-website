@@ -8,6 +8,9 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { getDepartmentBySlug } from "@/lib/data/departments"
 import { plainExcerpt, textToBlocks } from "@/lib/actions/admin/blocks"
+import { Breadcrumbs } from "@/components/seo/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { medicalClinicJsonLd, pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -16,12 +19,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const department = await getDepartmentBySlug(slug)
-  if (!department) return {}
+  if (!department) return { title: "Department not found", robots: { index: false, follow: false } }
 
-  return {
-    title: department.seo_title || department.name,
-    description: department.seo_description || plainExcerpt(department.description) || undefined,
-  }
+  return pageMetadata({
+    title: department.seo_title || `${department.name} Department in Nairobi`,
+    description:
+      department.seo_description ||
+      plainExcerpt(department.description) ||
+      `The ${department.name} department at Mama Margaret Uhuru Hospital, Outering Road, Nairobi — services, location and contact details.`,
+    path: `/departments/${department.slug}`,
+    image: department.banner_image_url,
+  })
 }
 
 export default async function DepartmentDetailPage({
@@ -37,12 +45,27 @@ export default async function DepartmentDetailPage({
 
   return (
     <div>
+      <JsonLd
+        data={medicalClinicJsonLd({
+          name: department.name,
+          description: plainExcerpt(department.description),
+          path: `/departments/${department.slug}`,
+          image: department.banner_image_url,
+        })}
+      />
       <div className="relative h-56 sm:h-72 lg:h-[26rem]">
         <SmartImage src={department.banner_image_url} alt={department.name} kind="building" sizes="100vw" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-6">
-            <h1 className="text-3xl font-bold text-white sm:text-4xl">{department.name}</h1>
+            <Breadcrumbs
+              onDark
+              items={[
+                { name: "Departments", path: "/departments" },
+                { name: department.name, path: `/departments/${department.slug}` },
+              ]}
+            />
+            <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{department.name}</h1>
           </div>
         </div>
       </div>

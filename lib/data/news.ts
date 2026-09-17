@@ -19,7 +19,7 @@ export const listNews = cache(
     let query = supabase
       .from("margaret_news")
       .select(
-        "id, title, slug, excerpt, featured_image_url, author_name, tags, is_featured, is_breaking, published_at, category_id"
+        "id, title, slug, excerpt, featured_image_url, author_name, tags, is_featured, is_breaking, published_at, updated_at, category_id"
       )
       .is("deleted_at", null)
       .eq("status", "published")
@@ -61,7 +61,7 @@ export const getNewsBySlug = cache(async (slug: string) => {
   const { data } = await supabase
     .from("margaret_news")
     .select(
-      "id, title, slug, excerpt, content, featured_image_url, author_name, tags, is_breaking, published_at, view_count, seo_title, seo_description"
+      "id, title, slug, excerpt, content, featured_image_url, author_name, tags, is_breaking, published_at, updated_at, view_count, seo_title, seo_description"
     )
     .is("deleted_at", null)
     .eq("slug", slug)

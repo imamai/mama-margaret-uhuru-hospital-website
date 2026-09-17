@@ -4,11 +4,14 @@ import { AppointmentForm } from "@/components/forms/appointment-form"
 import { SectionHeading } from "@/components/common/section-heading"
 import { listDepartments } from "@/lib/data/departments"
 import { getSiteSettings } from "@/lib/data/settings"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Book an Appointment",
-  description: "Request an appointment with one of our specialists.",
-}
+  description:
+    "Request an appointment with a doctor or clinic at Mama Margaret Uhuru Hospital, Outering Road, Nairobi. For urgent care, call our emergency line instead.",
+  path: "/appointments",
+})
 
 export default async function AppointmentsPage() {
   const [departments, settings] = await Promise.all([listDepartments(), getSiteSettings()])

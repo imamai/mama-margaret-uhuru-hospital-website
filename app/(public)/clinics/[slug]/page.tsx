@@ -7,6 +7,9 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getClinicBySlug } from "@/lib/data/clinics"
+import { Breadcrumbs } from "@/components/seo/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { medicalClinicJsonLd, pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -15,11 +18,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const clinic = await getClinicBySlug(slug)
-  if (!clinic) return {}
-  return {
-    title: clinic.seo_title || clinic.name,
-    description: clinic.seo_description || clinic.description || undefined,
-  }
+  if (!clinic) return { title: "Clinic not found", robots: { index: false, follow: false } }
+  return pageMetadata({
+    title: clinic.seo_title || `${clinic.name} in Nairobi`,
+    description:
+      clinic.seo_description ||
+      clinic.description ||
+      `The ${clinic.name} at Mama Margaret Uhuru Hospital, Outering Road, Nairobi — clinic days, services and how to book.`,
+    path: `/clinics/${clinic.slug}`,
+    image: clinic.banner_image_url,
+  })
 }
 
 export default async function ClinicDetailPage({
@@ -35,12 +43,27 @@ export default async function ClinicDetailPage({
 
   return (
     <div>
+      <JsonLd
+        data={medicalClinicJsonLd({
+          name: clinic.name,
+          description: clinic.description,
+          path: `/clinics/${clinic.slug}`,
+          image: clinic.banner_image_url,
+        })}
+      />
       <div className="relative h-56 sm:h-72 lg:h-[26rem]">
         <SmartImage src={clinic.banner_image_url} alt={clinic.name} kind="building" sizes="100vw" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-end">
           <div className="mx-auto w-full max-w-7xl px-4 pb-6">
-            <h1 className="text-3xl font-bold text-white sm:text-4xl">{clinic.name}</h1>
+            <Breadcrumbs
+              onDark
+              items={[
+                { name: "Clinics", path: "/clinics" },
+                { name: clinic.name, path: `/clinics/${clinic.slug}` },
+              ]}
+            />
+            <h1 className="mt-2 text-3xl font-bold text-white sm:text-4xl">{clinic.name}</h1>
           </div>
         </div>
       </div>

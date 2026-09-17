@@ -5,6 +5,8 @@ import { Briefcase, Calendar, MapPin } from "lucide-react"
 import { JobApplicationForm } from "@/components/forms/job-application-form"
 import { Card, CardContent } from "@/components/ui/card"
 import { getJobBySlug, isJobOpen } from "@/lib/data/jobs"
+import { Breadcrumbs } from "@/components/seo/breadcrumbs"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -13,11 +15,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const job = await getJobBySlug(slug)
-  if (!job) return {}
-  return {
-    title: job.title,
-    description: job.description?.slice(0, 160),
-  }
+  if (!job) return { title: "Vacancy not found", robots: { index: false, follow: false } }
+  return pageMetadata({
+    title: `${job.title} — Job Vacancy`,
+    description:
+      job.description?.slice(0, 155) ||
+      `Apply for the ${job.title} position at Mama Margaret Uhuru Hospital, Nairobi.`,
+    path: `/careers/${job.slug}`,
+  })
 }
 
 export default async function JobDetailPage({
@@ -33,6 +38,12 @@ export default async function JobDetailPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
+      <Breadcrumbs
+        items={[
+          { name: "Careers", path: "/careers" },
+          { name: job.title, path: `/careers/${job.slug}` },
+        ]}
+      />
       <p className="text-sm font-semibold tracking-wide text-brand-deep uppercase dark:text-brand-accent">
         {job.department?.name ?? "Mama Margaret Uhuru Hospital"}
       </p>

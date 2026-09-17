@@ -6,14 +6,20 @@ import { SectionHeading } from "@/components/common/section-heading"
 import { SmartImage } from "@/components/common/smart-image"
 import { getPageBySlug } from "@/lib/data/pages"
 import { getSiteSettings } from "@/lib/data/settings"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("about")
   const settings = await getSiteSettings()
-  return {
-    title: page?.seo_title || "About Us",
-    description: page?.seo_description || settings.mission,
-  }
+  return pageMetadata({
+    title: page?.seo_title || `About ${settings.hospital_name}`,
+    description:
+      page?.seo_description ||
+      settings.mission ||
+      `${settings.hospital_name} (MMUH) is a hospital on Outering Road, Nairobi. Read about our mission, vision and the care we provide.`,
+    path: "/about",
+    image: page?.seo_og_image_url || page?.featured_image_url,
+  })
 }
 
 export default async function AboutPage() {

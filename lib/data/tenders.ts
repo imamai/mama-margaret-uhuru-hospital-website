@@ -7,7 +7,7 @@ export const listTenders = cache(async () => {
   const supabase = await createClient()
   const { data } = await supabase
     .from("margaret_tenders")
-    .select("id, title, slug, tender_number, closing_date, status")
+    .select("id, title, slug, tender_number, closing_date, status, updated_at")
     .is("deleted_at", null)
     .eq("status", "published")
     .order("closing_date", { ascending: false })

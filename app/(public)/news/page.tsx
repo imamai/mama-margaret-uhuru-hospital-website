@@ -6,11 +6,14 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { listNews, listNewsCategories } from "@/lib/data/news"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "News",
-  description: "Latest news, announcements, and press updates.",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Hospital News & Announcements",
+  description:
+    "News, announcements and press updates from Mama Margaret Uhuru Hospital in Nairobi, including service changes and community health activities.",
+  path: "/news",
+})
 
 export default async function NewsPage({
   searchParams,

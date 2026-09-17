@@ -10,7 +10,10 @@ import { getCurrentSupplier } from "@/lib/data/suppliers"
 import { getSiteSettings } from "@/lib/data/settings"
 import { createClient } from "@/lib/supabase/server"
 
-export const metadata: Metadata = { title: "Supplier Dashboard" }
+export const metadata: Metadata = {
+  title: "Supplier Dashboard",
+  robots: { index: false, follow: false },
+}
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pending Approval",

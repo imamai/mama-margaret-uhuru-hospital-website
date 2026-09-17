@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { trackContactSubmit } from "@/lib/analytics"
 
 const initialState: ActionResult | null = null
 
@@ -19,6 +20,7 @@ export function ContactForm() {
     if (!state) return
     if (state.success) {
       toast.success("Message sent. We'll get back to you shortly.")
+      trackContactSubmit()
       formRef.current?.reset()
     } else {
       toast.error(state.error)

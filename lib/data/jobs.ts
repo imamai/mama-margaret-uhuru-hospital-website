@@ -8,7 +8,7 @@ export const listOpenJobs = cache(async () => {
   const { data } = await supabase
     .from("margaret_jobs")
     .select(
-      "id, title, slug, department_id, location, contract_type, application_deadline, positions_available"
+      "id, title, slug, department_id, location, contract_type, application_deadline, positions_available, updated_at"
     )
     .is("deleted_at", null)
     .eq("status", "published")

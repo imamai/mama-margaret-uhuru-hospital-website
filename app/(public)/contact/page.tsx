@@ -4,11 +4,14 @@ import { Mail, MapPin, Phone } from "lucide-react"
 import { ContactForm } from "@/components/forms/contact-form"
 import { SectionHeading } from "@/components/common/section-heading"
 import { getSiteSettings } from "@/lib/data/settings"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with Mama Margaret Uhuru Hospital.",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Contact Us & Location",
+  description:
+    "Phone numbers, email, directions and a map for Mama Margaret Uhuru Hospital on Outering Road, off Kamunde Road, Nairobi. Send us a message online.",
+  path: "/contact",
+})
 
 export default async function ContactPage() {
   const settings = await getSiteSettings()

@@ -5,6 +5,9 @@ import { BlockContent } from "@/components/common/block-content"
 import { SmartImage } from "@/components/common/smart-image"
 import { Badge } from "@/components/ui/badge"
 import { getNewsBySlug } from "@/lib/data/news"
+import { Breadcrumbs } from "@/components/seo/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { articleJsonLd, pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -13,12 +16,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const article = await getNewsBySlug(slug)
-  if (!article) return {}
-  return {
+  if (!article) return { title: "Article not found", robots: { index: false, follow: false } }
+  return pageMetadata({
     title: article.seo_title || article.title,
-    description: article.seo_description || article.excerpt || undefined,
-    openGraph: article.featured_image_url ? { images: [article.featured_image_url] } : undefined,
-  }
+    description: article.seo_description || article.excerpt,
+    path: `/news/${article.slug}`,
+    image: article.featured_image_url,
+    type: "article",
+    publishedTime: article.published_at,
+    modifiedTime: article.updated_at,
+    authors: article.author_name ? [article.author_name] : undefined,
+  })
 }
 
 export default async function NewsDetailPage({
@@ -30,20 +38,22 @@ export default async function NewsDetailPage({
   const article = await getNewsBySlug(slug)
   if (!article) notFound()
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    headline: article.title,
-    datePublished: article.published_at,
-    author: article.author_name ? { "@type": "Person", name: article.author_name } : undefined,
-    image: article.featured_image_url ? [article.featured_image_url] : undefined,
-  }
-
   return (
     <article className="mx-auto max-w-3xl px-4 py-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        data={articleJsonLd({
+          title: article.title,
+          description: article.excerpt,
+          path: `/news/${article.slug}`,
+          image: article.featured_image_url,
+          publishedAt: article.published_at,
+          updatedAt: article.updated_at,
+          authorName: article.author_name,
+        })}
+      />
+      <Breadcrumbs items={[{ name: "News", path: "/news" }, { name: article.title, path: `/news/${article.slug}` }]} />
 
-      {article.is_breaking ? <Badge variant="destructive">Breaking</Badge> : null}
+      {article.is_breaking ? <Badge variant="destructive" className="mt-6">Breaking</Badge> : null}
       <h1 className="mt-3 text-3xl font-bold sm:text-4xl">{article.title}</h1>
       <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
         {article.author_name ? <span>{article.author_name}</span> : null}

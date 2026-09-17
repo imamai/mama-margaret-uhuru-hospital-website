@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getTenderBySlug, isTenderOpen } from "@/lib/data/tenders"
+import { pageMetadata } from "@/lib/seo"
 
 const DOCUMENT_LABELS: Record<string, string> = {
   tender_document: "Tender Document",
@@ -24,11 +25,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const tender = await getTenderBySlug(slug)
-  if (!tender) return {}
-  return {
-    title: `${tender.tender_number} -- ${tender.title}`,
-    description: tender.description?.slice(0, 160),
-  }
+  if (!tender) return { title: "Tender not found", robots: { index: false, follow: false } }
+  return pageMetadata({
+    title: `${tender.title} (${tender.tender_number}) — Tender`,
+    description:
+      tender.description?.slice(0, 155) ||
+      `Tender ${tender.tender_number} at Mama Margaret Uhuru Hospital, Nairobi. Download the documents and see the submission deadline.`,
+    path: `/tenders/${tender.slug}`,
+  })
 }
 
 export default async function TenderDetailPage({

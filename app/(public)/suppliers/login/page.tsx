@@ -3,7 +3,10 @@ import Link from "next/link"
 
 import { SupplierLoginForm } from "@/components/forms/supplier-login-form"
 
-export const metadata: Metadata = { title: "Supplier Login" }
+export const metadata: Metadata = {
+  title: "Supplier Login",
+  robots: { index: false, follow: false },
+}
 
 export default function SupplierLoginPage() {
   return (

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import { trackAppointmentRequest } from "@/lib/analytics"
 
 const initialState: ActionResult | null = null
 
@@ -32,6 +33,8 @@ export function AppointmentForm({
     if (!state) return
     if (state.success) {
       toast.success("Appointment request received. Our team will confirm shortly.")
+      // Counts the request. Deliberately no patient details in the payload.
+      trackAppointmentRequest()
       formRef.current?.reset()
       // Resets the conditional insurance-provider field after a successful submit.
       // eslint-disable-next-line react-hooks/set-state-in-effect

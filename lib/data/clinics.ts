@@ -7,7 +7,7 @@ export const listClinics = cache(async () => {
   const supabase = await createClient()
   const { data } = await supabase
     .from("margaret_clinics")
-    .select("id, name, slug, banner_image_url, description")
+    .select("id, name, slug, banner_image_url, description, updated_at")
     .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })

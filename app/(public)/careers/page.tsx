@@ -6,11 +6,14 @@ import { SectionHeading } from "@/components/common/section-heading"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { listOpenJobs } from "@/lib/data/jobs"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Careers",
-  description: "Explore current job openings and join our team.",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Careers & Job Vacancies",
+  description:
+    "Current job openings at Mama Margaret Uhuru Hospital in Nairobi. Browse clinical and non-clinical vacancies and apply online.",
+  path: "/careers",
+})
 
 export default async function CareersPage() {
   const jobs = await listOpenJobs()

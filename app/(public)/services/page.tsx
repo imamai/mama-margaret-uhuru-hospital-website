@@ -5,9 +5,15 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { listServiceCategories, listServices } from "@/lib/data/services"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
-  return { title: "Services", description: "All medical services offered, categorized and searchable." }
+  return pageMetadata({
+    title: "Medical Services",
+    description:
+      "The medical services offered at Mama Margaret Uhuru Hospital in Nairobi, grouped by category and searchable by name.",
+    path: "/services",
+  })
 }
 
 export default async function ServicesPage({

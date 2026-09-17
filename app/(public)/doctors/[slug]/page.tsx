@@ -8,6 +8,9 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getDoctorBySlug } from "@/lib/data/doctors"
+import { Breadcrumbs } from "@/components/seo/breadcrumbs"
+import { JsonLd } from "@/components/seo/json-ld"
+import { pageMetadata, physicianJsonLd } from "@/lib/seo"
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -18,11 +21,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const doctor = await getDoctorBySlug(slug)
-  if (!doctor) return {}
-  return {
-    title: doctor.full_name,
-    description: doctor.biography || `${doctor.full_name}, ${doctor.specialization}`,
-  }
+  if (!doctor) return { title: "Doctor not found", robots: { index: false, follow: false } }
+  return pageMetadata({
+    title: doctor.specialization ? `${doctor.full_name} — ${doctor.specialization}` : doctor.full_name,
+    description:
+      doctor.biography ||
+      `${doctor.full_name}, ${doctor.specialization ?? "specialist"} at Mama Margaret Uhuru Hospital, Nairobi. See clinic days and book an appointment.`,
+    path: `/doctors/${doctor.slug}`,
+    image: doctor.photo_url,
+  })
 }
 
 export default async function DoctorDetailPage({
@@ -36,7 +43,22 @@ export default async function DoctorDetailPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
-      <div className="grid gap-10 lg:grid-cols-3">
+      <JsonLd
+        data={physicianJsonLd({
+          name: doctor.full_name,
+          specialization: doctor.specialization,
+          description: doctor.biography,
+          path: `/doctors/${doctor.slug}`,
+          image: doctor.photo_url,
+        })}
+      />
+      <Breadcrumbs
+        items={[
+          { name: "Doctors", path: "/doctors" },
+          { name: doctor.full_name, path: `/doctors/${doctor.slug}` },
+        ]}
+      />
+      <div className="mt-6 grid gap-10 lg:grid-cols-3">
         <div>
           <div className="relative aspect-square overflow-hidden rounded-2xl">
             <SmartImage src={doctor.photo_url} alt={doctor.full_name} kind="doctor" />

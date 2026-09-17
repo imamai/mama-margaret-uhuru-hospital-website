@@ -7,7 +7,7 @@ export const getPageBySlug = cache(async (slug: string) => {
   const supabase = await createClient()
   const { data: page } = await supabase
     .from("margaret_pages")
-    .select("id, title, slug, excerpt, content, featured_image_url, seo_title, seo_description, published_at")
+    .select("id, title, slug, excerpt, content, featured_image_url, seo_title, seo_description, seo_og_image_url, published_at, updated_at")
     .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")

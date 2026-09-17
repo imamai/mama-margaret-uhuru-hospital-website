@@ -3,11 +3,14 @@ import type { Metadata } from "next"
 import { SectionHeading } from "@/components/common/section-heading"
 import { SupplierRegistrationForm } from "@/components/forms/supplier-registration-form"
 import { listSupplierCategories } from "@/lib/data/suppliers"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Supplier Registration",
-  description: "Register as a supplier to bid on hospital tenders.",
-}
+  description:
+    "Register as a supplier to bid on tenders at Mama Margaret Uhuru Hospital, Nairobi. Submit your company details and category of supply.",
+  path: "/suppliers/register",
+})
 
 export default async function SupplierRegisterPage() {
   const categories = await listSupplierCategories()

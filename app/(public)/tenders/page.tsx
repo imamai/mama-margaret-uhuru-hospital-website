@@ -6,11 +6,14 @@ import { SectionHeading } from "@/components/common/section-heading"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { isTenderOpen, listTenders } from "@/lib/data/tenders"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Tenders",
-  description: "Current and past procurement tenders and RFQs.",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Tenders & Procurement Opportunities",
+  description:
+    "Open and closed procurement tenders and RFQs at Mama Margaret Uhuru Hospital. Download tender documents and see submission deadlines.",
+  path: "/tenders",
+})
 
 export default async function TendersPage() {
   const tenders = await listTenders()

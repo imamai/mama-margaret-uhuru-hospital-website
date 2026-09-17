@@ -75,7 +75,9 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             transition={{ duration: reduceMotion ? 0 : 0.5 }}
             className="max-w-2xl"
           >
-            <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">{slide.title}</h1>
+            {/* h2, not h1: the slide rotates, and a page's single h1 must not
+                change under the reader. The stable h1 is on the page itself. */}
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">{slide.title}</h2>
             {slide.subtitle ? <p className="mt-4 text-lg text-white/85 sm:text-xl">{slide.subtitle}</p> : null}
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">

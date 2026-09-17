@@ -7,13 +7,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { listDepartments } from "@/lib/data/departments"
 import { plainExcerpt } from "@/lib/actions/admin/blocks"
 import { getSiteSettings } from "@/lib/data/settings"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
-  return {
-    title: "Departments",
-    description: `Explore the clinical departments at ${settings.hospital_name}.`,
-  }
+  return pageMetadata({
+    title: "Hospital Departments in Nairobi",
+    description: `The clinical departments at ${settings.hospital_name}, Outering Road, Nairobi — what each one treats, its location and how to reach it.`,
+    path: "/departments",
+  })
 }
 
 export default async function DepartmentsPage() {

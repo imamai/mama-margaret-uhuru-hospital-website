@@ -6,11 +6,14 @@ import { SmartImage } from "@/components/common/smart-image"
 import { ClinicTimetable } from "@/components/sections/clinic-timetable"
 import { Card, CardContent } from "@/components/ui/card"
 import { listClinics } from "@/lib/data/clinics"
+import { pageMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Specialized Clinics",
-  description: "Explore our specialized outpatient clinics.",
-}
+export const metadata: Metadata = pageMetadata({
+  title: "Specialised Outpatient Clinics in Nairobi",
+  description:
+    "Specialised outpatient clinics at Mama Margaret Uhuru Hospital, with clinic days, times and what to bring to your visit.",
+  path: "/clinics",
+})
 
 export default async function ClinicsPage() {
   const clinics = await listClinics()

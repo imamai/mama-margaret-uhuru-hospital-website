@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import type { JSX } from "react"
 
 import { AwardsSection } from "@/components/sections/awards-section"
@@ -15,8 +16,7 @@ import { StatsBar } from "@/components/sections/stats-bar"
 import { TestimonialsCarousel } from "@/components/sections/testimonials-carousel"
 import { getVisibleHomepageSections } from "@/lib/data/homepage"
 import { getSiteSettings } from "@/lib/data/settings"
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+import { pageMetadata } from "@/lib/seo"
 
 const SECTION_COMPONENTS: Record<string, () => Promise<JSX.Element | null>> = {
   emergency: EmergencyBanner,
@@ -33,26 +33,30 @@ const SECTION_COMPONENTS: Record<string, () => Promise<JSX.Element | null>> = {
   partners: PartnersSection,
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings()
+  return pageMetadata({
+    title: settings.seo_defaults.title || `${settings.hospital_name} | Quality Healthcare in Nairobi, Kenya`,
+    description:
+      settings.seo_defaults.description ||
+      `${settings.hospital_name} (MMUH) provides outpatient, maternity, paediatric, laboratory and emergency care on Outering Road, Nairobi. Book an appointment or call us today.`,
+    path: "/",
+    image: settings.seo_defaults.og_image || settings.logo_url,
+  })
+}
+
 export default async function HomePage() {
   const [sections, settings] = await Promise.all([getVisibleHomepageSections(), getSiteSettings()])
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Hospital",
-    name: settings.hospital_name,
-    url: SITE_URL,
-    logo: settings.logo_url || undefined,
-    telephone: settings.emergency_phone,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: settings.address,
-    },
-    sameAs: Object.values(settings.social_links).filter(Boolean),
-  }
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {/* The visible hero headline is a rotating carousel slide, so it cannot
+          serve as the h1. This one is stable, names the hospital and says where
+          it is -- the two things a patient searches for. It is read by screen
+          readers and crawlers; sighted users see the carousel headline below. */}
+      <h1 className="sr-only">
+        {settings.hospital_name} ({settings.hospital_short_name}) — hospital in Nairobi, Kenya
+      </h1>
       {/* Hero always renders first regardless of homepage_sections ordering --
           it's the one section every hospital homepage in the reference set leads with. */}
       <Hero />

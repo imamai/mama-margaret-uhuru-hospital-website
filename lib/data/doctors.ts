@@ -8,7 +8,7 @@ export const listDoctors = cache(async (search?: string) => {
   let query = supabase
     .from("margaret_doctors")
     .select(
-      "id, full_name, slug, photo_url, title, specialization, department_id, years_experience"
+      "id, full_name, slug, photo_url, title, specialization, department_id, years_experience, updated_at"
     )
     .is("deleted_at", null)
     .eq("status", "published")

@@ -12,9 +12,9 @@ export async function Hero() {
     return (
       <section className="relative flex min-h-[28rem] items-center bg-gradient-to-br from-brand-deep to-brand-primary text-white">
         <div className="mx-auto max-w-7xl px-4 py-20">
-          <h1 className="max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
+          <h2 className="max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
             {settings.hospital_name}
-          </h1>
+          </h2>
           <p className="mt-4 max-w-xl text-lg text-white/85">{settings.mission}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg" variant="secondary">

@@ -9,13 +9,18 @@ import { FeedbackForm } from "@/components/forms/feedback-form"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getPageBySlug } from "@/lib/data/pages"
+import { pageMetadata } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("patients")
-  return {
-    title: page?.seo_title || "Patient Information",
-    description: page?.seo_description || "Admissions, discharge, billing, insurance, and patient rights.",
-  }
+  return pageMetadata({
+    title: page?.seo_title || "Patient Information & Visiting Guide",
+    description:
+      page?.seo_description ||
+      "Admissions, discharge, billing, insurance and patient rights at Mama Margaret Uhuru Hospital, Nairobi — what to bring and what to expect.",
+    path: "/patients",
+    image: page?.seo_og_image_url || page?.featured_image_url,
+  })
 }
 
 export default async function PatientsPage() {

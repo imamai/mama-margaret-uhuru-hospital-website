@@ -29,6 +29,7 @@ import {
   Newspaper,
   PanelBottom,
   Phone,
+  Search,
   Settings as SettingsIcon,
   ShieldCheck,
   Stethoscope,
@@ -93,6 +94,7 @@ const MODULE_ICONS: Record<string, LucideIcon> = {
   menus: MenuIcon,
   "footer-sections": PanelBottom,
   downloads: Download,
+  seo: Search,
   settings: SettingsIcon,
 }
 
