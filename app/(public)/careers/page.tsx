@@ -21,6 +21,7 @@ export default async function CareersPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Join our team"
         title="Careers"
         description="We're always looking for compassionate, skilled professionals."

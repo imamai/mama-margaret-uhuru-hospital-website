@@ -20,7 +20,8 @@ export default async function TendersPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <SectionHeading eyebrow="Procurement" title="Tenders" align="left" className="max-w-none" />
+      <SectionHeading
+        as="h1" eyebrow="Procurement" title="Tenders" align="left" className="max-w-none" />
 
       {tenders.length === 0 ? (
         <p className="mt-10 text-muted-foreground">There are no published tenders at the moment.</p>

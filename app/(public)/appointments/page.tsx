@@ -19,6 +19,7 @@ export default async function AppointmentsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Patients"
         title="Book an Appointment"
         description={`Fill in the form below and our team will confirm your appointment. For urgent care, call ${settings.emergency_phone} instead.`}

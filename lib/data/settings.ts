@@ -29,8 +29,6 @@ export type SiteSettings = {
   address: string
   social_links: Record<string, string>
   seo_defaults: { title: string; description: string; og_image: string }
-  /** A YouTube link shown in the homepage "Watch" section, with its caption. */
-  homepage_video: { url: string; title: string; description: string }
   google_analytics_id: string
   google_maps_embed_url: string
 }
@@ -63,7 +61,6 @@ const DEFAULTS: SiteSettings = {
   address: "",
   social_links: {},
   seo_defaults: { title: "Mama Margaret Uhuru Hospital", description: "", og_image: "" },
-  homepage_video: { url: "", title: "", description: "" },
   google_analytics_id: "",
   google_maps_embed_url: "",
 }

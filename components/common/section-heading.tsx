@@ -10,13 +10,22 @@ export function SectionHeading({
   description,
   align = "center",
   className,
+  as = "h2",
 }: {
   eyebrow?: string
   title: string
   description?: string
   align?: "center" | "left"
   className?: string
+  /**
+   * The heading level. Defaults to h2, which is right for a section inside a
+   * page. Pass "h1" where this IS the page's title -- every listing page used
+   * this component for its main heading and so shipped with no h1 at all,
+   * which leaves a crawler no statement of what the page is about.
+   */
+  as?: "h1" | "h2"
 }) {
+  const Heading = as
   const reduceMotion = useReducedMotion()
 
   return (
@@ -36,7 +45,7 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</h2>
+      <Heading className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{title}</Heading>
       {description ? <p className="mt-3 text-muted-foreground">{description}</p> : null}
     </motion.div>
   )

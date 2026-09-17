@@ -20,7 +20,8 @@ export default async function ContactPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <SectionHeading eyebrow="Get in touch" title="Contact Us" align="left" className="max-w-none" />
+      <SectionHeading
+        as="h1" eyebrow="Get in touch" title="Contact Us" align="left" className="max-w-none" />
 
       <div className="mt-10 grid gap-10 lg:grid-cols-2">
         <div className="space-y-6">

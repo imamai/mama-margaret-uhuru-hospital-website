@@ -4,7 +4,6 @@ import {
   updateBrandingSettings,
   updateGeneralSettings,
   updateIntegrationSettings,
-  updateVideoSettings,
   updateSeoSettings,
   updateSocialSettings,
 } from "@/lib/actions/admin/settings"
@@ -31,7 +30,6 @@ export default async function AdminSettingsPage() {
           <TabsTrigger value="branding">Branding</TabsTrigger>
           <TabsTrigger value="social">Social</TabsTrigger>
           <TabsTrigger value="seo">SEO</TabsTrigger>
-          <TabsTrigger value="video">Video</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
         </TabsList>
 
@@ -100,32 +98,6 @@ export default async function AdminSettingsPage() {
               { name: "title", label: "Default meta title", defaultValue: settings.seo_defaults.title },
               { name: "description", label: "Default meta description", type: "textarea", defaultValue: settings.seo_defaults.description },
               { name: "og_image", label: "Default Open Graph image URL", defaultValue: settings.seo_defaults.og_image },
-            ]}
-          />
-        </TabsContent>
-
-        <TabsContent value="video" className="pt-6">
-          <SettingsForm
-            action={updateVideoSettings}
-            fields={[
-              {
-                name: "url",
-                label: "YouTube link",
-                defaultValue: settings.homepage_video.url,
-                hint: "Paste the address from the video's YouTube page, e.g. https://www.youtube.com/watch?v=… Leave blank to hide the section. Show or reorder it under Homepage Builder.",
-              },
-              {
-                name: "title",
-                label: "Heading",
-                defaultValue: settings.homepage_video.title,
-                hint: "Shown above the video, and also given to Google as the video's title — so it should describe what the video actually shows, not a slogan. Defaults to “Watch”.",
-              },
-              {
-                name: "description",
-                label: "Short description",
-                defaultValue: settings.homepage_video.description,
-                hint: "One or two sentences under the heading. Also given to Google as the video's description.",
-              },
             ]}
           />
         </TabsContent>

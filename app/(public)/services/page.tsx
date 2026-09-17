@@ -32,7 +32,8 @@ export default async function ServicesPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <SectionHeading eyebrow="What we offer" title="Our Services" align="left" className="max-w-none" />
+      <SectionHeading
+        as="h1" eyebrow="What we offer" title="Our Services" align="left" className="max-w-none" />
 
       <form className="mt-8 max-w-sm" action="/services" method="get">
         <Input type="search" name="q" placeholder="Search services" defaultValue={q ?? ""} aria-label="Search services" />

@@ -32,7 +32,8 @@ export default async function PatientsPage() {
         <SmartImage src={page?.featured_image_url} alt={page?.title ?? "Patient Information"} kind="people" sizes="100vw" />
       </div>
       <div className="mx-auto max-w-3xl px-4 py-16">
-        <SectionHeading eyebrow="Patients" title={page?.title ?? "Patient Information"} align="left" className="max-w-none" />
+        <SectionHeading
+        as="h1" eyebrow="Patients" title={page?.title ?? "Patient Information"} align="left" className="max-w-none" />
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <Button asChild size="lg">

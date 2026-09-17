@@ -24,6 +24,7 @@ export default async function DepartmentsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Care areas"
         title="Our Departments"
         description="Specialised, multidisciplinary care across every stage of life."

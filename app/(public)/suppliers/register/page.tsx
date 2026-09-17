@@ -18,6 +18,7 @@ export default async function SupplierRegisterPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Procurement"
         title="Supplier Registration"
         description="Register your company to bid on our published tenders. Your account needs approval from our procurement team before you can submit bids."

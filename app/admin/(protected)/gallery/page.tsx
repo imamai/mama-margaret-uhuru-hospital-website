@@ -26,7 +26,20 @@ function fieldsFor(row?: Row): EntityFieldConfig[] {
   return [
     { name: "title", label: "Title", defaultValue: row?.title ?? "" },
     { name: "mediaType", label: "Media type", type: "select", options: MEDIA_TYPE_OPTIONS, defaultValue: row?.media_type ?? "image" },
-    { name: "file", label: row ? "Replace file" : "File", type: "file", accept: "image/*,video/*", required: !row, hint: "Leave blank to keep the current file." },
+    {
+      name: "videoUrl",
+      label: "YouTube link (videos only)",
+      defaultValue: row?.media_type === "video" && !row.file_url.includes("/storage/") ? row.file_url : "",
+      hint: "For a video, paste its YouTube address instead of uploading — hospital video is far larger than the 10MB upload limit. Leave blank for photos.",
+    },
+    {
+      name: "file",
+      label: row ? "Replace file" : "File",
+      type: "file",
+      accept: "image/*,video/*",
+      required: false,
+      hint: row ? "Leave blank to keep the current file." : "Required for a photo. Not needed if you pasted a YouTube link above.",
+    },
     { name: "caption", label: "Caption", type: "textarea", defaultValue: row?.caption ?? "" },
     { name: "status", label: "Status", type: "select", options: STATUS_OPTIONS, defaultValue: row?.status ?? "published" },
   ]
@@ -36,7 +49,7 @@ export default async function AdminGalleryPage() {
   const supabase = await createClient()
   const { data } = await supabase
     .from("margaret_gallery")
-    .select("id, title, media_type, file_url, caption, status")
+    .select("id, title, media_type, file_url, thumbnail_url, caption, status")
     .is("deleted_at", null)
     .order("sort_order", { ascending: true })
 

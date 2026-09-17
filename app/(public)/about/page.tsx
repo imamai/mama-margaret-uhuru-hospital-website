@@ -31,7 +31,13 @@ export default async function AboutPage() {
         <SmartImage src={page?.featured_image_url} alt={page?.title ?? "About Us"} kind="building" sizes="100vw" />
       </div>
       <div className="mx-auto max-w-3xl px-4 py-16">
-        <SectionHeading eyebrow="About us" title={page?.title ?? "About Us"} align="left" className="max-w-none" />
+        <SectionHeading
+          as="h1"
+          eyebrow="About us"
+          title={page?.title ?? "About Us"}
+          align="left"
+          className="max-w-none"
+        />
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {settings.mission ? (

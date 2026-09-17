@@ -29,6 +29,7 @@ export default async function DoctorsPage({
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
       <SectionHeading
+        as="h1"
         eyebrow="Meet our team"
         title="Our Doctors"
         description="Experienced specialists dedicated to your wellbeing."

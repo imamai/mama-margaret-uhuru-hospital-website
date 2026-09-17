@@ -20,7 +20,8 @@ export default async function ClinicsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
-      <SectionHeading eyebrow="Specialised care" title="Specialized Clinics" align="left" className="max-w-none" />
+      <SectionHeading
+        as="h1" eyebrow="Specialised care" title="Specialized Clinics" align="left" className="max-w-none" />
 
       {clinics.length === 0 ? (
         <p className="mt-10 text-muted-foreground">Clinic information is being updated. Please check back soon.</p>

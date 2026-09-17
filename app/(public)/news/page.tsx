@@ -28,7 +28,8 @@ export default async function NewsPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16">
-      <SectionHeading eyebrow="Stay informed" title="Latest News" align="left" className="max-w-none" />
+      <SectionHeading
+        as="h1" eyebrow="Stay informed" title="Latest News" align="left" className="max-w-none" />
 
       {categories.length > 0 ? (
         <div className="mt-6 flex flex-wrap gap-2">
