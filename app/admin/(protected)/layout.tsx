@@ -15,6 +15,7 @@ const GROUPS: { key: string; label: string; items: { key: string; label: string;
       { key: "service-categories", label: "Service Categories", href: "/admin/service-categories", permissionPrefix: "services" },
       { key: "services", label: "Services", href: "/admin/services", permissionPrefix: "services" },
       { key: "clinics", label: "Clinics", href: "/admin/clinics", permissionPrefix: "clinics" },
+      { key: "clinic-schedule", label: "Clinic Timetable", href: "/admin/clinic-schedule", permissionPrefix: "clinics" },
       { key: "facilities", label: "Facilities", href: "/admin/facilities", permissionPrefix: "facilities" },
     ],
   },

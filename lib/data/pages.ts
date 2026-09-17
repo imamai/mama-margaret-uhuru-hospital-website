@@ -8,6 +8,7 @@ export const getPageBySlug = cache(async (slug: string) => {
   const { data: page } = await supabase
     .from("margaret_pages")
     .select("id, title, slug, excerpt, content, featured_image_url, seo_title, seo_description, published_at")
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()

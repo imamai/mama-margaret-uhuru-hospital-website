@@ -21,6 +21,7 @@ export const listNews = cache(
       .select(
         "id, title, slug, excerpt, featured_image_url, author_name, tags, is_featured, is_breaking, published_at, category_id"
       )
+      .is("deleted_at", null)
       .eq("status", "published")
       .order("published_at", { ascending: false })
 
@@ -47,6 +48,7 @@ export const listBreakingNews = cache(async () => {
   const { data } = await supabase
     .from("margaret_news")
     .select("id, title, slug")
+    .is("deleted_at", null)
     .eq("status", "published")
     .eq("is_breaking", true)
     .order("published_at", { ascending: false })
@@ -61,6 +63,7 @@ export const getNewsBySlug = cache(async (slug: string) => {
     .select(
       "id, title, slug, excerpt, content, featured_image_url, author_name, tags, is_breaking, published_at, view_count, seo_title, seo_description"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()

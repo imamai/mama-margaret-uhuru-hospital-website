@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { SectionHeading } from "@/components/common/section-heading"
 import { SmartImage } from "@/components/common/smart-image"
+import { ClinicTimetable } from "@/components/sections/clinic-timetable"
 import { Card, CardContent } from "@/components/ui/card"
 import { listClinics } from "@/lib/data/clinics"
 
@@ -39,6 +40,8 @@ export default async function ClinicsPage() {
           ))}
         </div>
       )}
+
+      <ClinicTimetable />
     </div>
   )
 }

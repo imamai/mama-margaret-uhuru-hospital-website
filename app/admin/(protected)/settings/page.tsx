@@ -40,7 +40,9 @@ export default async function AdminSettingsPage() {
               { name: "mission", label: "Mission statement", type: "textarea", defaultValue: settings.mission },
               { name: "vision", label: "Vision statement", type: "textarea", defaultValue: settings.vision },
               { name: "emergency_phone", label: "Emergency phone", required: true, defaultValue: settings.emergency_phone },
-              { name: "ambulance_phone", label: "Ambulance phone", defaultValue: settings.ambulance_phone },
+              { name: "ambulance_phone", label: "Ambulance phone", defaultValue: settings.ambulance_phone, hint: "A number, or text such as Coming soon — text is shown without a call link." },
+              { name: "general_phone", label: "Reception phone", defaultValue: settings.general_phone },
+              { name: "email", label: "General email", defaultValue: settings.email },
               { name: "address", label: "Address", defaultValue: settings.address },
             ]}
           />

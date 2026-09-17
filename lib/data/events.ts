@@ -10,6 +10,7 @@ export const listUpcomingEvents = cache(async (limit = 6) => {
     .select(
       "id, title, slug, event_type, featured_image_url, location, is_virtual, starts_at, ends_at, registration_required"
     )
+    .is("deleted_at", null)
     .eq("status", "published")
     .gte("starts_at", new Date().toISOString())
     .order("starts_at", { ascending: true })
@@ -24,6 +25,7 @@ export const getEventBySlug = cache(async (slug: string) => {
     .select(
       "id, title, slug, event_type, description, featured_image_url, location, is_virtual, virtual_link, starts_at, ends_at, registration_required, registration_deadline, capacity, seo_title, seo_description"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()

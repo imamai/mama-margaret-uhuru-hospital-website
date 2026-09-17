@@ -35,6 +35,8 @@ const generalSchema = z.object({
   vision: z.string().trim().max(2000).optional().or(z.literal("")),
   emergency_phone: z.string().trim().min(1).max(30),
   ambulance_phone: z.string().trim().max(30).optional().or(z.literal("")),
+  general_phone: z.string().trim().max(30).optional().or(z.literal("")),
+  email: z.string().trim().email("Enter a valid email address.").optional().or(z.literal("")),
   address: z.string().trim().max(300).optional().or(z.literal("")),
 })
 
@@ -49,6 +51,8 @@ export async function updateGeneralSettings(_prev: ActionResult | null, formData
     { key: "vision", value: parsed.data.vision || "" },
     { key: "emergency_phone", value: parsed.data.emergency_phone },
     { key: "ambulance_phone", value: parsed.data.ambulance_phone || "" },
+    { key: "general_phone", value: parsed.data.general_phone || "" },
+    { key: "email", value: parsed.data.email || "" },
     { key: "address", value: parsed.data.address || "" },
   ])
 }

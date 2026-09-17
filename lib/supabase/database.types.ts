@@ -11558,6 +11558,84 @@ export type Database = {
           },
         ]
       }
+      margaret_clinic_schedule: {
+        Row: {
+          clinic_id: string | null
+          clinic_label: string
+          created_at: string
+          created_by: string | null
+          day_of_week: number
+          deleted_at: string | null
+          doctor_id: string | null
+          end_time: string | null
+          id: string
+          notes: string | null
+          room: string | null
+          sort_order: number
+          specialist_name: string | null
+          specialist_role: string | null
+          start_time: string
+          status: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          clinic_id?: string | null
+          clinic_label: string
+          created_at?: string
+          created_by?: string | null
+          day_of_week: number
+          deleted_at?: string | null
+          doctor_id?: string | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          room?: string | null
+          sort_order?: number
+          specialist_name?: string | null
+          specialist_role?: string | null
+          start_time: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          clinic_id?: string | null
+          clinic_label?: string
+          created_at?: string
+          created_by?: string | null
+          day_of_week?: number
+          deleted_at?: string | null
+          doctor_id?: string | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          room?: string | null
+          sort_order?: number
+          specialist_name?: string | null
+          specialist_role?: string | null
+          start_time?: string
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "margaret_clinic_schedule_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "margaret_clinics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "margaret_clinic_schedule_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "margaret_doctors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       margaret_clinics: {
         Row: {
           banner_image_url: string | null

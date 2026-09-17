@@ -8,6 +8,7 @@ export const listDepartments = cache(async () => {
   const { data } = await supabase
     .from("margaret_departments")
     .select("id, name, slug, banner_image_url, description, location, sort_order")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
   return data ?? []
@@ -21,6 +22,7 @@ export const getDepartmentBySlug = cache(async (slug: string) => {
     .select(
       "id, name, slug, banner_image_url, description, operating_hours, phone, email, location, seo_title, seo_description"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()
@@ -36,12 +38,14 @@ export const getDepartmentBySlug = cache(async (slug: string) => {
       supabase
         .from("margaret_services")
         .select("id, name, slug, description, image_url, price_info")
+        .is("deleted_at", null)
         .eq("department_id", department.id)
         .eq("status", "published")
         .order("sort_order", { ascending: true }),
       supabase
         .from("margaret_gallery")
         .select("id, title, media_type, file_url, thumbnail_url, caption")
+        .is("deleted_at", null)
         .eq("module", "department")
         .eq("reference_id", department.id)
         .eq("status", "published")

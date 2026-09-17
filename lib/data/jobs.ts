@@ -10,6 +10,7 @@ export const listOpenJobs = cache(async () => {
     .select(
       "id, title, slug, department_id, location, contract_type, application_deadline, positions_available"
     )
+    .is("deleted_at", null)
     .eq("status", "published")
     .gte("application_deadline", new Date().toISOString().slice(0, 10))
     .order("application_deadline", { ascending: true })
@@ -23,6 +24,7 @@ export const getJobBySlug = cache(async (slug: string) => {
     .select(
       "id, title, slug, department_id, location, contract_type, qualifications, experience_required, responsibilities, salary_range, description, application_deadline, positions_available, attachments"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()
@@ -34,6 +36,7 @@ export const getJobBySlug = cache(async (slug: string) => {
         await supabase
           .from("margaret_departments")
           .select("id, name, slug")
+          .is("deleted_at", null)
           .eq("id", job.department_id)
           .maybeSingle()
       ).data

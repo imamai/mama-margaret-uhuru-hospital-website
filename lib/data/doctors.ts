@@ -10,6 +10,7 @@ export const listDoctors = cache(async (search?: string) => {
     .select(
       "id, full_name, slug, photo_url, title, specialization, department_id, years_experience"
     )
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
 
@@ -29,6 +30,7 @@ export const getDoctorBySlug = cache(async (slug: string) => {
     .select(
       "id, full_name, slug, photo_url, title, specialization, department_id, qualifications, languages, biography, years_experience, email, phone, linkedin_url, twitter_url"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()
@@ -41,6 +43,7 @@ export const getDoctorBySlug = cache(async (slug: string) => {
         ? supabase
             .from("margaret_departments")
             .select("id, name, slug")
+            .is("deleted_at", null)
             .eq("id", doctor.department_id)
             .maybeSingle()
         : Promise.resolve({ data: null }),
@@ -57,6 +60,7 @@ export const getDoctorBySlug = cache(async (slug: string) => {
       supabase
         .from("margaret_awards")
         .select("id, title, awarding_body, awarded_year")
+        .is("deleted_at", null)
         .eq("doctor_id", doctor.id)
         .eq("status", "published"),
     ])

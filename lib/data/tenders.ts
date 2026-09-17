@@ -8,6 +8,7 @@ export const listTenders = cache(async () => {
   const { data } = await supabase
     .from("margaret_tenders")
     .select("id, title, slug, tender_number, closing_date, status")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("closing_date", { ascending: false })
   return data ?? []
@@ -21,6 +22,7 @@ export const getTenderBySlug = cache(async (slug: string) => {
     .select(
       "id, title, slug, tender_number, category_id, description, eligibility, closing_date, opening_date, evaluation_stage, status"
     )
+    .is("deleted_at", null)
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle()

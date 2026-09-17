@@ -25,6 +25,7 @@ export const getHeroSlides = cache(async () => {
   const { data } = await supabase
     .from("margaret_hero_slides")
     .select("id, title, subtitle, image_url, video_url, cta_label, cta_url, focal_point")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
   return data ?? []
@@ -45,6 +46,7 @@ export const getTestimonials = cache(async () => {
   const { data } = await supabase
     .from("margaret_testimonials")
     .select("id, patient_name, photo_url, quote, rating")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
   return data ?? []
@@ -65,6 +67,7 @@ export const getAwards = cache(async () => {
   const { data } = await supabase
     .from("margaret_awards")
     .select("id, title, awarding_body, image_url, awarded_year")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
   return data ?? []
@@ -85,6 +88,7 @@ export const getGallery = cache(async (limit = 12) => {
   const { data } = await supabase
     .from("margaret_gallery")
     .select("id, title, media_type, file_url, thumbnail_url, caption")
+    .is("deleted_at", null)
     .eq("status", "published")
     .order("sort_order", { ascending: true })
     .limit(limit)
