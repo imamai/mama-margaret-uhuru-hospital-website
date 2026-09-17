@@ -35,6 +35,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 
 sys.path.insert(0, str(Path(__file__).parent))
 from content_schema import slugify  # noqa: E402
+from text_tidy import tidy  # noqa: E402
+
 
 # Rows that group the departments beneath them rather than naming one.
 HEADINGS = {"OUTPATIENT SERVICES", "REHABILITATION UNIT", "INPATIENT SERVICES"}
@@ -160,7 +162,7 @@ def main(src_path, out_path):
         dept_slug[final] = slugify(final)
         departments.append({
             "name": final,
-            "description": (str(desc).strip() if desc else ""),
+            "description": tidy(desc),
             "phone": "", "email": "", "location": "",
             "sort_order": len(departments) + 1,
             "status": "published",
@@ -235,7 +237,7 @@ def main(src_path, out_path):
             continue
         testimonials.append({
             "patient_name": str(who).strip(),
-            "quote": str(quote).strip().strip('"'),
+            "quote": tidy(str(quote).strip().strip('"')),
             "rating": 5,
             "sort_order": len(testimonials) + 1,
             "status": "published",
@@ -301,7 +303,7 @@ def main(src_path, out_path):
                 ["setting_key", "setting_value"],
                 "One row per detail. Do not rename the keys in the first column — the "
                 "site looks them up by name. Only the second column is yours to change.",
-                [{"setting_key": k, "setting_value": str(v or "").strip()} for k, v in settings])
+                [{"setting_key": k, "setting_value": tidy(v)} for k, v in settings])
 
     out.save(out_path)
     print(f"wrote {out_path}")

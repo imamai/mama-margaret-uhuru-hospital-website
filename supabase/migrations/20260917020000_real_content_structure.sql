@@ -6,33 +6,33 @@
 
 /* Departments — 24 row(s) */
 
-update margaret_departments set name = 'Accident and Emergency', description = 'Accident and Emergency operates 24 hrs and provides immediate,life saving care to patients with acute illness,severe injuries or sudden medical trauma.', phone = null, email = null, location = null, sort_order = 1, status = 'published', updated_at = now() where slug = 'accident-and-emergency';
+update margaret_departments set name = 'Accident and Emergency', description = 'Accident and Emergency operates 24 hours and provides immediate, life saving care to patients with acute illness, severe injuries or sudden medical trauma.', phone = null, email = null, location = null, sort_order = 1, status = 'published', updated_at = now() where slug = 'accident-and-emergency';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Accident and Emergency', 'Accident and Emergency operates 24 hrs and provides immediate,life saving care to patients with acute illness,severe injuries or sudden medical trauma.', null, null, null, 1, 'published', 'accident-and-emergency'
+select 'Accident and Emergency', 'Accident and Emergency operates 24 hours and provides immediate, life saving care to patients with acute illness, severe injuries or sudden medical trauma.', null, null, null, 1, 'published', 'accident-and-emergency'
 where not exists (select 1 from margaret_departments where slug = 'accident-and-emergency');
 
 update margaret_departments set name = 'Laboratory Services', description = 'The Laboratory at MMUH provides comprehensive diagnostic testing services to support accurate diagnosis, treatment, and patient management. Our laboratory operates 24 hours a day, 7 days a week, ensuring timely access to critical diagnostic services for both inpatients and outpatients, including emergencies.
-We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation. 
-Our Services 
-•	Haematology – Full blood count, erythrocyte sedimentation rate (ESR),   Coagulation profile
-•	Blood Transfusion Services – Blood grouping, Blood Crossmatching, Direct coombs test, Indirect coombs test, Du test.
-•	Parasitology- Stool for Ova/Cyst, Salmonella antigen (SAT),Fecal occult blood (FOB), V. Cholera Ag, B/s Malaria parasites,VDRL, Rheumatoid Factor, ASOT, Serum CRAG ,CSF CRAG, Urine analysis.
-•	 Routine Clinical Chemistry Tests–  Serum Albumin, Alkaline phosphatase, Alanine Aminotransferase, Aspartate Aminotransferase, Calcium, Gamma–Glutamyltransferase, Glucose,HDL-Cholesterol, LDL-Cholesterol,Magnesium,Phosphorus, Bilirubin Total, Total Cholesterol,Triglycerides, Total Protein, Total Protein in Urine/CSF（TPUC）,Uric Acid, Urea creatinine, urine multi drug toxicology screening.
-•	Immunoassays/ Serology tests – Thyroid Function Tests (TFTs), HbA1c , HBsAg, HAV, HCV, 
-•	Microbiology tests -Gram stain, Ziehl Nelsen(ZN), Wet Preparation Urine microscopy,Indian Ink ,Cell Count, CSF / Serum Crag, ASOT Test,Helicobacter Pylori, Gen-expert & TB LAM ,CSF) Analysis  
-•	HTS -  including Viral load, CD4 count and Early Infant Diagnosis (EID).
+We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation.
+Our Services
+• Haematology – Full blood count, erythrocyte sedimentation rate (ESR), Coagulation profile
+• Blood Transfusion Services – Blood grouping, Blood Crossmatching, Direct coombs test, Indirect coombs test, Du test.
+• Parasitology- Stool for Ova/Cyst, Salmonella antigen (SAT), Fecal occult blood (FOB), V. Cholera Ag, B/s Malaria parasites, VDRL, Rheumatoid Factor, ASOT, Serum CRAG, CSF CRAG, Urine analysis.
+• Routine Clinical Chemistry Tests– Serum Albumin, Alkaline phosphatase, Alanine Aminotransferase, Aspartate Aminotransferase, Calcium, Gamma–Glutamyltransferase, Glucose, HDL-Cholesterol, LDL-Cholesterol, Magnesium, Phosphorus, Bilirubin Total, Total Cholesterol, Triglycerides, Total Protein, Total Protein in Urine/CSF（TPUC）, Uric Acid, Urea creatinine, urine multi drug toxicology screening.
+• Immunoassays/ Serology tests – Thyroid Function Tests (TFTs), HbA1c, HBsAg, HAV, HCV,
+• Microbiology tests -Gram stain, Ziehl Nelsen(ZN), Wet Preparation Urine microscopy, Indian Ink, Cell Count, CSF / Serum Crag, ASOT Test, Helicobacter Pylori, Gen-expert & TB LAM, CSF) Analysis
+• HTS - including Viral load, CD4 count and Early Infant Diagnosis (EID).
 Our team of qualified and experienced laboratory personnel is dedicated to delivering accurate, reliable, and timely results.', phone = null, email = null, location = null, sort_order = 2, status = 'published', updated_at = now() where slug = 'laboratory-services';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Laboratory Services', 'The Laboratory at MMUH provides comprehensive diagnostic testing services to support accurate diagnosis, treatment, and patient management. Our laboratory operates 24 hours a day, 7 days a week, ensuring timely access to critical diagnostic services for both inpatients and outpatients, including emergencies.
-We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation. 
-Our Services 
-•	Haematology – Full blood count, erythrocyte sedimentation rate (ESR),   Coagulation profile
-•	Blood Transfusion Services – Blood grouping, Blood Crossmatching, Direct coombs test, Indirect coombs test, Du test.
-•	Parasitology- Stool for Ova/Cyst, Salmonella antigen (SAT),Fecal occult blood (FOB), V. Cholera Ag, B/s Malaria parasites,VDRL, Rheumatoid Factor, ASOT, Serum CRAG ,CSF CRAG, Urine analysis.
-•	 Routine Clinical Chemistry Tests–  Serum Albumin, Alkaline phosphatase, Alanine Aminotransferase, Aspartate Aminotransferase, Calcium, Gamma–Glutamyltransferase, Glucose,HDL-Cholesterol, LDL-Cholesterol,Magnesium,Phosphorus, Bilirubin Total, Total Cholesterol,Triglycerides, Total Protein, Total Protein in Urine/CSF（TPUC）,Uric Acid, Urea creatinine, urine multi drug toxicology screening.
-•	Immunoassays/ Serology tests – Thyroid Function Tests (TFTs), HbA1c , HBsAg, HAV, HCV, 
-•	Microbiology tests -Gram stain, Ziehl Nelsen(ZN), Wet Preparation Urine microscopy,Indian Ink ,Cell Count, CSF / Serum Crag, ASOT Test,Helicobacter Pylori, Gen-expert & TB LAM ,CSF) Analysis  
-•	HTS -  including Viral load, CD4 count and Early Infant Diagnosis (EID).
+We are committed to quality and patient safety. The laboratory is currently implementing a robust Quality Management System (QMS) in line with international standards, as part of our ongoing journey towards full laboratory accreditation.
+Our Services
+• Haematology – Full blood count, erythrocyte sedimentation rate (ESR), Coagulation profile
+• Blood Transfusion Services – Blood grouping, Blood Crossmatching, Direct coombs test, Indirect coombs test, Du test.
+• Parasitology- Stool for Ova/Cyst, Salmonella antigen (SAT), Fecal occult blood (FOB), V. Cholera Ag, B/s Malaria parasites, VDRL, Rheumatoid Factor, ASOT, Serum CRAG, CSF CRAG, Urine analysis.
+• Routine Clinical Chemistry Tests– Serum Albumin, Alkaline phosphatase, Alanine Aminotransferase, Aspartate Aminotransferase, Calcium, Gamma–Glutamyltransferase, Glucose, HDL-Cholesterol, LDL-Cholesterol, Magnesium, Phosphorus, Bilirubin Total, Total Cholesterol, Triglycerides, Total Protein, Total Protein in Urine/CSF（TPUC）, Uric Acid, Urea creatinine, urine multi drug toxicology screening.
+• Immunoassays/ Serology tests – Thyroid Function Tests (TFTs), HbA1c, HBsAg, HAV, HCV,
+• Microbiology tests -Gram stain, Ziehl Nelsen(ZN), Wet Preparation Urine microscopy, Indian Ink, Cell Count, CSF / Serum Crag, ASOT Test, Helicobacter Pylori, Gen-expert & TB LAM, CSF) Analysis
+• HTS - including Viral load, CD4 count and Early Infant Diagnosis (EID).
 Our team of qualified and experienced laboratory personnel is dedicated to delivering accurate, reliable, and timely results.', null, null, null, 2, 'published', 'laboratory-services'
 where not exists (select 1 from margaret_departments where slug = 'laboratory-services');
 
@@ -71,9 +71,9 @@ Services available
 - Health Education.', null, null, null, 5, 'published', 'ophthalmology'
 where not exists (select 1 from margaret_departments where slug = 'ophthalmology');
 
-update margaret_departments set name = 'Comprehensive Care Clinic', description = 'We offer care and treatment,lab investigations CD4 count,viral load ,HIv testing ,PITC and adherence treatment', phone = null, email = null, location = null, sort_order = 6, status = 'published', updated_at = now() where slug = 'comprehensive-care-clinic';
+update margaret_departments set name = 'Comprehensive Care Clinic', description = 'We offer care and treatment, lab investigations CD4 count, viral load, HIV testing, PITC and adherence treatment', phone = null, email = null, location = null, sort_order = 6, status = 'published', updated_at = now() where slug = 'comprehensive-care-clinic';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Comprehensive Care Clinic', 'We offer care and treatment,lab investigations CD4 count,viral load ,HIv testing ,PITC and adherence treatment', null, null, null, 6, 'published', 'comprehensive-care-clinic'
+select 'Comprehensive Care Clinic', 'We offer care and treatment, lab investigations CD4 count, viral load, HIV testing, PITC and adherence treatment', null, null, null, 6, 'published', 'comprehensive-care-clinic'
 where not exists (select 1 from margaret_departments where slug = 'comprehensive-care-clinic');
 
 update margaret_departments set name = 'Mother, Child Health & Family Planning', description = 'Mother, Child Health and Family Planning Department
@@ -107,44 +107,42 @@ where not exists (select 1 from margaret_departments where slug = 'mother-child-
 
 update margaret_departments set name = 'Nutrition Clinic', description = 'Inpatient Clinical Nutrition
 Proper nutrition during a hospital stay drastically reduces healing period, prevents complications, and builds immune resilience. Our inpatient services include:
-•	Nutritional Assessment & Care Planning: Universal screening of patients upon admission to identify, prevent, and treat malnutrition.
-•	Critical Care & Specialized Nutrition: Formulating precise Enteral (tube feeding) and nutrition regimens for patients in the medical and surgical wards.
-•	Therapeutic Hospital Menus: Direct collaboration with our hospitality department to produce and deliver meals customized to specific therapeutic needs (e.g., low-sodium, texture-modified, diabetic etc).
-•	Pre- & Post-Operative Nutritional Optimization: Building up nutrient reserves before major surgeries and managing dietary steps during post-surgical recovery.
+• Nutritional Assessment & Care Planning: Universal screening of patients upon admission to identify, prevent, and treat malnutrition.
+• Critical Care & Specialized Nutrition: Formulating precise Enteral (tube feeding) and nutrition regimens for patients in the medical and surgical wards.
+• Therapeutic Hospital Menus: Direct collaboration with our hospitality department to produce and deliver meals customized to specific therapeutic needs (e.g., low-sodium, texture-modified, diabetic etc).
+• Pre- & Post-Operative Nutritional Optimization: Building up nutrient reserves before major surgeries and managing dietary steps during post-surgical recovery.
 
 Outpatient Nutrition & Dietetic Clinics
 We offer dedicated, one-on-one nutrition counseling and long-term monitoring for walk-in patients and medical referrals:
-•	Metabolic & Lifestyle Diseases: Specialized diet plans to reverse, manage,or stall the progression of Type 2 Diabetes, Hypertension etc.
-•	Gastrointestinal & Food Allergy Care: Practical dietary tracking for conditions like Irritable Bowel Syndrome (IBS), peptic ulcers and food intolerances.
-•	Sustainable Weight Management: Scientific, practical and programs focusing on healthy weight loss, weight gain tailored to the individual client/patient.
-
+• Metabolic & Lifestyle Diseases: Specialized diet plans to reverse, manage, or stall the progression of Type 2 Diabetes, Hypertension etc.
+• Gastrointestinal & Food Allergy Care: Practical dietary tracking for conditions like Irritable Bowel Syndrome (IBS), peptic ulcers and food intolerances.
+• Sustainable Weight Management: Scientific, practical and programs focusing on healthy weight loss, weight gain tailored to the individual client/patient.
 
 Maternal, Infant, and Child Nutrition
 We offer comprehensive care at every developmental stage to guarantee proper growth and maternal wellness:
-•	Prenatal & Gestational Support: Nutritional tracking for expectant mothers, focusing on the health of the mother including acceptable gestational weight gain, prevention and management of nutritional deficiencies,gestational Diabetes eclampsia etc.
-•	Infant and Young Child Feeding (IYCF): Direct  and one-on-one support to ensure optimal and exclusive breastfeeding for the first six months of life, management of breast feeding challenges/difficulties, and complimentary feeding from 6-59 months for optimal growth and development.
-•	Growth monitoring& promotion,Vitamin A supplementation and provision of antihelmiths:
+• Prenatal & Gestational Support: Nutritional tracking for expectant mothers, focusing on the health of the mother including acceptable gestational weight gain, prevention and management of nutritional deficiencies, gestational Diabetes eclampsia etc.
+• Infant and Young Child Feeding (IYCF): Direct and one-on-one support to ensure optimal and exclusive breastfeeding for the first six months of life, management of breast feeding challenges/difficulties, and complimentary feeding from 6-59 months for optimal growth and development.
+• Growth monitoring& promotion, Vitamin A supplementation and provision of antihelmiths:
  Malnutrition Clinic(OTC): Comprehensive management of acute malnutrition and rehabilitation through personalized nutrition counselling, use of therapeutic feeds and approaches like PdHear', phone = null, email = null, location = null, sort_order = 8, status = 'published', updated_at = now() where slug = 'nutrition-clinic';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Nutrition Clinic', 'Inpatient Clinical Nutrition
 Proper nutrition during a hospital stay drastically reduces healing period, prevents complications, and builds immune resilience. Our inpatient services include:
-•	Nutritional Assessment & Care Planning: Universal screening of patients upon admission to identify, prevent, and treat malnutrition.
-•	Critical Care & Specialized Nutrition: Formulating precise Enteral (tube feeding) and nutrition regimens for patients in the medical and surgical wards.
-•	Therapeutic Hospital Menus: Direct collaboration with our hospitality department to produce and deliver meals customized to specific therapeutic needs (e.g., low-sodium, texture-modified, diabetic etc).
-•	Pre- & Post-Operative Nutritional Optimization: Building up nutrient reserves before major surgeries and managing dietary steps during post-surgical recovery.
+• Nutritional Assessment & Care Planning: Universal screening of patients upon admission to identify, prevent, and treat malnutrition.
+• Critical Care & Specialized Nutrition: Formulating precise Enteral (tube feeding) and nutrition regimens for patients in the medical and surgical wards.
+• Therapeutic Hospital Menus: Direct collaboration with our hospitality department to produce and deliver meals customized to specific therapeutic needs (e.g., low-sodium, texture-modified, diabetic etc).
+• Pre- & Post-Operative Nutritional Optimization: Building up nutrient reserves before major surgeries and managing dietary steps during post-surgical recovery.
 
 Outpatient Nutrition & Dietetic Clinics
 We offer dedicated, one-on-one nutrition counseling and long-term monitoring for walk-in patients and medical referrals:
-•	Metabolic & Lifestyle Diseases: Specialized diet plans to reverse, manage,or stall the progression of Type 2 Diabetes, Hypertension etc.
-•	Gastrointestinal & Food Allergy Care: Practical dietary tracking for conditions like Irritable Bowel Syndrome (IBS), peptic ulcers and food intolerances.
-•	Sustainable Weight Management: Scientific, practical and programs focusing on healthy weight loss, weight gain tailored to the individual client/patient.
-
+• Metabolic & Lifestyle Diseases: Specialized diet plans to reverse, manage, or stall the progression of Type 2 Diabetes, Hypertension etc.
+• Gastrointestinal & Food Allergy Care: Practical dietary tracking for conditions like Irritable Bowel Syndrome (IBS), peptic ulcers and food intolerances.
+• Sustainable Weight Management: Scientific, practical and programs focusing on healthy weight loss, weight gain tailored to the individual client/patient.
 
 Maternal, Infant, and Child Nutrition
 We offer comprehensive care at every developmental stage to guarantee proper growth and maternal wellness:
-•	Prenatal & Gestational Support: Nutritional tracking for expectant mothers, focusing on the health of the mother including acceptable gestational weight gain, prevention and management of nutritional deficiencies,gestational Diabetes eclampsia etc.
-•	Infant and Young Child Feeding (IYCF): Direct  and one-on-one support to ensure optimal and exclusive breastfeeding for the first six months of life, management of breast feeding challenges/difficulties, and complimentary feeding from 6-59 months for optimal growth and development.
-•	Growth monitoring& promotion,Vitamin A supplementation and provision of antihelmiths:
+• Prenatal & Gestational Support: Nutritional tracking for expectant mothers, focusing on the health of the mother including acceptable gestational weight gain, prevention and management of nutritional deficiencies, gestational Diabetes eclampsia etc.
+• Infant and Young Child Feeding (IYCF): Direct and one-on-one support to ensure optimal and exclusive breastfeeding for the first six months of life, management of breast feeding challenges/difficulties, and complimentary feeding from 6-59 months for optimal growth and development.
+• Growth monitoring& promotion, Vitamin A supplementation and provision of antihelmiths:
  Malnutrition Clinic(OTC): Comprehensive management of acute malnutrition and rehabilitation through personalized nutrition counselling, use of therapeutic feeds and approaches like PdHear', null, null, null, 8, 'published', 'nutrition-clinic'
 where not exists (select 1 from margaret_departments where slug = 'nutrition-clinic');
 
@@ -195,9 +193,9 @@ Updates and Alerts
 . All patients advised to carry valid prescriptions for refill', null, null, null, 9, 'published', 'pharmacy-services'
 where not exists (select 1 from margaret_departments where slug = 'pharmacy-services');
 
-update margaret_departments set name = 'Medical Social Work', description = 'he Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', phone = null, email = null, location = null, sort_order = 10, status = 'published', updated_at = now() where slug = 'medical-social-work';
+update margaret_departments set name = 'Medical Social Work', description = 'The Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', phone = null, email = null, location = null, sort_order = 10, status = 'published', updated_at = now() where slug = 'medical-social-work';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Medical Social Work', 'he Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', null, null, null, 10, 'published', 'medical-social-work'
+select 'Medical Social Work', 'The Medical Social Work Department provides psychosocial, emotional and socioeconomic support to patients and their families. The department conducts social assessments, counselling, case management, referrals, discharge planning and linkage to community support services, with a focus on vulnerable clients.', null, null, null, 10, 'published', 'medical-social-work'
 where not exists (select 1 from margaret_departments where slug = 'medical-social-work');
 
 update margaret_departments set name = 'SGBV Centre (Tumaini Clinic)', description = 'The department also hosts Tumaini Clinic, which provides specialized support and services to clients affected by Sexual and Gender-Based Violence (SGBV), including counselling, referral, follow-up and coordination of appropriate care.', phone = null, email = null, location = null, sort_order = 11, status = 'published', updated_at = now() where slug = 'sgbv-centre-tumaini-clinic';
@@ -205,9 +203,9 @@ insert into margaret_departments (name, description, phone, email, location, sor
 select 'SGBV Centre (Tumaini Clinic)', 'The department also hosts Tumaini Clinic, which provides specialized support and services to clients affected by Sexual and Gender-Based Violence (SGBV), including counselling, referral, follow-up and coordination of appropriate care.', null, null, null, 11, 'published', 'sgbv-centre-tumaini-clinic'
 where not exists (select 1 from margaret_departments where slug = 'sgbv-centre-tumaini-clinic');
 
-update margaret_departments set name = 'Health Information Systems', description = 'The main key role of this department is to serve as the main back borne  of patient  data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records  management,clinical coding of diseases,cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors,Ensure the dept is in accordance with data protection act (2019),cordinate vital statistic by processing all births and deaths  notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', phone = null, email = null, location = null, sort_order = 12, status = 'published', updated_at = now() where slug = 'health-information-systems';
+update margaret_departments set name = 'Health Information Systems', description = 'The main key role of this department is to serve as the main back borne of patient data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records management, clinical coding of diseases, cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors, Ensure the dept is in accordance with data protection act (2019), cordinate vital statistic by processing all births and deaths notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', phone = null, email = null, location = null, sort_order = 12, status = 'published', updated_at = now() where slug = 'health-information-systems';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Health Information Systems', 'The main key role of this department is to serve as the main back borne  of patient  data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records  management,clinical coding of diseases,cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors,Ensure the dept is in accordance with data protection act (2019),cordinate vital statistic by processing all births and deaths  notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', null, null, null, 12, 'published', 'health-information-systems'
+select 'Health Information Systems', 'The main key role of this department is to serve as the main back borne of patient data management This is achieved by tracking all performance indicators interprete share and influence decision making .Other roles includes records management, clinical coding of diseases, cordinate data systems (EMR)we oversee the deployment of the system and trouble shoot the errors, Ensure the dept is in accordance with data protection act (2019), cordinate vital statistic by processing all births and deaths notoifications occuring in the hospital and lastly serves as ateaching hub by actively hosting students on attachment or internship programms.', null, null, null, 12, 'published', 'health-information-systems'
 where not exists (select 1 from margaret_departments where slug = 'health-information-systems');
 
 update margaret_departments set name = 'Orthopaedics & Trauma', description = 'Mama Margaret Uhuru Hospital — Orthopaedic & Trauma Department
@@ -231,59 +229,59 @@ What we do:
 - Rehab: Works with Physiotherapy for back exercises, traction, post-op rehab', null, null, null, 13, 'published', 'orthopaedics-trauma'
 where not exists (select 1 from margaret_departments where slug = 'orthopaedics-trauma');
 
-update margaret_departments set name = 'Occupational Therapy', description = 'Our occupational therapy department at MMUH is committed to offering the following services 
+update margaret_departments set name = 'Occupational Therapy', description = 'Our occupational therapy department at MMUH is committed to offering the following services
 
-*Activities of daily living training to help individuals regain independence in feeding, toileting, bathing, dressing and grooming 
+*Activities of daily living training to help individuals regain independence in feeding, toileting, bathing, dressing and grooming
 
-*Neonatal screening to help identify,diagnose and schedule timely follow up to neonates born or referred to our facility.
+*Neonatal screening to help identify, diagnose and schedule timely follow up to neonates born or referred to our facility.
 
-*Pediatric care which includes assessment and play based therapy for children with physical, cognitive, developmental and learning challenges 
+*Pediatric care which includes assessment and play based therapy for children with physical, cognitive, developmental and learning challenges
 
 *Assistive devices which include assessing, recommending and fabricating of splints or custom made adaptive tools to aid mobility and function.', phone = null, email = null, location = null, sort_order = 14, status = 'published', updated_at = now() where slug = 'occupational-therapy';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Occupational Therapy', 'Our occupational therapy department at MMUH is committed to offering the following services 
+select 'Occupational Therapy', 'Our occupational therapy department at MMUH is committed to offering the following services
 
-*Activities of daily living training to help individuals regain independence in feeding, toileting, bathing, dressing and grooming 
+*Activities of daily living training to help individuals regain independence in feeding, toileting, bathing, dressing and grooming
 
-*Neonatal screening to help identify,diagnose and schedule timely follow up to neonates born or referred to our facility.
+*Neonatal screening to help identify, diagnose and schedule timely follow up to neonates born or referred to our facility.
 
-*Pediatric care which includes assessment and play based therapy for children with physical, cognitive, developmental and learning challenges 
+*Pediatric care which includes assessment and play based therapy for children with physical, cognitive, developmental and learning challenges
 
 *Assistive devices which include assessing, recommending and fabricating of splints or custom made adaptive tools to aid mobility and function.', null, null, null, 14, 'published', 'occupational-therapy'
 where not exists (select 1 from margaret_departments where slug = 'occupational-therapy');
 
 update margaret_departments set name = 'Physiotherapy', description = '” Healing Through Motion, Empowering Recovery”
-At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life. 
+At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life.
 Services offered both in patient and outpatient basis.
 Our Services
-•	Musculoskeletal Rehabilitation – restore function, reduce pain affecting muscles, ligament & soft tissue injuries
-•	Neurological Physiotherapy – focuses neurological disorders affecting brain, spinal cord, and nervous system. 
-•	Paediatric Physiotherapy –focus on developmental delays, movement and posture correction
-•	Sports Physiotherapy – athlete Injury prevention, rehabilitation, performance training
-•	Geriatric Physiotherapy – focus on healthy aging maintaining mobility, balance, fall prevention
-•	Post Surgical Care – Recovery after any surgery preventing complications, scar mobilization
-•	Women’s Health Physiotherapy – Pelvic floor rehabilitation, prenatal and postnatal care, menopause related support
-•	Disability assessment - Specialized physical assessments conducted in collaboration with other departments.
-•	Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', phone = null, email = null, location = null, sort_order = 15, status = 'published', updated_at = now() where slug = 'physiotherapy';
+• Musculoskeletal Rehabilitation – restore function, reduce pain affecting muscles, ligament & soft tissue injuries
+• Neurological Physiotherapy – focuses neurological disorders affecting brain, spinal cord, and nervous system.
+• Paediatric Physiotherapy –focus on developmental delays, movement and posture correction
+• Sports Physiotherapy – athlete Injury prevention, rehabilitation, performance training
+• Geriatric Physiotherapy – focus on healthy aging maintaining mobility, balance, fall prevention
+• Post Surgical Care – Recovery after any surgery preventing complications, scar mobilization
+• Women’s Health Physiotherapy – Pelvic floor rehabilitation, prenatal and postnatal care, menopause related support
+• Disability assessment - Specialized physical assessments conducted in collaboration with other departments.
+• Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', phone = null, email = null, location = null, sort_order = 15, status = 'published', updated_at = now() where slug = 'physiotherapy';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
 select 'Physiotherapy', '” Healing Through Motion, Empowering Recovery”
-At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life. 
+At Mama Margaret Uhuru Hospital, our Physiotherapy Department is dedicated to helping patients regain strength, mobility, and independence. Through personalized care and evidence based practice, we support recovery journeys that restore confidence and improve quality of life.
 Services offered both in patient and outpatient basis.
 Our Services
-•	Musculoskeletal Rehabilitation – restore function, reduce pain affecting muscles, ligament & soft tissue injuries
-•	Neurological Physiotherapy – focuses neurological disorders affecting brain, spinal cord, and nervous system. 
-•	Paediatric Physiotherapy –focus on developmental delays, movement and posture correction
-•	Sports Physiotherapy – athlete Injury prevention, rehabilitation, performance training
-•	Geriatric Physiotherapy – focus on healthy aging maintaining mobility, balance, fall prevention
-•	Post Surgical Care – Recovery after any surgery preventing complications, scar mobilization
-•	Women’s Health Physiotherapy – Pelvic floor rehabilitation, prenatal and postnatal care, menopause related support
-•	Disability assessment - Specialized physical assessments conducted in collaboration with other departments.
-•	Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', null, null, null, 15, 'published', 'physiotherapy'
+• Musculoskeletal Rehabilitation – restore function, reduce pain affecting muscles, ligament & soft tissue injuries
+• Neurological Physiotherapy – focuses neurological disorders affecting brain, spinal cord, and nervous system.
+• Paediatric Physiotherapy –focus on developmental delays, movement and posture correction
+• Sports Physiotherapy – athlete Injury prevention, rehabilitation, performance training
+• Geriatric Physiotherapy – focus on healthy aging maintaining mobility, balance, fall prevention
+• Post Surgical Care – Recovery after any surgery preventing complications, scar mobilization
+• Women’s Health Physiotherapy – Pelvic floor rehabilitation, prenatal and postnatal care, menopause related support
+• Disability assessment - Specialized physical assessments conducted in collaboration with other departments.
+• Training, Research, and Continuous Medical Education (CME) – Ongoing staff development that contribute to physiotherapy evidence-based practice.', null, null, null, 15, 'published', 'physiotherapy'
 where not exists (select 1 from margaret_departments where slug = 'physiotherapy');
 
-update margaret_departments set name = 'Orthopaedic Technology', description = 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions  the department helps improve mobility, function, comfort, independence and quality of life,  including follow-up,', phone = null, email = null, location = null, sort_order = 16, status = 'published', updated_at = now() where slug = 'orthopaedic-technology';
+update margaret_departments set name = 'Orthopaedic Technology', description = 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions the department helps improve mobility, function, comfort, independence and quality of life, including follow-up,', phone = null, email = null, location = null, sort_order = 16, status = 'published', updated_at = now() where slug = 'orthopaedic-technology';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Orthopaedic Technology', 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions  the department helps improve mobility, function, comfort, independence and quality of life,  including follow-up,', null, null, null, 16, 'published', 'orthopaedic-technology'
+select 'Orthopaedic Technology', 'The Orthopaedic Technology Department at Mama Margaret Uhuru Hospital (MMUH) provides specialized patient-centred services in the assessment, design, fabrication, fitting and maintenance of prosthetic and orthotic devices and other supportive assistive devices for people with physical disabilities and conditions affecting movement and function, including bow legs, clubfoot, diabetic foot, post-polio paralysis, limb loss, foot and ankle deformities and other musculoskeletal and neurological conditions. Through customized solutions the department helps improve mobility, function, comfort, independence and quality of life, including follow-up,', null, null, null, 16, 'published', 'orthopaedic-technology'
 where not exists (select 1 from margaret_departments where slug = 'orthopaedic-technology');
 
 update margaret_departments set name = 'Maternity', description = null, phone = null, email = null, location = null, sort_order = 17, status = 'published', updated_at = now() where slug = 'maternity';
@@ -311,14 +309,14 @@ insert into margaret_departments (name, description, phone, email, location, sor
 select 'Newborn Unit (NBU)', null, null, null, null, 21, 'published', 'newborn-unit-nbu'
 where not exists (select 1 from margaret_departments where slug = 'newborn-unit-nbu');
 
-update margaret_departments set name = 'Supply Chain Management', description = 'Reliable supply ensuring essential medicine , consumamble equipment and services are available when they are needed', phone = null, email = null, location = null, sort_order = 22, status = 'published', updated_at = now() where slug = 'supply-chain-management';
+update margaret_departments set name = 'Supply Chain Management', description = 'Reliable supply ensuring essential medicine, consumamble equipment and services are available when they are needed', phone = null, email = null, location = null, sort_order = 22, status = 'published', updated_at = now() where slug = 'supply-chain-management';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Supply Chain Management', 'Reliable supply ensuring essential medicine , consumamble equipment and services are available when they are needed', null, null, null, 22, 'published', 'supply-chain-management'
+select 'Supply Chain Management', 'Reliable supply ensuring essential medicine, consumamble equipment and services are available when they are needed', null, null, null, 22, 'published', 'supply-chain-management'
 where not exists (select 1 from margaret_departments where slug = 'supply-chain-management');
 
-update margaret_departments set name = 'Biomedical Engineering', description = 'Medical Engineering Department is responsible fr the management, maintenance , safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration , user training , techical assessment and equipment lifecycle management , ensuring reliable and quality patient care.', phone = null, email = null, location = null, sort_order = 23, status = 'published', updated_at = now() where slug = 'biomedical-engineering';
+update margaret_departments set name = 'Biomedical Engineering', description = 'Medical Engineering Department is responsible for the management, maintenance, safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration, user training, techical assessment and equipment lifecycle management, ensuring reliable and quality patient care.', phone = null, email = null, location = null, sort_order = 23, status = 'published', updated_at = now() where slug = 'biomedical-engineering';
 insert into margaret_departments (name, description, phone, email, location, sort_order, status, slug)
-select 'Biomedical Engineering', 'Medical Engineering Department is responsible fr the management, maintenance , safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration , user training , techical assessment and equipment lifecycle management , ensuring reliable and quality patient care.', null, null, null, 23, 'published', 'biomedical-engineering'
+select 'Biomedical Engineering', 'Medical Engineering Department is responsible for the management, maintenance, safety and optimal functioning of medical equipment and health technologies in the hospital. It supports clinical departments through equipment installation, preventive and corrective maintainance, calibration, user training, techical assessment and equipment lifecycle management, ensuring reliable and quality patient care.', null, null, null, 23, 'published', 'biomedical-engineering'
 where not exists (select 1 from margaret_departments where slug = 'biomedical-engineering');
 
 update margaret_departments set name = 'Farewell Services', description = 'In a hospital, the mortuary (also called morgue) has a much bigger role than just keeping bodies. It''s part of patient care, law, and public health.
@@ -593,14 +591,14 @@ insert into margaret_testimonials (patient_name, quote, rating, sort_order, stat
 select 'Jose Kioko', 'I appreciate the medics for perfect services', 5, 4, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Jose Kioko');
 
-update margaret_testimonials set quote = 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital , the doctors are very dilligent with their work , I would like to give the hospital a five star rank. Great Services!', rating = 5, sort_order = 5, status = 'published', updated_at = now() where patient_name = 'Sharon Odhiambo';
+update margaret_testimonials set quote = 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital, the doctors are very dilligent with their work, I would like to give the hospital a five star rank. Great Services!', rating = 5, sort_order = 5, status = 'published', updated_at = now() where patient_name = 'Sharon Odhiambo';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
-select 'Sharon Odhiambo', 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital , the doctors are very dilligent with their work , I would like to give the hospital a five star rank. Great Services!', 5, 5, 'published'
+select 'Sharon Odhiambo', 'I am satisfied with the services offered at Mama Margaret Uhuru Hospital, the doctors are very dilligent with their work, I would like to give the hospital a five star rank. Great Services!', 5, 5, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Sharon Odhiambo');
 
-update margaret_testimonials set quote = 'Since my wife was admitted and discharged , the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', rating = 5, sort_order = 6, status = 'published', updated_at = now() where patient_name = 'Brian Kevin';
+update margaret_testimonials set quote = 'Since my wife was admitted and discharged, the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', rating = 5, sort_order = 6, status = 'published', updated_at = now() where patient_name = 'Brian Kevin';
 insert into margaret_testimonials (patient_name, quote, rating, sort_order, status)
-select 'Brian Kevin', 'Since my wife was admitted and discharged , the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', 5, 6, 'published'
+select 'Brian Kevin', 'Since my wife was admitted and discharged, the services offered were fantastic, thank you very much Mama Margaret hospital staff God Bless You!', 5, 6, 'published'
 where not exists (select 1 from margaret_testimonials where patient_name = 'Brian Kevin');
 
 /* Partners — 6 row(s) */
