@@ -2,11 +2,12 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { Calendar, LogOut } from "lucide-react"
 
-import { BidForm } from "@/components/forms/bid-form"
+import { TenderDocuments, type TenderDocument } from "@/components/forms/tender-documents"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { supplierSignOut } from "@/lib/actions/suppliers"
 import { getCurrentSupplier } from "@/lib/data/suppliers"
+import { getSiteSettings } from "@/lib/data/settings"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = { title: "Supplier Dashboard" }
@@ -38,27 +39,30 @@ export default async function SupplierDashboardPage() {
 
   const bidByTender = new Map((myBids ?? []).map((b) => [b.tender_id, b.status]))
 
-  // The forms each open tender asks to be signed and returned. Fetched once
-  // for all of them rather than per card, so the page still costs two queries.
+  // Every document published with each open tender -- the ones to read and the
+  // ones to fill in. Fetched once for all of them rather than per card.
   const tenderIds = (openTenders ?? []).map((t) => t.id as string)
-  const { data: requiredDocs } = tenderIds.length
-    ? await supabase
-        .from("margaret_tender_documents")
-        .select("id, tender_id, title, file_url, sort_order")
-        .in("tender_id", tenderIds)
-        .eq("is_required_return", true)
-        .order("sort_order")
-    : { data: [] }
+  const [{ data: tenderDocs }, settings] = await Promise.all([
+    tenderIds.length
+      ? supabase
+          .from("margaret_tender_documents")
+          .select("id, tender_id, title, file_url, is_required_return, sort_order")
+          .in("tender_id", tenderIds)
+          .order("sort_order")
+      : Promise.resolve({ data: [] }),
+    getSiteSettings(),
+  ])
 
-  const slotsByTender = new Map<string, { id: string; title: string; fileUrl: string | null }[]>()
-  for (const doc of requiredDocs ?? []) {
-    const list = slotsByTender.get(doc.tender_id as string) ?? []
+  const docsByTender = new Map<string, TenderDocument[]>()
+  for (const doc of tenderDocs ?? []) {
+    const list = docsByTender.get(doc.tender_id as string) ?? []
     list.push({
       id: doc.id as string,
       title: doc.title as string,
       fileUrl: (doc.file_url as string | null) ?? null,
+      mustReturn: Boolean(doc.is_required_return),
     })
-    slotsByTender.set(doc.tender_id as string, list)
+    docsByTender.set(doc.tender_id as string, list)
   }
 
   return (
@@ -89,8 +93,8 @@ export default async function SupplierDashboardPage() {
 
       {supplier.status === "pending" ? (
         <p className="mt-6 text-sm text-muted-foreground">
-          Your registration is awaiting review by our procurement team. You&rsquo;ll be able to submit bids once
-          approved.
+          Your registration is awaiting review by our procurement team. You&rsquo;ll be able to download tender
+          documents once approved.
         </p>
       ) : null}
 
@@ -122,17 +126,20 @@ export default async function SupplierDashboardPage() {
                           Closes {new Date(tender.closing_date).toLocaleDateString("en-KE", { month: "short", day: "numeric", year: "numeric" })}
                         </p>
                       </div>
-                      {bidStatus ? (
-                        <Badge variant="secondary" className="w-fit capitalize">
-                          Bid {bidStatus.replace("_", " ")}
-                        </Badge>
-                      ) : (
-                        <BidForm
-                          tenderId={tender.id}
+                      <div className="flex flex-wrap items-center gap-2">
+                        {bidStatus ? (
+                          <Badge variant="secondary" className="w-fit capitalize">
+                            Quotation {bidStatus.replace("_", " ")}
+                          </Badge>
+                        ) : null}
+                        <TenderDocuments
+                          tenderNumber={tender.tender_number}
                           tenderTitle={tender.title}
-                          slots={slotsByTender.get(tender.id) ?? []}
+                          closingDate={tender.closing_date}
+                          address={settings.address}
+                          documents={docsByTender.get(tender.id) ?? []}
                         />
-                      )}
+                      </div>
                     </CardContent>
                   </Card>
                 )

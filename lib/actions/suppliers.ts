@@ -1,7 +1,6 @@
 "use server"
 
 import { redirect } from "next/navigation"
-import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 import { createClient } from "@/lib/supabase/server"
@@ -170,136 +169,16 @@ export async function supplierSignOut() {
   redirect("/suppliers/login")
 }
 
-const MAX_BID_FILE_BYTES = 15 * 1024 * 1024
-
-export async function submitBid(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
-  const tenderId = String(formData.get("tenderId") ?? "")
-  const bidAmountRaw = formData.get("bidAmount")
-  const notes = String(formData.get("notes") ?? "")
-
-  if (!tenderId) return { success: false, error: "Missing tender." }
-
-  const bidAmount = bidAmountRaw ? Number(bidAmountRaw) : null
-  if (bidAmountRaw && (Number.isNaN(bidAmount) || (bidAmount ?? 0) < 0)) {
-    return { success: false, error: "Please enter a valid bid amount." }
-  }
-
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { success: false, error: "Please log in as a supplier to submit a bid." }
-  }
-
-  const { data: supplier } = await supabase
-    .from("margaret_suppliers")
-    .select("id, status")
-    .eq("user_id", user.id)
-    .maybeSingle()
-
-  if (!supplier) {
-    return { success: false, error: "No supplier profile found for your account." }
-  }
-
-  if (supplier.status !== "approved") {
-    return { success: false, error: "Your supplier account is not yet approved to submit bids." }
-  }
-
-  const { data: bid, error: bidError } = await supabase
-    .from("margaret_bids")
-    .insert({
-      tender_id: tenderId,
-      supplier_id: supplier.id,
-      bid_amount: bidAmount,
-      notes: notes || null,
-      status: "submitted",
-    })
-    .select("id")
-    .single()
-
-  if (bidError || !bid) {
-    return { success: false, error: "You may have already submitted a bid for this tender, or something went wrong." }
-  }
-
-  // The forms this tender asks to be returned. Each one is a named slot on the
-  // form, so a returned file arrives already labelled as "this is SD2" rather
-  // than as whatever the supplier happened to call the scan.
-  const { data: required } = await supabase
-    .from("margaret_tender_documents")
-    .select("id, title")
-    .eq("tender_id", tenderId)
-    .eq("is_required_return", true)
-    .order("sort_order")
-
-  const missing: string[] = []
-
-  for (const slot of required ?? []) {
-    const file = formData.get(`slot_${slot.id}`)
-
-    if (!(file instanceof File) || file.size === 0) {
-      missing.push(slot.title as string)
-      continue
-    }
-    if (file.size > MAX_BID_FILE_BYTES) {
-      missing.push(`${slot.title} (over 15MB)`)
-      continue
-    }
-
-    const path = `bids/${bid.id}/${slot.id}-${Date.now()}-${file.name}`
-    const { error: uploadError } = await supabase.storage
-      .from("bid-documents")
-      .upload(path, file, { contentType: file.type, upsert: false })
-
-    if (uploadError) {
-      missing.push(slot.title as string)
-      continue
-    }
-
-    await supabase.from("margaret_bid_documents").insert({
-      bid_id: bid.id,
-      tender_document_id: slot.id,
-      document_type: slot.title,
-      title: file.name,
-      file_url: path,
-      bucket: "bid-documents",
-    })
-  }
-
-  // Anything else the supplier wants to add — a company profile, a brochure —
-  // still goes up, unnamed, because the checklist is about what is required.
-  const extras = formData.getAll("documents").filter((f): f is File => f instanceof File && f.size > 0)
-
-  for (const file of extras) {
-    if (file.size > MAX_BID_FILE_BYTES) continue
-
-    const path = `bids/${bid.id}/extra-${Date.now()}-${file.name}`
-    const { error: uploadError } = await supabase.storage
-      .from("bid-documents")
-      .upload(path, file, { contentType: file.type, upsert: false })
-
-    if (uploadError) continue
-
-    await supabase.from("margaret_bid_documents").insert({
-      bid_id: bid.id,
-      title: file.name,
-      file_url: path,
-      bucket: "bid-documents",
-    })
-  }
-
-  revalidatePath("/suppliers/dashboard")
-
-  // The bid is saved either way — a submission held back for a missing scan
-  // near a deadline would be worse than an incomplete one the desk can chase.
-  // But the supplier is told plainly, while there is still time to fix it.
-  if (missing.length > 0) {
-    return {
-      success: true,
-      warning: `Your bid was submitted, but these required forms are still missing: ${missing.join(", ")}. Upload them before the closing date or the bid may be rejected at preliminary examination.`,
-    }
-  }
-
-  return { success: true }
-}
+/**
+ * Online bid submission was removed on 21 September 2026.
+ *
+ * The hospital's RFQ requires one original, sealed in a single envelope and
+ * delivered by hand, courier or registered post, opened in public immediately
+ * after the closing time. A price typed into a web form before that opening is
+ * a sealed bid that was not sealed, and a portal upload is not the original
+ * the rules ask for.
+ *
+ * Suppliers now download the pack from their dashboard; procurement records
+ * what arrives in the envelope from Admin -> Tenders, where the evaluation and
+ * award steps already live.
+ */

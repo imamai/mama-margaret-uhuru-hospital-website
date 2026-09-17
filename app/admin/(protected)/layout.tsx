@@ -51,6 +51,7 @@ const GROUPS: { key: string; label: string; items: { key: string; label: string;
       { key: "tenders", label: "Tenders", href: "/admin/tenders", permissionPrefix: "tenders" },
       { key: "suppliers", label: "Suppliers", href: "/admin/suppliers", permissionPrefix: "tenders" },
       { key: "supplier-categories", label: "Supplier Categories", href: "/admin/supplier-categories", permissionPrefix: "tenders" },
+      { key: "document-library", label: "Document Library", href: "/admin/document-library", permissionPrefix: "tenders" },
     ],
   },
   {

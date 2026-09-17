@@ -12871,6 +12871,57 @@ export type Database = {
           },
         ]
       }
+      margaret_document_library: {
+        Row: {
+          category: string
+          content_type: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          file_name: string | null
+          file_size: number | null
+          file_url: string
+          id: string
+          sort_order: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url: string
+          id?: string
+          sort_order?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content_type?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_name?: string | null
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          sort_order?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       margaret_maintenance_accounts: {
         Row: {
           created_at: string
@@ -13972,6 +14023,7 @@ export type Database = {
       }
       margaret_tender_documents: {
         Row: {
+          library_document_id: string | null
           created_at: string
           created_by: string | null
           document_type: string
@@ -13983,6 +14035,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          library_document_id?: string | null
           created_at?: string
           created_by?: string | null
           document_type?: string
@@ -13994,6 +14047,7 @@ export type Database = {
           title: string
         }
         Update: {
+          library_document_id?: string | null
           created_at?: string
           created_by?: string | null
           document_type?: string

@@ -8,6 +8,8 @@ import { DeleteButton } from "@/components/admin/delete-button"
 import { EntityFormDialog } from "@/components/admin/entity-form-dialog"
 import { TenderDocumentUploadForm } from "@/components/admin/tender-document-upload-form"
 import { AddStandardFormsButton } from "@/components/admin/add-standard-forms-button"
+import { AttachLibraryDocuments, type LibraryChoice } from "@/components/admin/attach-library-documents"
+import { RecordBidForm } from "@/components/admin/record-bid-form"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -32,7 +34,7 @@ export default async function AdminTenderDetailPage({
   if (!tender) notFound()
 
   const [{ data: documents }, { data: clarifications }, { data: award }, { data: bids }] = await Promise.all([
-    supabase.from("margaret_tender_documents").select("id, title, file_url, document_type, is_required_return, sort_order").eq("tender_id", id).order("sort_order").order("created_at"),
+    supabase.from("margaret_tender_documents").select("id, title, file_url, document_type, is_required_return, sort_order, library_document_id").eq("tender_id", id).order("sort_order").order("created_at"),
     supabase.from("margaret_tender_clarifications").select("id, question, answer, asked_by_name, status").eq("tender_id", id).order("created_at"),
     supabase.from("margaret_tender_awards").select("id, awarded_supplier_name").eq("tender_id", id).maybeSingle(),
     supabase
@@ -41,6 +43,36 @@ export default async function AdminTenderDetailPage({
       .eq("tender_id", id)
       .order("submitted_at", { ascending: false }),
   ])
+
+  // The library shelf, and every approved supplier -- one for attaching
+  // documents, the other for recording a quotation that arrived by envelope.
+  const [{ data: libraryDocs }, { data: approvedSuppliers }] = await Promise.all([
+    supabase
+      .from("margaret_document_library")
+      .select("id, title, description, category, sort_order")
+      .is("deleted_at", null)
+      .eq("status", "active")
+      .order("category")
+      .order("sort_order")
+      .order("title"),
+    supabase
+      .from("margaret_suppliers")
+      .select("id, company_name")
+      .eq("status", "approved")
+      .is("deleted_at", null)
+      .order("company_name"),
+  ])
+
+  const attachedLibraryIds = new Set(
+    (documents ?? []).map((d) => d.library_document_id as string | null).filter(Boolean) as string[]
+  )
+  const libraryChoices: LibraryChoice[] = (libraryDocs ?? []).map((doc) => ({
+    id: doc.id as string,
+    title: doc.title as string,
+    description: (doc.description as string | null) ?? null,
+    category: doc.category as string,
+    attached: attachedLibraryIds.has(doc.id as string),
+  }))
 
   const supplierIds = [...new Set((bids ?? []).map((b) => b.supplier_id))]
   const { data: suppliers } = supplierIds.length
@@ -119,7 +151,10 @@ export default async function AdminTenderDetailPage({
                 : "No forms are marked for return, so bidders are only shown a plain file box."}
             </p>
           </div>
-          <AddStandardFormsButton tenderId={tender.id} />
+          <div className="flex flex-wrap gap-2">
+            <AttachLibraryDocuments tenderId={tender.id} documents={libraryChoices} />
+            <AddStandardFormsButton tenderId={tender.id} />
+          </div>
         </div>
         <TenderDocumentUploadForm tenderId={tender.id} />
         <div className="mt-4 overflow-x-auto rounded-xl border bg-background">
@@ -198,7 +233,21 @@ export default async function AdminTenderDetailPage({
       </section>
 
       <section className="mb-10">
-        <h2 className="mb-3 text-lg font-bold">Bids</h2>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-bold">Quotations received</h2>
+            <p className="text-muted-foreground text-sm">
+              Quotations arrive sealed and are opened in public. Record each one here after the opening.
+            </p>
+          </div>
+          <RecordBidForm
+            tenderId={tender.id}
+            suppliers={(approvedSuppliers ?? []).map((sup) => ({
+              id: sup.id as string,
+              name: sup.company_name as string,
+            }))}
+          />
+        </div>
         <div className="overflow-x-auto rounded-xl border bg-background">
           <Table>
             <TableHeader>
@@ -214,7 +263,7 @@ export default async function AdminTenderDetailPage({
               {(bids ?? []).length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-6 text-center text-muted-foreground">
-                    No bids submitted yet.
+                    Nothing recorded yet.
                   </TableCell>
                 </TableRow>
               ) : (
