@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { ColorField } from "@/components/admin/color-field"
 import { PasswordField } from "@/components/admin/password-field"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -34,6 +35,7 @@ export type EntityFieldConfig = {
     | "file"
     | "image"
     | "password"
+    | "color"
   required?: boolean
   options?: { value: string; label: string }[]
   defaultValue?: string
@@ -103,7 +105,9 @@ export function EntityFormDialog({
                 {field.label}
                 {field.required ? <span className="text-destructive"> *</span> : null}
               </Label>
-              {field.type === "password" ? (
+              {field.type === "color" ? (
+                <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} />
+              ) : field.type === "password" ? (
                 <PasswordField
                   id={field.name}
                   name={field.name}

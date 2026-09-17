@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import type { ActionResult } from "@/lib/actions/forms"
 import type { EntityFieldConfig } from "@/components/admin/entity-form-dialog"
 import { Button } from "@/components/ui/button"
+import { ColorField } from "@/components/admin/color-field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -39,7 +40,9 @@ export function SettingsForm({
       {fields.map((field) => (
         <div key={field.name} className="space-y-1.5">
           <Label htmlFor={field.name}>{field.label}</Label>
-          {field.type === "textarea" ? (
+          {field.type === "color" ? (
+            <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} />
+          ) : field.type === "textarea" ? (
             <Textarea id={field.name} name={field.name} defaultValue={field.defaultValue} rows={3} />
           ) : field.type === "file" ? (
             <Input id={field.name} name={field.name} type="file" accept={field.accept} required={field.required} />
@@ -62,6 +65,9 @@ export function SettingsForm({
           ) : (
             <Input id={field.name} name={field.name} type={field.type ?? "text"} defaultValue={field.defaultValue} />
           )}
+          {/* Some fields carry a hint and, until now, this form quietly dropped
+              it -- the branding colours need theirs to say where each one lands. */}
+          {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
         </div>
       ))}
       <Button type="submit" disabled={pending}>

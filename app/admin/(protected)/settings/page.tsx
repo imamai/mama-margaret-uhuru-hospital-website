@@ -52,11 +52,41 @@ export default async function AdminSettingsPage() {
           <SettingsForm
             action={updateBrandingSettings}
             fields={[
-              { name: "primary", label: "Primary color", defaultValue: settings.brand_colors.primary },
-              { name: "deep", label: "Deep color", defaultValue: settings.brand_colors.deep },
-              { name: "accent", label: "Accent color", defaultValue: settings.brand_colors.accent },
-              { name: "dark_grey", label: "Dark grey", defaultValue: settings.brand_colors.dark_grey },
-              { name: "light_grey", label: "Light grey", defaultValue: settings.brand_colors.light_grey },
+              {
+                name: "primary",
+                label: "Primary",
+                type: "color",
+                defaultValue: settings.brand_colors.primary,
+                hint: "The main brand colour. Used for links and highlights.",
+              },
+              {
+                name: "deep",
+                label: "Deep",
+                type: "color",
+                defaultValue: settings.brand_colors.deep,
+                hint: "The darker shade: buttons, headings and the emergency bar. This is the colour most of the site reads as.",
+              },
+              {
+                name: "accent",
+                label: "Accent",
+                type: "color",
+                defaultValue: settings.brand_colors.accent,
+                hint: "The lighter shade, used sparingly for emphasis and in dark mode.",
+              },
+              {
+                name: "dark_grey",
+                label: "Text",
+                type: "color",
+                defaultValue: settings.brand_colors.dark_grey,
+                hint: "Body text and the footer background. Keep it dark enough to read comfortably.",
+              },
+              {
+                name: "light_grey",
+                label: "Section background",
+                type: "color",
+                defaultValue: settings.brand_colors.light_grey,
+                hint: "The tint behind alternating sections. Keep it very close to white.",
+              },
               {
                 name: "logo_url",
                 label: "Logo",
