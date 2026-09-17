@@ -2,19 +2,38 @@ import type { Metadata } from "next"
 
 import type { SiteSettings } from "@/lib/data/settings"
 
+/** The live site. Used whenever the environment cannot be trusted. */
+const PRODUCTION_URL = "https://mamamargaretuhuruhospital.co.ke"
+
+const LOOPBACK = /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])(:\d+)?$/i
+
 /**
  * Canonical origin for every URL the site hands to a search engine.
  *
- * The fallback used to be http://localhost:3000. That is fine in development
- * and quietly disastrous in production: if NEXT_PUBLIC_SITE_URL is ever missing
- * from the deploy environment, every canonical tag, Open Graph URL and sitemap
- * entry tells Google the hospital lives on localhost. A real domain fallback
- * cannot be wrong in that way — set the env var anyway, but a missing one now
- * degrades to "correct" instead of "unindexable".
+ * Two ways this has already gone wrong, both guarded here:
+ *
+ *  1. The variable is MISSING. The old fallback was http://localhost:3000, so a
+ *     deploy without it told Google the hospital lives on a laptop. The
+ *     fallback is now the live domain, which cannot be wrong that way.
+ *
+ *  2. The variable is SET, to localhost. A fallback cannot help with that --
+ *     an explicit value wins -- and this is exactly what shipped: Search
+ *     Console read all 60 sitemap URLs as "URL not allowed" because every one
+ *     of them said http://localhost:3000. So in a production build a loopback
+ *     address is now ignored outright. In development it is honoured, because
+ *     there localhost is the right answer.
+ *
+ * Set NEXT_PUBLIC_SITE_URL properly regardless: preview deployments should
+ * point at themselves, and only the environment knows their address.
  */
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://mamamargaretuhuruhospital.co.ke"
-).replace(/\/$/, "")
+function resolveSiteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "")
+  if (!configured) return PRODUCTION_URL
+  if (process.env.NODE_ENV === "production" && LOOPBACK.test(configured)) return PRODUCTION_URL
+  return configured
+}
+
+export const SITE_URL = resolveSiteUrl()
 
 /** Only this host is whitelisted for next/image and only it serves our uploads. */
 const ASSET_HOST_PREFIX = "https://sedsjjmjnikppfaecaya.supabase.co/storage/v1/object/public/"
