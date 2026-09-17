@@ -38,7 +38,12 @@ export async function Header() {
           )}
           <span className="hidden text-sm leading-tight sm:block">
             <span className="block text-base font-bold text-foreground">{settings.hospital_short_name}</span>
-            <span className="block text-xs font-normal text-muted-foreground">{settings.hospital_name}</span>
+            {/* The full name is the widest thing in the bar. With Careers and
+                Tenders now sitting in the nav in their own right, it only fits
+                alongside eight links once there is room for it. */}
+            <span className="hidden text-xs font-normal text-muted-foreground xl:block">
+              {settings.hospital_name}
+            </span>
           </span>
         </Link>
 
