@@ -27,27 +27,71 @@ const ORDERED = /^\d+[.)]\s+/
 const BULLET = /^[-*•]\s+/
 const IMAGE = /^!\[([^\]]*)\]\(([^)\s]+)\)$/
 
-function toBlock(chunk: string): Block {
-  const heading = chunk.match(HEADING)
-  if (heading && !chunk.includes("\n")) {
-    return { type: "header", data: { level: heading[1].length, text: heading[2].trim() } }
-  }
+type Kind = "heading" | "ordered" | "bullet" | "image" | "text"
 
-  const image = chunk.match(IMAGE)
-  if (image) {
-    return { type: "image", data: { url: image[2], caption: image[1] } }
-  }
+function kindOf(line: string): Kind {
+  if (HEADING.test(line)) return "heading"
+  if (IMAGE.test(line)) return "image"
+  if (ORDERED.test(line)) return "ordered"
+  if (BULLET.test(line)) return "bullet"
+  return "text"
+}
 
+/**
+ * Reads one blank-line-separated chunk into blocks.
+ *
+ * A chunk can hold more than one block. Writing
+ *
+ *   ## Services
+ *   - One
+ *   - Two
+ *
+ * with no blank line after the heading is what anyone actually types, and it
+ * used to come out as a single paragraph with the "##" and the dashes printed
+ * literally on the page. So lines are grouped by kind instead: a heading or an
+ * image is its own block, consecutive list lines are one list, and everything
+ * else gathers into a paragraph.
+ */
+function chunkToBlocks(chunk: string): Block[] {
   const lines = chunk.split("\n").map((l) => l.trim()).filter(Boolean)
+  const blocks: Block[] = []
+  let i = 0
 
-  if (lines.length > 0 && lines.every((l) => ORDERED.test(l))) {
-    return { type: "list", data: { style: "ordered", items: lines.map((l) => l.replace(ORDERED, "")) } }
-  }
-  if (lines.length > 0 && lines.every((l) => BULLET.test(l))) {
-    return { type: "list", data: { style: "unordered", items: lines.map((l) => l.replace(BULLET, "")) } }
+  while (i < lines.length) {
+    const kind = kindOf(lines[i])
+
+    if (kind === "heading") {
+      const [, hashes, text] = lines[i].match(HEADING)!
+      blocks.push({ type: "header", data: { level: hashes.length, text: text.trim() } })
+      i += 1
+      continue
+    }
+
+    if (kind === "image") {
+      const [, caption, url] = lines[i].match(IMAGE)!
+      blocks.push({ type: "image", data: { url, caption } })
+      i += 1
+      continue
+    }
+
+    const run: string[] = []
+    while (i < lines.length && kindOf(lines[i]) === kind) {
+      run.push(lines[i])
+      i += 1
+    }
+
+    if (kind === "ordered" || kind === "bullet") {
+      const marker = kind === "ordered" ? ORDERED : BULLET
+      blocks.push({
+        type: "list",
+        data: { style: kind === "ordered" ? "ordered" : "unordered", items: run.map((l) => l.replace(marker, "")) },
+      })
+    } else {
+      blocks.push({ type: "paragraph", data: { text: run.join("\n") } })
+    }
   }
 
-  return { type: "paragraph", data: { text: chunk } }
+  return blocks
 }
 
 /** Converts the admin's plain-text body field into the CMS's `{ blocks }` jsonb shape. */
@@ -57,7 +101,7 @@ export function textToBlocks(text: string): { blocks: Block[] } {
     .split(/\n{2,}/)
     .map((p) => p.trim())
     .filter(Boolean)
-  return { blocks: chunks.map(toBlock) }
+  return { blocks: chunks.flatMap(chunkToBlocks) }
 }
 
 function fromBlock(block: Block): string | null {
@@ -82,6 +126,27 @@ function fromBlock(block: Block): string | null {
       // an unknown block would be saved back as a paragraph and published.
       return null
   }
+}
+
+/**
+ * The opening paragraph with the syntax stripped, for places that need one
+ * line of plain prose: a card excerpt, a meta description, a search result.
+ * Those cannot render a list, and "### Services" is not a summary of anything.
+ */
+export function plainExcerpt(text: string | null | undefined): string {
+  if (!text) return ""
+  const first =
+    text
+      .replace(/\r\n/g, "\n")
+      .split(/\n{2,}/)
+      .map((chunk) => chunk.trim())
+      .find(Boolean) ?? ""
+
+  return first
+    .split("\n")
+    .map((line) => line.replace(HEADING, "$2").replace(ORDERED, "").replace(BULLET, "").trim())
+    .filter(Boolean)
+    .join(" ")
 }
 
 /** Inverse of textToBlocks, for populating the edit form from stored content. */

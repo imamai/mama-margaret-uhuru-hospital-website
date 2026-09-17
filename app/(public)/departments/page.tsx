@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/common/section-heading"
 import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { listDepartments } from "@/lib/data/departments"
+import { plainExcerpt } from "@/lib/actions/admin/blocks"
 import { getSiteSettings } from "@/lib/data/settings"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,7 +41,7 @@ export default async function DepartmentsPage() {
                 <CardContent className="py-5">
                   <h2 className="font-semibold text-foreground group-hover:text-primary">{department.name}</h2>
                   {department.description ? (
-                    <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{department.description}</p>
+                    <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{plainExcerpt(department.description)}</p>
                   ) : null}
                   {department.location ? (
                     <p className="mt-2 text-xs text-muted-foreground">{department.location}</p>

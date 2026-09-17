@@ -6,6 +6,7 @@ import { SmartImage } from "@/components/common/smart-image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { listDepartments } from "@/lib/data/departments"
+import { plainExcerpt } from "@/lib/actions/admin/blocks"
 
 export async function DepartmentsGrid() {
   const departments = await listDepartments()
@@ -28,7 +29,7 @@ export async function DepartmentsGrid() {
               <CardContent className="py-5">
                 <h3 className="font-semibold text-foreground group-hover:text-primary">{department.name}</h3>
                 {department.description ? (
-                  <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{department.description}</p>
+                  <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{plainExcerpt(department.description)}</p>
                 ) : null}
               </CardContent>
             </Link>

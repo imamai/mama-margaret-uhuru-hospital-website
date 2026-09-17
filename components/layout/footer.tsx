@@ -4,7 +4,6 @@ import { Mail, MapPin, Phone } from "lucide-react"
 import { FacebookIcon, InstagramIcon, LinkedInIcon, TwitterIcon, YouTubeIcon } from "@/components/common/social-icons"
 import { getFooterNav } from "@/lib/data/menus"
 import { getFooterSections } from "@/lib/data/footer"
-import { getInsurancePartners } from "@/lib/data/homepage"
 import { getSiteSettings } from "@/lib/data/settings"
 
 const SOCIAL_ICONS: Record<string, typeof FacebookIcon> = {
@@ -16,11 +15,10 @@ const SOCIAL_ICONS: Record<string, typeof FacebookIcon> = {
 }
 
 export async function Footer() {
-  const [settings, footerNav, footerSections, insurancePartners] = await Promise.all([
+  const [settings, footerNav, footerSections] = await Promise.all([
     getSiteSettings(),
     getFooterNav(),
     getFooterSections(),
-    getInsurancePartners(),
   ])
 
   const socialEntries = Object.entries(settings.social_links).filter(([, url]) => url)
@@ -102,21 +100,6 @@ export async function Footer() {
           </ul>
         </div>
       </div>
-
-      {insurancePartners.length > 0 ? (
-        <div className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-4 py-6">
-            <p className="mb-4 text-xs font-semibold tracking-wide text-white/60 uppercase">Insurance Partners</p>
-            <div className="flex flex-wrap items-center gap-6 opacity-80">
-              {insurancePartners.map((partner) => (
-                <span key={partner.id} className="text-sm font-medium text-white/70">
-                  {partner.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : null}
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-white/60 sm:flex-row">

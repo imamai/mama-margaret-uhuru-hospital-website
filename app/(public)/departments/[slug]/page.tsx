@@ -3,9 +3,11 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Clock, Download, Mail, MapPin, Phone } from "lucide-react"
 
+import { BlockContent } from "@/components/common/block-content"
 import { SmartImage } from "@/components/common/smart-image"
 import { Card, CardContent } from "@/components/ui/card"
 import { getDepartmentBySlug } from "@/lib/data/departments"
+import { plainExcerpt, textToBlocks } from "@/lib/actions/admin/blocks"
 
 export async function generateMetadata({
   params,
@@ -18,7 +20,7 @@ export async function generateMetadata({
 
   return {
     title: department.seo_title || department.name,
-    description: department.seo_description || department.description || undefined,
+    description: department.seo_description || plainExcerpt(department.description) || undefined,
   }
 }
 
@@ -50,7 +52,7 @@ export default async function DepartmentDetailPage({
           {department.description ? (
             <section>
               <h2 className="mb-3 text-xl font-bold">About this department</h2>
-              <p className="whitespace-pre-line text-muted-foreground">{department.description}</p>
+              <BlockContent content={textToBlocks(department.description)} />
             </section>
           ) : null}
 
