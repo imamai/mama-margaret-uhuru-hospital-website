@@ -97,6 +97,14 @@ export async function Footer() {
                 {settings.emergency_phone}
               </a>
             </li>
+            {settings.email ? (
+              <li className="flex items-start gap-2">
+                <Mail className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                <a href={`mailto:${settings.email}`} className="break-all hover:text-white hover:underline">
+                  {settings.email}
+                </a>
+              </li>
+            ) : null}
           </ul>
         </div>
       </div>

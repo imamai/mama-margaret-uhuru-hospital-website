@@ -87,6 +87,7 @@ export default async function AdminSettingsPage() {
                 type: "color",
                 defaultValue: settings.brand_colors.primary,
                 hint: "The main brand colour. Used for links and highlights.",
+                check: { mode: "text" as const, used: "Link text in this colour" },
               },
               {
                 name: "deep",
@@ -94,6 +95,7 @@ export default async function AdminSettingsPage() {
                 type: "color",
                 defaultValue: settings.brand_colors.deep,
                 hint: "The darker shade: buttons, headings and the emergency bar. This is the colour most of the site reads as.",
+                check: { mode: "surface" as const, used: "Button and emergency bar text" },
               },
               {
                 name: "accent",
@@ -108,6 +110,7 @@ export default async function AdminSettingsPage() {
                 type: "color",
                 defaultValue: settings.brand_colors.dark_grey,
                 hint: "Body text and the footer background. Keep it dark enough to read comfortably.",
+                check: { mode: "text" as const, used: "Body text in this colour" },
               },
               {
                 name: "light_grey",
@@ -115,6 +118,7 @@ export default async function AdminSettingsPage() {
                 type: "color",
                 defaultValue: settings.brand_colors.light_grey,
                 hint: "The tint behind alternating sections. Keep it very close to white.",
+                check: { mode: "tint" as const, used: "Text in those sections" },
               },
               {
                 name: "logo_url",

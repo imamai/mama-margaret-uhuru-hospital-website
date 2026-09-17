@@ -60,7 +60,7 @@ export function SettingsForm({
         <div key={field.name} className="space-y-1.5">
           <Label htmlFor={field.name}>{field.label}</Label>
           {field.type === "color" ? (
-            <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} />
+            <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} check={field.check} />
           ) : field.type === "textarea" ? (
             <Textarea id={field.name} name={field.name} defaultValue={field.defaultValue} rows={3} />
           ) : field.type === "file" ? (

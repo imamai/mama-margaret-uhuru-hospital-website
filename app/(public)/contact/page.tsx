@@ -39,7 +39,18 @@ export default async function ContactPage() {
             <Mail className="mt-1 size-5 shrink-0 text-brand-deep dark:text-brand-accent" aria-hidden="true" />
             <div>
               <p className="font-semibold text-foreground">Email</p>
-              <p className="text-muted-foreground">info@{settings.hospital_short_name.toLowerCase()}.org</p>
+              {/* This used to print info@<short name>.org, an address nobody
+                  owns and nobody reads. It comes from Settings -> General. */}
+              {settings.email ? (
+                <a
+                  href={`mailto:${settings.email}`}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {settings.email}
+                </a>
+              ) : (
+                <p className="text-muted-foreground">Not published yet.</p>
+              )}
             </div>
           </div>
 

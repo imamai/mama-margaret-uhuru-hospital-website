@@ -16,7 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { ColorField } from "@/components/admin/color-field"
+import { ColorField, type ColorCheck } from "@/components/admin/color-field"
 import { PasswordField } from "@/components/admin/password-field"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -44,6 +44,8 @@ export type EntityFieldConfig = {
   hint?: string
   /** For type "password": offer a generated one alongside the box. */
   offerGenerator?: boolean
+  /** For type "color": how the colour is used, so its readability can be checked. */
+  check?: ColorCheck
 }
 
 /**
@@ -106,7 +108,7 @@ export function EntityFormDialog({
                 {field.required ? <span className="text-destructive"> *</span> : null}
               </Label>
               {field.type === "color" ? (
-                <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} />
+                <ColorField id={field.name} name={field.name} defaultValue={field.defaultValue} check={field.check} />
               ) : field.type === "password" ? (
                 <PasswordField
                   id={field.name}
