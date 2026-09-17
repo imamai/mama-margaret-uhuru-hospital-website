@@ -57,18 +57,34 @@ export async function changeMyPassword(_prev: ActionResult | null, formData: For
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
-  const { error: wrongPassword } = await verifier.auth.signInWithPassword({
+  const { error: signInError } = await verifier.auth.signInWithPassword({
     email: user.email,
     password: parsed.data.currentPassword,
   })
-  if (wrongPassword) return { success: false, error: "Your current password is not correct." }
 
-  // Sign the throwaway session out again rather than leaving it live until it
-  // expires on its own.
-  await verifier.auth.signOut()
+  if (signInError) {
+    // Only a credentials failure means they typed the wrong password. Anything
+    // else -- rate limiting, captcha, a locked account -- is reported as it
+    // came back, because "your password is wrong" would send someone off
+    // trying to remember a password that was right all along.
+    const wrongPassword =
+      signInError.code === "invalid_credentials" ||
+      signInError.message.toLowerCase().includes("invalid login credentials")
+
+    return {
+      success: false,
+      error: wrongPassword ? "Your current password is not correct." : signInError.message,
+    }
+  }
 
   const { error } = await supabase.auth.updateUser({ password: parsed.data.newPassword })
-  if (error) return { success: false, error: "We couldn't change your password. Try again." }
+  if (error) return { success: false, error: error.message }
+
+  // Only now, and only this session. signOut() defaults to global scope, which
+  // revokes every refresh token the person holds -- including the browser
+  // session making this request, which left the password unchanged and the
+  // administrator signed out.
+  await verifier.auth.signOut({ scope: "local" })
 
   return { success: true }
 }
