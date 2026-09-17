@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useEffect } from "react"
 import { toast } from "sonner"
 
 import type { ActionResult } from "@/lib/actions/forms"
@@ -19,30 +19,17 @@ export function SettingsForm({
   fields,
   action,
   submitLabel = "Save changes",
-  restores,
-  setDefault,
+  before,
 }: {
   fields: EntityFieldConfig[]
   action: (prev: ActionResult | null, formData: FormData) => Promise<ActionResult>
   submitLabel?: string
-  /** One button per palette worth coming back to, each a field name -> value map. */
-  restores?: { label: string; hint?: string; values: Record<string, string> }[]
-  /** Renders a tick that records what is being saved as the new default. */
-  setDefault?: { name: string; label: string; hint?: string }
+  /** Rendered inside the form, above the fields, for a section the field list cannot express. */
+  before?: React.ReactNode
 }) {
   const [state, formAction, pending] = useActionState<ActionResult | null, FormData>(action, null)
 
-  // Bumped by the restore button. The fields are keyed on it so they remount
-  // carrying the shipped values -- the colour boxes hold their own state, and
-  // nothing short of a remount puts it back. Nothing is written until Save is
-  // pressed, so a mis-click costs one press of the browser's back button.
-  const [restored, setRestored] = useState<{ at: number; values: Record<string, string> } | null>(null)
 
-  const shown = restored
-    ? fields.map((field) =>
-        restored.values[field.name] ? { ...field, defaultValue: restored.values[field.name] } : field
-      )
-    : fields
 
   useEffect(() => {
     if (!state) return
@@ -55,8 +42,10 @@ export function SettingsForm({
 
   return (
     <form action={formAction} encType="multipart/form-data" className="max-w-xl space-y-4">
-      <div key={restored?.at ?? 0} className="space-y-4">
-      {shown.map((field) => (
+
+      {before}
+
+      {fields.map((field) => (
         <div key={field.name} className="space-y-1.5">
           <Label htmlFor={field.name}>{field.label}</Label>
           {field.type === "color" ? (
@@ -89,46 +78,8 @@ export function SettingsForm({
           {field.hint ? <p className="text-xs text-muted-foreground">{field.hint}</p> : null}
         </div>
       ))}
-      </div>
 
-      {setDefault ? (
-        <label className="flex items-start gap-2.5 rounded-lg border p-3 text-sm">
-          <input
-            type="checkbox"
-            name={setDefault.name}
-            value="true"
-            className="mt-0.5 size-4 rounded border-input"
-          />
-          <span>
-            {setDefault.label}
-            {setDefault.hint ? (
-              <span className="block text-xs text-muted-foreground">{setDefault.hint}</span>
-            ) : null}
-          </span>
-        </label>
-      ) : null}
 
-      {restores?.length ? (
-        <div className="space-y-2 rounded-lg border border-dashed p-3">
-          <div className="flex flex-wrap gap-2">
-            {restores.map((restore, i) => (
-              <Button
-                key={restore.label}
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setRestored({ at: Date.now() + i, values: restore.values })}
-              >
-                {restore.label}
-              </Button>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {restores.find((r) => r.hint)?.hint ??
-              "Puts those values back in the boxes. Nothing changes on the site until you save."}
-          </p>
-        </div>
-      ) : null}
 
       <Button type="submit" disabled={pending}>
         {pending ? "Saving..." : submitLabel}

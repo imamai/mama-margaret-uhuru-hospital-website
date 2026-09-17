@@ -8,15 +8,11 @@ import {
   updateSocialSettings,
 } from "@/lib/actions/admin/settings"
 import { getSiteSettings } from "@/lib/data/settings"
-import { DEFAULT_BRAND_COLORS } from "@/lib/brand-defaults"
+import { BrandPaletteEditor } from "@/components/admin/brand-palette-editor"
 
 export default async function AdminSettingsPage() {
   const settings = await getSiteSettings()
 
-  // Whether the hospital has set a palette of its own, or is still on the one
-  // the site shipped with.
-  const hospitalDefaultIsCustom =
-    JSON.stringify(settings.brand_colors_default) !== JSON.stringify(DEFAULT_BRAND_COLORS)
 
   return (
     <div>
@@ -57,69 +53,13 @@ export default async function AdminSettingsPage() {
         <TabsContent value="branding" className="pt-6">
           <SettingsForm
             action={updateBrandingSettings}
-            setDefault={{
-              name: "setAsDefault",
-              label: "Make these the hospital's default colours",
-              hint: "Restore brings them back later. Tick this once you are happy with how the site looks.",
-            }}
-            restores={[
-              // The hospital's own default first, and only offered when it is
-              // actually different -- two buttons saying the same thing is
-              // worse than one.
-              ...(hospitalDefaultIsCustom
-                ? [
-                    {
-                      label: "Restore hospital colours",
-                      values: { ...settings.brand_colors_default },
-                      hint: "Puts those values back in the boxes. Nothing changes on the site until you save.",
-                    },
-                  ]
-                : []),
-              {
-                label: hospitalDefaultIsCustom ? "Restore original site colours" : "Restore default colours",
-                values: { ...DEFAULT_BRAND_COLORS },
-              },
-            ]}
+            before={
+              <BrandPaletteEditor
+                current={{ ...settings.brand_colors }}
+                hospitalDefault={{ ...settings.brand_colors_default }}
+              />
+            }
             fields={[
-              {
-                name: "primary",
-                label: "Primary",
-                type: "color",
-                defaultValue: settings.brand_colors.primary,
-                hint: "The main brand colour. Used for links and highlights.",
-                check: { mode: "text" as const, used: "Link text in this colour" },
-              },
-              {
-                name: "deep",
-                label: "Deep",
-                type: "color",
-                defaultValue: settings.brand_colors.deep,
-                hint: "The darker shade: buttons, headings and the emergency bar. This is the colour most of the site reads as.",
-                check: { mode: "surface" as const, used: "Button and emergency bar text" },
-              },
-              {
-                name: "accent",
-                label: "Accent",
-                type: "color",
-                defaultValue: settings.brand_colors.accent,
-                hint: "The lighter shade, used sparingly for emphasis and in dark mode.",
-              },
-              {
-                name: "dark_grey",
-                label: "Text",
-                type: "color",
-                defaultValue: settings.brand_colors.dark_grey,
-                hint: "Body text and the footer background. Keep it dark enough to read comfortably.",
-                check: { mode: "text" as const, used: "Body text in this colour" },
-              },
-              {
-                name: "light_grey",
-                label: "Section background",
-                type: "color",
-                defaultValue: settings.brand_colors.light_grey,
-                hint: "The tint behind alternating sections. Keep it very close to white.",
-                check: { mode: "tint" as const, used: "Text in those sections" },
-              },
               {
                 name: "logo_url",
                 label: "Logo",
@@ -131,7 +71,7 @@ export default async function AdminSettingsPage() {
                 name: "favicon_url",
                 label: "Favicon",
                 type: "image",
-                hint: "Upload a square favicon image or paste an image URL. Leave both blank to keep the current favicon.",
+                hint: "Upload a new favicon or paste an image URL. Leave both blank to keep the current one.",
                 defaultValue: settings.favicon_url ?? "",
               },
             ]}

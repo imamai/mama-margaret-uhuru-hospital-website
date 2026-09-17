@@ -8,19 +8,34 @@ import { MIN_TEXT_CONTRAST, contrastRatio, formatRatio } from "@/lib/contrast"
 
 const HEX = /^#[0-9a-fA-F]{6}$/
 const WHITE = "#FFFFFF"
+/** The page behind Primary and Accent in dark mode. */
+const DARK_BG = "#0A1116"
 
 /**
  * How a colour is used, which is what decides whether it is readable.
  *
- *   text    - shown as words on a white page, so it must be dark enough
+ *   text    - words on a white page, so it must be dark enough
  *   surface - filled behind white words, so it must also be dark enough
+ *   on-dark - words or fills on the dark-mode page, so it must be LIGHT enough
  *   tint    - a background wash that should stay close to white
+ *
+ * The distinction matters. Primary and Accent only appear in dark mode, where
+ * being light is the point; judging them against white would condemn exactly
+ * the colours that work.
  */
-export type ColorCheck = { mode: "text" | "surface" | "tint"; used: string }
+export type ColorCheck = { mode: "text" | "surface" | "on-dark" | "tint"; used: string }
 
 function warningFor(value: string, check: ColorCheck): string | null {
-  const ratio = contrastRatio(value, WHITE)
+  const ratio = contrastRatio(value, check.mode === "on-dark" ? DARK_BG : WHITE)
   if (ratio === null) return null
+
+  if (check.mode === "on-dark") {
+    return ratio < MIN_TEXT_CONTRAST
+      ? `${check.used} would have contrast ${formatRatio(ratio)} against the dark page. ${formatRatio(
+          MIN_TEXT_CONTRAST
+        )} is the minimum for readable text — choose something lighter.`
+      : null
+  }
 
   if (check.mode === "tint") {
     // Not a contrast failure but the same kind of mistake: a "light background"
@@ -58,13 +73,20 @@ export function ColorField({
   name,
   defaultValue,
   check,
+  value: controlledValue,
+  onValueChange,
 }: {
   id: string
   name: string
   defaultValue?: string
   check?: ColorCheck
+  /** Pass both to let a parent own the value, for a live preview. */
+  value?: string
+  onValueChange?: (next: string) => void
 }) {
-  const [value, setValue] = useState(defaultValue ?? "#000000")
+  const [ownValue, setOwnValue] = useState(defaultValue ?? "#000000")
+  const value = controlledValue ?? ownValue
+  const setValue = onValueChange ?? setOwnValue
   const valid = HEX.test(value)
   const warning = valid && check ? warningFor(value, check) : null
 
