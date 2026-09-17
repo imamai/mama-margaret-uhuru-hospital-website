@@ -2,6 +2,7 @@ import "server-only"
 import { cache } from "react"
 
 import { createClient } from "@/lib/supabase/server"
+import { DEFAULT_BRAND_COLORS } from "@/lib/brand-defaults"
 
 export type BrandColors = {
   primary: string
@@ -44,13 +45,7 @@ const DEFAULTS: SiteSettings = {
   hospital_short_name: "MMUH",
   mission: "",
   vision: "",
-  brand_colors: {
-    primary: "#1496E8",
-    deep: "#0D5EA6",
-    accent: "#19B5FE",
-    dark_grey: "#3E4348",
-    light_grey: "#F6F7F9",
-  },
+  brand_colors: { ...DEFAULT_BRAND_COLORS },
   logo_url: null,
   favicon_url: null,
   // The hospital's real emergency line. This is a fallback for a missing row,

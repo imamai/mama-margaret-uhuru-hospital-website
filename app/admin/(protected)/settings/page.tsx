@@ -8,6 +8,7 @@ import {
   updateSocialSettings,
 } from "@/lib/actions/admin/settings"
 import { getSiteSettings } from "@/lib/data/settings"
+import { DEFAULT_BRAND_COLORS } from "@/lib/brand-defaults"
 
 export default async function AdminSettingsPage() {
   const settings = await getSiteSettings()
@@ -51,6 +52,8 @@ export default async function AdminSettingsPage() {
         <TabsContent value="branding" className="pt-6">
           <SettingsForm
             action={updateBrandingSettings}
+            defaults={{ ...DEFAULT_BRAND_COLORS }}
+            restoreLabel="Restore default colours"
             fields={[
               {
                 name: "primary",
