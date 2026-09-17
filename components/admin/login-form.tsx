@@ -1,6 +1,7 @@
 "use client"
 
 import { useActionState, useEffect } from "react"
+import Link from "next/link"
 import { toast } from "sonner"
 
 import { signIn, type AuthResult } from "@/lib/actions/auth"
@@ -31,6 +32,13 @@ export function LoginForm({ next }: { next?: string }) {
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Signing in..." : "Sign In"}
       </Button>
+
+      <Link
+        href="/admin/forgot-password"
+        className="block text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+      >
+        Forgot your password?
+      </Link>
     </form>
   )
 }

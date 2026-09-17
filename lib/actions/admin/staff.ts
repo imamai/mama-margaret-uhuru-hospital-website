@@ -74,6 +74,42 @@ function revalidate() {
   revalidatePath("/admin/staff")
 }
 
+/**
+ * Would this change leave the site with nobody who can administer it?
+ *
+ * The worst outcome here is not someone having too much access; it is a
+ * hospital with a website nobody can get into. Removing the last super admin
+ * does exactly that, and no amount of care with passwords recovers from it
+ * without going to the database directly.
+ *
+ * `keeping` is the roles that person will hold afterwards -- empty when their
+ * access is being removed entirely.
+ */
+async function wouldStrandTheSite(
+  supabase: Client,
+  userId: string,
+  keeping: string[]
+): Promise<boolean> {
+  const { data: superRole } = await supabase
+    .from("margaret_roles")
+    .select("id")
+    .eq("slug", "super-admin")
+    .maybeSingle()
+
+  if (!superRole) return false
+  if (keeping.includes(superRole.id)) return false
+
+  const { data: holders } = await supabase
+    .from("margaret_user_roles")
+    .select("user_id")
+    .eq("role_id", superRole.id)
+
+  const others = (holders ?? []).filter((row) => row.user_id !== userId)
+  const losingIt = (holders ?? []).some((row) => row.user_id === userId)
+
+  return losingIt && others.length === 0
+}
+
 /** Replaces someone's roles with exactly the set given. */
 async function writeRoles(
   supabase: Client,
@@ -193,6 +229,13 @@ export async function setStaffRoles(_prev: ActionResult | null, formData: FormDa
     return { success: false, error: "Choose at least one role, or use Remove access." }
   }
 
+  if (await wouldStrandTheSite(check.supabase, userId.data, roleIds)) {
+    return {
+      success: false,
+      error: "That would leave the site with no super admin. Give someone else the role first.",
+    }
+  }
+
   const roleError = await writeRoles(check.supabase, userId.data, roleIds)
   if (roleError) return { success: false, error: roleError }
 
@@ -273,6 +316,13 @@ export async function revokeStaffAccess(userId: string): Promise<ActionResult> {
 
   if (userId === check.currentUserId) {
     return { success: false, error: "You can't remove your own access. Ask another administrator." }
+  }
+
+  if (await wouldStrandTheSite(check.supabase, userId, [])) {
+    return {
+      success: false,
+      error: "That would leave the site with no super admin. Give someone else the role first.",
+    }
   }
 
   const { error } = await check.supabase.from("margaret_user_roles").delete().eq("user_id", userId)

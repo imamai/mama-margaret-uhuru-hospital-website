@@ -32,7 +32,15 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (request.nextUrl.pathname.startsWith("/admin") && request.nextUrl.pathname !== "/admin/login" && !user) {
+  // Reachable without a session: signing in, asking for a recovery link, and
+  // the address that link lands on. Everything else under /admin needs one.
+  const publicAdminPaths = ["/admin/login", "/admin/forgot-password", "/admin/auth/callback"]
+
+  if (
+    request.nextUrl.pathname.startsWith("/admin") &&
+    !publicAdminPaths.includes(request.nextUrl.pathname) &&
+    !user
+  ) {
     const url = request.nextUrl.clone()
     url.pathname = "/admin/login"
     url.searchParams.set("next", request.nextUrl.pathname)
