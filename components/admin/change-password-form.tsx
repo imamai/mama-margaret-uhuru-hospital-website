@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react"
 import { toast } from "sonner"
 
-import { changeMyPassword } from "@/lib/actions/admin/account"
+import { changeMyPassword } from "@/lib/actions/account"
 import type { ActionResult } from "@/lib/actions/forms"
 import { PasswordField } from "@/components/admin/password-field"
 import { Button } from "@/components/ui/button"

@@ -36,7 +36,7 @@ export function SupplierRegistrationForm({ categories }: { categories: { id: str
         <p className="font-semibold text-foreground">Check your email</p>
         <p className="mt-1 text-sm text-muted-foreground">
           We&rsquo;ve sent a confirmation link to your email address. Confirm it, then log in -- your supplier
-          account will still need to be approved by our procurement team before you can submit bids.
+          account will still need to be approved by our procurement team before you can download tender documents.
         </p>
       </div>
     )

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { Calendar, LogOut } from "lucide-react"
 
+import { SupplierChangePassword } from "@/components/forms/supplier-change-password"
 import { TenderDocuments, type TenderDocument } from "@/components/forms/tender-documents"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -151,6 +152,19 @@ export default async function SupplierDashboardPage() {
           )}
         </div>
       ) : null}
+
+      <section aria-labelledby="account-heading" className="mt-14 border-t pt-10">
+        <h2 id="account-heading" className="text-lg font-bold">
+          Your account
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Signed in as {supplier.email}. If the procurement office set this password for you, change it to one only
+          you know.
+        </p>
+        <div className="mt-6 max-w-xl">
+          <SupplierChangePassword />
+        </div>
+      </section>
     </div>
   )
 }

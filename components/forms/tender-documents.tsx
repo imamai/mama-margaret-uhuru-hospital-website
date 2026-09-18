@@ -32,6 +32,10 @@ export interface TenderDocument {
  * Forms that have to come back are listed separately from documents that are
  * only to be read, because the hospital's own rules reject a quotation missing
  * any of them at preliminary examination.
+ *
+ * The steps begin at "download", because that is genuinely the first thing to
+ * do and the old list opened at "complete every form" as though the forms had
+ * arrived by themselves.
  */
 export function TenderDocuments({
   tenderNumber,
@@ -121,25 +125,25 @@ export function TenderDocuments({
           ) : null}
 
           <section className="rounded-lg border bg-muted/40 p-4">
-            <h3 className="text-sm font-semibold">How to submit</h3>
-            <ol className="mt-2 space-y-2 text-sm text-muted-foreground">
+            <h3 className="text-sm font-semibold">What to do next</h3>
+            {/* A real ordered list, numbered by the browser. The numbers used to
+                be typed into each item, so inserting this download step meant
+                renumbering every one by hand -- and a screen reader read "one"
+                as body text rather than announcing a list of four. */}
+            <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-muted-foreground marker:font-medium marker:text-foreground">
+              <li>Download every document listed above.</li>
+              <li>Complete every form, then sign and stamp it. Paginate all filled pages in order.</li>
               <li>
-                <span className="font-medium text-foreground">1.</span> Complete every form, then sign and stamp it.
-                Paginate all filled pages in order.
+                Seal one original in a single envelope, marked with{" "}
+                {tenderNumber ? <span className="font-medium text-foreground">{tenderNumber}</span> : "the quotation reference"}
+                {" "}
+                and your company&apos;s name and address.
               </li>
-              <li>
-                <span className="font-medium text-foreground">2.</span> Seal one original in a single envelope, marked
-                with {tenderNumber ? <span className="font-medium text-foreground">{tenderNumber}</span> : "the quotation reference"} and
-                your company&apos;s name and address.
-              </li>
-              <li>
-                <span className="font-medium text-foreground">3.</span> Deliver it by hand, courier or registered post
-                to the tender box{address ? <>, {address}</> : null}.
-              </li>
+              <li>Deliver it by hand, courier or registered post to the tender box{address ? <>, {address}</> : null}.</li>
               {closing ? (
                 <li>
-                  <span className="font-medium text-foreground">4.</span> It must arrive by{" "}
-                  <span className="font-medium text-foreground">{closing}</span>. Late quotations are rejected.
+                  It must arrive by <span className="font-medium text-foreground">{closing}</span>. Late quotations are
+                  rejected.
                 </li>
               ) : null}
             </ol>

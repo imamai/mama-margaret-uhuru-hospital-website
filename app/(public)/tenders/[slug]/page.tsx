@@ -171,9 +171,9 @@ export default async function TenderDetailPage({
         {open ? (
           <Card className="bg-muted/40">
             <CardContent className="flex flex-col items-start gap-3 py-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-muted-foreground">Registered and approved suppliers can submit a bid for this tender.</p>
+              <p className="text-sm text-muted-foreground">Registered and approved suppliers can download the documents for this tender.</p>
               <Button asChild size="sm">
-                <Link href="/suppliers/login">Log in to Submit a Bid</Link>
+                <Link href="/suppliers/login">Log in to download documents</Link>
               </Button>
             </CardContent>
           </Card>

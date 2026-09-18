@@ -9,6 +9,10 @@ import type { ActionResult } from "@/lib/actions/forms"
 /**
  * Changing your own password.
  *
+ * Used by hospital staff and by suppliers alike: it works from the signed-in
+ * session and asks nothing about who the person is, which is why it lives here
+ * rather than under admin/.
+ *
  * Supabase will change a password for anyone holding a live session without
  * asking for the old one, which means an unattended, unlocked browser is
  * enough to take an account over. So the current password is verified first.
@@ -83,7 +87,7 @@ export async function changeMyPassword(_prev: ActionResult | null, formData: For
   // Only now, and only this session. signOut() defaults to global scope, which
   // revokes every refresh token the person holds -- including the browser
   // session making this request, which left the password unchanged and the
-  // administrator signed out.
+  // person signed out.
   await verifier.auth.signOut({ scope: "local" })
 
   return { success: true }

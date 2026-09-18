@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/seo"
 export const metadata: Metadata = pageMetadata({
   title: "Supplier Registration",
   description:
-    "Register as a supplier to bid on tenders at Mama Margaret Uhuru Hospital, Nairobi. Submit your company details and category of supply.",
+    "Register as a supplier at Mama Margaret Uhuru Hospital, Nairobi to access published tender documents. Submit your company details and category of supply.",
   path: "/suppliers/register",
 })
 
@@ -21,7 +21,7 @@ export default async function SupplierRegisterPage() {
         as="h1"
         eyebrow="Procurement"
         title="Supplier Registration"
-        description="Register your company to bid on our published tenders. Your account needs approval from our procurement team before you can submit bids."
+        description="Register your company to take part in our published tenders. Your account needs approval from our procurement team before you can download tender documents."
         align="left"
         className="max-w-none"
       />

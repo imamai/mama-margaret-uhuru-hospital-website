@@ -18,7 +18,7 @@ export default async function SupplierLoginPage({
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-4 py-16">
       <p className="text-center text-lg font-bold text-foreground">Supplier Login</p>
-      <p className="mt-1 text-center text-sm text-muted-foreground">Sign in to view tenders and submit bids</p>
+      <p className="mt-1 text-center text-sm text-muted-foreground">Sign in to download tender documents</p>
       {error === "link-expired" ? (
         <p className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
           That link has expired or has already been used. Request a new one below.
