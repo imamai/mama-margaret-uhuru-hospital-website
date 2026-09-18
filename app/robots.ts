@@ -20,6 +20,9 @@ export default function robots(): MetadataRoute.Robots {
         "/api",            // internal endpoints
         "/suppliers/login",
         "/suppliers/dashboard", // a supplier's own tender documents and bids
+        "/suppliers/forgot-password",
+        "/suppliers/reset-password",
+        "/suppliers/auth", // the one-time link lands here
       ],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,

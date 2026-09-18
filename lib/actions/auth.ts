@@ -41,7 +41,7 @@ export async function signIn(_prev: AuthResult | null, formData: FormData): Prom
  * change it. Supabase will only honour addresses on its own redirect
  * allow-list, so a forged Host header cannot send the link somewhere else.
  */
-async function siteOrigin(): Promise<string> {
+export async function siteOrigin(): Promise<string> {
   const h = await headers()
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000"
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https")
@@ -49,19 +49,38 @@ async function siteOrigin(): Promise<string> {
 }
 
 /**
+ * Which sign-in the reset belongs to.
+ *
+ * Staff and suppliers use the same Supabase project but land in different
+ * parts of the site, so the emailed link has to come back to the right
+ * callback. This is a closed set rather than a path taken from the form --
+ * a caller-supplied redirect is how an open-redirect gets shipped.
+ */
+const CALLBACKS = {
+  admin: "/admin/auth/callback",
+  supplier: "/suppliers/auth/callback",
+} as const
+
+export type ResetScope = keyof typeof CALLBACKS
+
+/**
  * Sends the "set a new password" email.
  *
  * It reports success whether or not the address has an account. Saying "no
- * such user" would let anyone with the login page discover who works here,
- * and the hospital's staff addresses are worth more than that to an attacker.
+ * such user" would let anyone with the sign-in page discover who works here --
+ * or which companies supply the hospital -- and both are worth more than that
+ * to an attacker.
  */
 export async function requestPasswordReset(_prev: AuthResult | null, formData: FormData): Promise<AuthResult> {
   const email = z.string().trim().email("Please enter a valid email address.").safeParse(formData.get("email"))
   if (!email.success) return { success: false, error: email.error.issues[0]?.message ?? "Invalid email." }
 
+  const raw = String(formData.get("scope") ?? "admin")
+  const scope: ResetScope = raw === "supplier" ? "supplier" : "admin"
+
   const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(email.data, {
-    redirectTo: `${await siteOrigin()}/admin/auth/callback`,
+    redirectTo: `${await siteOrigin()}${CALLBACKS[scope]}`,
   })
 
   // Rate limiting is worth passing on -- it tells someone to wait rather than

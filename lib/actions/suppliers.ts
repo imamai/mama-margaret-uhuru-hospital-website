@@ -157,7 +157,28 @@ export async function supplierSignIn(_prev: ActionResult | null, formData: FormD
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    return { success: false, error: "Incorrect email or password." }
+    // Every failure used to read "Incorrect email or password", including the
+    // ones that are not about the password at all -- so a supplier whose email
+    // was never confirmed, or whose account was locked after too many tries,
+    // retyped a correct password until they gave up. These three are worth
+    // telling apart; anything else stays deliberately vague, because saying
+    // "no such account" would reveal which companies supply the hospital.
+    const message = error.message.toLowerCase()
+
+    if (message.includes("not confirmed")) {
+      return {
+        success: false,
+        error:
+          "Your email address has not been confirmed yet. Open the confirmation link we emailed when you registered, then sign in.",
+      }
+    }
+    if (error.status === 429 || message.includes("rate limit")) {
+      return { success: false, error: "Too many attempts. Please wait a few minutes and try again." }
+    }
+    return {
+      success: false,
+      error: "Incorrect email or password. If you have forgotten it, use the reset link below.",
+    }
   }
 
   redirect("/suppliers/dashboard")

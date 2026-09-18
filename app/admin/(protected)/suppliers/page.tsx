@@ -1,6 +1,7 @@
 import { FileText } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { SupplierPasswordReset } from "@/components/admin/supplier-password-reset"
 import { SupplierStatusSelect } from "@/components/admin/supplier-status-select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { createClient } from "@/lib/supabase/server"
@@ -46,7 +47,7 @@ export default async function AdminSuppliersPage() {
               <TableHead>Contact</TableHead>
               <TableHead>Documents</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Change Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -94,7 +95,10 @@ export default async function AdminSuppliersPage() {
                     <Badge variant={supplier.status === "approved" ? "default" : "outline"}>{supplier.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <SupplierStatusSelect id={supplier.id} status={supplier.status} />
+                    <div className="flex flex-wrap items-center justify-end gap-2">
+                      <SupplierPasswordReset supplierId={supplier.id} companyName={supplier.company_name} />
+                      <SupplierStatusSelect id={supplier.id} status={supplier.status} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
