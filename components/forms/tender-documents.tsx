@@ -131,7 +131,7 @@ export function TenderDocuments({
                 renumbering every one by hand -- and a screen reader read "one"
                 as body text rather than announcing a list of four. */}
             <ol className="mt-2 list-decimal space-y-2 pl-5 text-sm text-muted-foreground marker:font-medium marker:text-foreground">
-              <li>Download every document listed above.</li>
+              <li>Download the PDF document(s) above.</li>
               <li>Complete every form, then sign and stamp it. Paginate all filled pages in order.</li>
               <li>
                 Seal one original in a single envelope, marked with{" "}
