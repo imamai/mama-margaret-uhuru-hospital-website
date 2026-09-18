@@ -102,14 +102,33 @@ whole mitigation and takes about five minutes.
 
 ## Prerequisites
 
-- **Email delivery.** Password recovery needs the project to send mail. Supabase's
-  built-in sender is heavily rate-limited and is not meant for production; if
-  recovery emails are slow or missing, configure SMTP under
-  *Project Settings → Authentication → SMTP Settings*. Routes 2, 3 and 4 do not
-  depend on email.
-- **Redirect allow-list.** The recovery link returns to `/admin/auth/callback`.
-  That address must be listed under *Authentication → URL Configuration →
-  Redirect URLs*, for the live domain and for `http://localhost:3000` if
-  recovery is to be tested locally.
+- **Email delivery.** This site sends its own recovery email through Resend,
+  not through Supabase. Set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` in
+  `.env.local` and in Vercel; the from-address must be on a domain verified in
+  Resend. Without them the reset form says so plainly rather than pretending to
+  send. Routes 2, 3 and 4 do not depend on email.
+
+  Supabase's own SMTP settings are deliberately **not** used: they belong to
+  the whole project, and seven other sites share it, so pointing them at the
+  hospital would make all of them send as the hospital.
+
+- **Redirect allow-list.** The recovery link returns to `/admin/auth/callback`
+  (or `/suppliers/auth/callback`). Those must be listed under *Authentication →
+  URL Configuration → Redirect URLs*; `https://mamamargaretuhuruhospital.co.ke/**`
+  covers both. Supabase silently substitutes the Site URL when a redirect is
+  not allow-listed, which is what sent every early reset link to
+  `http://localhost:3000`. localhost is permitted implicitly, so local testing
+  needs no entry.
+
+- **Why the link carries `token_hash`.** Supabase's own recovery link returns
+  its tokens in a URL *fragment*, which a browser never sends to the server, so
+  the callback route cannot read them and every reset ends on "link expired".
+  The link is therefore built in `lib/actions/auth.ts` with the token in the
+  query string, which the callback verifies with `verifyOtp`.
+
+- **Listing users is broken on this project.** `auth.admin.listUsers()` returns
+  `Database error finding users` (HTTP 500). Look an account up by address
+  instead — `findUserIdByEmail()` in `lib/supabase/admin.ts` uses the admin
+  filter endpoint, which works.
 - **`SUPABASE_SERVICE_ROLE_KEY`.** Needed for creating accounts and for route 2.
   Set it in `.env.local` and in the Vercel project's environment variables.

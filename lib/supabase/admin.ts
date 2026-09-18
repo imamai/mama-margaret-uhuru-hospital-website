@@ -39,3 +39,33 @@ export function createAdminClient() {
 export function canCreateAccounts(): boolean {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
 }
+
+/**
+ * The account id for an email address, or null.
+ *
+ * Uses GoTrue's admin filter rather than listUsers, which returns
+ * "Database error finding users" (HTTP 500) on this project -- see
+ * docs/admin-recovery.md. The filter is a partial match, so the result is
+ * compared exactly before it is trusted.
+ */
+export async function findUserIdByEmail(email: string): Promise<string | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) return null
+
+  const wanted = email.trim().toLowerCase()
+
+  try {
+    const response = await fetch(`${url}/auth/v1/admin/users?filter=${encodeURIComponent(wanted)}`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      cache: "no-store",
+    })
+    if (!response.ok) return null
+
+    const body = (await response.json()) as { users?: { id: string; email?: string | null }[] }
+    const exact = (body.users ?? []).find((u) => (u.email ?? "").toLowerCase() === wanted)
+    return exact?.id ?? null
+  } catch {
+    return null
+  }
+}
