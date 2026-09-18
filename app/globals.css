@@ -165,3 +165,74 @@
     scroll-behavior: auto !important;
   }
 }
+/* ── Logo marquee ──────────────────────────────────────────────────────────
+   A continuously scrolling row of partner logos.
+
+   Pure CSS on purpose: this sits on the homepage, and a JS-driven ticker
+   would cost every visitor bundle and main-thread time for decoration. A
+   transform animation runs on the compositor and costs neither.
+
+   The track holds the same logos twice and slides exactly half its width, so
+   the moment the first copy leaves, the second is in precisely the position
+   the first began -- the seam is invisible and the loop never resets visibly.
+   The duplicate is inert and aria-hidden, so it is neither read out twice nor
+   reachable by keyboard. */
+.logo-marquee {
+  overflow: hidden;
+  /* Fade the edges so logos enter and leave rather than being sliced off. */
+  mask-image: linear-gradient(to right, transparent, black 6rem, black calc(100% - 6rem), transparent);
+}
+
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: logo-marquee-scroll var(--marquee-duration, 40s) linear infinite;
+}
+
+/* Let people actually read or click a logo. */
+.logo-marquee:hover .logo-marquee-track,
+.logo-marquee:focus-within .logo-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes logo-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* The global reduced-motion rule above collapses every animation to 0.01ms and
+   one iteration. For a marquee that does not mean "still" -- it means "jump to
+   the end and stay there", leaving the track parked at -50% with the first
+   logos off-screen. So it is switched off properly here and the row simply
+   wraps, which is what it did before this existed. */
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee {
+    mask-image: none;
+  }
+  .logo-marquee-track {
+    animation: none !important;
+    width: 100%;
+  }
+  /* The second half exists only to make the loop seamless. */
+  .logo-marquee-track > [data-marquee-copy="duplicate"] {
+    display: none;
+  }
+  /* So do the extra repeats inside the first half -- without dropping them the
+     same partner would appear several times in a row that is no longer moving. */
+  .logo-marquee-row > li[data-repeat]:not([data-repeat="0"]) {
+    display: none;
+  }
+  /* Wrap on the row itself. Wrapping the track instead leaves this row still
+     wider than the screen, and centring an oversized child pushes its start off
+     the left edge -- the first logos vanish. */
+  .logo-marquee-row {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 3rem;
+  }
+}
