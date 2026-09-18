@@ -43,7 +43,11 @@ export async function sendEmail({
     // A plain-text part as well as HTML: some mail clients show only the text,
     // and a message with no text part scores worse with spam filters.
     const { error } = await resend.emails.send({
-      from: `Mama Margaret Uhuru Hospital <${from}>`,
+      // The short name in the sender line, the full name in the subject and
+      // the body -- so an inbox list stays readable while the message itself
+      // still says plainly who it is from. The domain is the hospital's own,
+      // so the short name is an abbreviation rather than a mismatch.
+      from: `MMUH <${from}>`,
       to,
       subject,
       html,
